@@ -1,0 +1,21 @@
+version: '3'
+
+services:
+  mypuhh:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: mypuhh_fastapi
+    command: uvicorn main:app --reload --host 0.0.0.0 --port 8000
+    container_name: mypuhh
+    volumes:
+      - .:/app
+
+    ports:
+      - "8000:8000"
+    # extra_hosts:
+    #   - "host.docker.internal:172.17.0.1"
+
+volumes:
+  curiobitesdb:
+    external: true
