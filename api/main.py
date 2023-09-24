@@ -1,32 +1,27 @@
 from fastapi import FastAPI
 
-from conf.database import DATABASE_URL
+from db import init_db
 from account.models import *
 from tortoise.contrib.fastapi import register_tortoise
-
 from account.routers import router as account_routes
 
 
-app = FastAPI()
+def create_application() -> FastAPI:
+    application = FastAPI()
+    return application
+
+
+app = create_application()
+
 app.include_router(account_routes)
 
 
-@app.get("/")
-async def home():
-    result = {"status": True}
-    return result
+@app.on_event("startup")
+async def startup_event():
+    print("Starting up...")
+    await init_db(app)
 
 
-@app.get("/User")
-async def get_user(pk: str):
-    result = {"status": True}
-    return result
-
-
-register_tortoise(
-    app,
-    db_url=DATABASE_URL,
-    modules={"account": ["account.models"], "umum": ["umum.models"]},
-    generate_schemas=True,
-    add_exception_handlers=True,
-)
+@app.on_event("shutdown")
+async def shutdown_event():
+    print("Shutting down...")

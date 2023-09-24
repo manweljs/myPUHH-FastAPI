@@ -13,7 +13,7 @@ class User(BaseModel):
     avatar: Optional[str] = None
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 
 class CreateUser(BaseModel):
@@ -25,7 +25,15 @@ class CreateUser(BaseModel):
     avatar: Optional[str] = None
 
     class Config:
-        orm_mode = True
+        from_attributes = True
+
+
+class LoginUser(BaseModel):
+    username: str
+    password: str
+
+    class Config:
+        from_attributes = True
 
 
 # class PerusahaanSchema(BaseModel):

@@ -4,7 +4,7 @@ from tortoise import fields
 from datetime import datetime
 
 
-class BaseModel(Model):
+class CustomModel(Model):
     id = fields.UUIDField(default=uuid4, pk=True, unique=True)
     created = fields.DatetimeField(auto_now_add=True)
     modified = fields.DatetimeField(auto_now=True)
@@ -13,10 +13,10 @@ class BaseModel(Model):
         abstract = True
 
 
-class Propinsi(BaseModel):
+class Propinsi(CustomModel):
     nama = fields.CharField(255)
 
 
-class Kabupaten(BaseModel):
+class Kabupaten(CustomModel):
     nama = fields.CharField(255)
     propinsi = fields.ForeignKeyField("umum.Propinsi", on_delete=fields.CASCADE)
