@@ -4,8 +4,19 @@ from uuid import UUID, uuid4
 from enum import Enum
 
 
-class UserSchema(BaseModel):
+class User(BaseModel):
     id: Optional[UUID] = uuid4()
+    username: str
+    first_name: str
+    last_name: str
+    email: str
+    avatar: Optional[str] = None
+
+    class Config:
+        orm_mode = True
+
+
+class CreateUser(BaseModel):
     username: str
     first_name: str
     last_name: str
@@ -13,15 +24,18 @@ class UserSchema(BaseModel):
     email: str
     avatar: Optional[str] = None
 
-
-class PerusahaanSchema(BaseModel):
-    id: UUID = uuid4()
-    nama: str
-    alamat: str
-    logo: str
+    class Config:
+        orm_mode = True
 
 
-class OperatorSchema(BaseModel):
-    id: UUID = uuid4()
-    user: UserSchema
-    perusahaan: PerusahaanSchema
+# class PerusahaanSchema(BaseModel):
+#     id: Optional[UUID] = uuid4()
+#     nama: str
+#     alamat: str
+#     logo: Optional[str] = None
+
+
+# class OperatorSchema(BaseModel):
+#     id: Optional[UUID] = uuid4()
+#     user: UserSchema
+#     perusahaan: PerusahaanSchema

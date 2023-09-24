@@ -2,38 +2,17 @@ from pydantic import BaseModel
 from typing import Optional
 from uuid import UUID, uuid4
 from enum import Enum
-from general.serializers import BaseSerializer
-from .models import *
+import datetime
 
-# class UserSerializer(BaseModel):
-#     id: UUID = uuid4()
-#     username: str
-#     first_name: str
-#     last_name: str
-#     password: str
-#     email: str
-#     avatar: Optional[str] = None
+from .models import User
+
+from tortoise.contrib.pydantic import pydantic_model_creator
+
+UserInSerializer = pydantic_model_creator(User, name="UserIn", exclude_readonly=True)
+UserSerializer = pydantic_model_creator(User, name="User")
 
 
-class UserSerializer(BaseSerializer):
-    class Meta:
-        model = User
-
-
-class PerusahaanSerializer(BaseModel):
-    class Meta:
-        model = Perusahaan
-
-    # id: UUID
-    # nama: str
-    # alamat: str
-    # logo: str
-
-
-class OperatorSerializer(BaseModel):
-    class Meta:
-        model = Operator
-
-    # id: UUID
-    # user: UserSerializer
-    # perusahaan: PerusahaanSerializer
+# class UserCreateSerializer(__UserCreateSerializer):
+#     created: Optional[datetime.datetime]  # Optional as it's auto-generated
+#     modified: Optional[datetime.datetime]  # Optional as it's auto-generated
+#     avatar: Optional[str]

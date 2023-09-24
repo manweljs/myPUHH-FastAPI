@@ -1,51 +1,35 @@
-from sqlalchemy import create_engine, Column, String, ForeignKey
-from sqlalchemy.dialects.postgresql import UUID
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import relationship, sessionmaker
+from tortoise import fields
+from umum.models import BaseModel
+from tortoise.models import Model
+from datetime import datetime
 from uuid import uuid4
 
-Base = declarative_base()
+
+class User(BaseModel):
+    username = fields.CharField(max_length=50)
+    first_name = fields.CharField(max_length=50)
+    last_name = fields.CharField(max_length=50)
+    password = fields.TextField()
+    email = fields.CharField(max_length=255)
+    avatar = fields.TextField(null=True)
+
+    class Meta:
+        table = "users"
 
 
-class User(Base):
-    __tablename__ = "users"
-
-    id = Column(
-        UUID(as_uuid=True),
-        primary_key=True,
-        unique=True,
-        nullable=False,
-        default=uuid4,
+class Perusahaan(BaseModel):
+    nama = fields.CharField(255)
+    kabupaten = fields.ForeignKeyField(
+        "umum.Kabupaten", on_delete=fields.SET_NULL, null=True
     )
-    username = Column(String, unique=True, nullable=False)
-    first_name = Column(String, nullable=False)
-    last_name = Column(String, nullable=False)
-    password = Column(String, nullable=False)
-    email = Column(String, unique=True, nullable=False)
-    avatar = Column(String, nullable=True)
+    alamat = fields.TextField(null=True)
+    logo = fields.TextField(null=True)
 
 
-class Perusahaan(Base):
-    __tablename__ = "perusahaan"
+class Operator(BaseModel):
+    user = fields.ForeignKeyField("account.User", on_delete=fields.CASCADE)
+    perusahaan = fields.ForeignKeyField("account.Perusahaan", on_delete=fields.CASCADE)
+    nama = fields.CharField(255)
 
-    id = Column(
-        UUID(as_uuid=True), primary_key=True, unique=True, nullable=False, default=uuid4
-    )
-    nama = Column(String, nullable=False)
-    alamat = Column(String, nullable=False)
-    logo = Column(String, nullable=True)
-
-
-class Operator(Base):
-    __tablename__ = "operators"
-
-    id = Column(
-        UUID(as_uuid=True), primary_key=True, unique=True, nullable=False, default=uuid4
-    )
-    user_id = Column(UUID(as_uuid=True), ForeignKey("users.id"), nullable=False)
-    perusahaan_id = Column(
-        UUID(as_uuid=True), ForeignKey("perusahaan.id"), nullable=False
-    )
-
-    user = relationship("User", backref="operators")
-    perusahaan = relationship("Perusahaan", backref="operators")
+    class Meta:
+        table = "operators"
