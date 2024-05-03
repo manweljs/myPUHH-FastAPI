@@ -36,6 +36,11 @@ class LoginUser(BaseModel):
         from_attributes = True
 
 
+class LoginResponse(BaseModel):
+    access_token: str
+    token_type: str
+
+
 # class PerusahaanSchema(BaseModel):
 #     id: Optional[UUID] = uuid4()
 #     nama: str

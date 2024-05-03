@@ -1,8 +1,5 @@
 from tortoise import fields
 from umum.models import CustomModel
-from tortoise.models import Model
-from datetime import datetime
-from uuid import uuid4
 
 
 class User(CustomModel):
