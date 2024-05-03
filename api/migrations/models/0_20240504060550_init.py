@@ -16,16 +16,11 @@ CREATE TABLE IF NOT EXISTS "users" (
     "modified" TIMESTAMPTZ NOT NULL  DEFAULT CURRENT_TIMESTAMP,
     "username" VARCHAR(50) NOT NULL UNIQUE,
     "first_name" VARCHAR(50) NOT NULL,
-    "last_name" VARCHAR(50),
+    "last_name" VARCHAR(50) NOT NULL,
     "password" TEXT NOT NULL,
     "email" VARCHAR(255) NOT NULL UNIQUE,
-    "avatar" TEXT
-);
-CREATE TABLE IF NOT EXISTS "aerich" (
-    "id" SERIAL NOT NULL PRIMARY KEY,
-    "version" VARCHAR(255) NOT NULL,
-    "app" VARCHAR(100) NOT NULL,
-    "content" JSONB NOT NULL
+    "avatar" TEXT,
+    "is_active" BOOL NOT NULL  DEFAULT False
 );
 CREATE TABLE IF NOT EXISTS "propinsi" (
     "id" UUID NOT NULL  PRIMARY KEY,
@@ -56,6 +51,12 @@ CREATE TABLE IF NOT EXISTS "operators" (
     "nama" VARCHAR(255) NOT NULL,
     "perusahaan_id" UUID NOT NULL REFERENCES "perusahaan" ("id") ON DELETE CASCADE,
     "user_id" UUID NOT NULL REFERENCES "users" ("id") ON DELETE CASCADE
+);
+CREATE TABLE IF NOT EXISTS "aerich" (
+    "id" SERIAL NOT NULL PRIMARY KEY,
+    "version" VARCHAR(255) NOT NULL,
+    "app" VARCHAR(100) NOT NULL,
+    "content" JSONB NOT NULL
 );"""
 
 

@@ -19,4 +19,8 @@ class Propinsi(CustomModel):
 
 class Kabupaten(CustomModel):
     nama = fields.CharField(255)
-    propinsi = fields.ForeignKeyField("umum.Propinsi", on_delete=fields.CASCADE)
+    propinsi = fields.ForeignKeyField("models.Propinsi", on_delete=fields.CASCADE)
+
+
+class RencanaTebangType(CustomModel):
+    nama = fields.CharField(255)

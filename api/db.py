@@ -15,12 +15,8 @@ DATABASE_URL = f"postgres://{DB_USER}:{DB_PASSWORD}@host.docker.internal:5432/{D
 tortoise_config = {
     "connections": {"default": DATABASE_URL},
     "apps": {
-        "account": {
-            "models": ["account.models", "aerich.models"],
-            "default_connection": "default",
-        },
-        "umum": {
-            "models": ["umum.models"],
+        "models": {
+            "models": ["account.models", "umum.models", "aerich.models"],
             "default_connection": "default",
         },
     },
@@ -29,15 +25,14 @@ tortoise_config = {
 
 async def init_db(app: FastAPI) -> None:
     await Tortoise.init(
-        db_url=DATABASE_URL,
-        modules={"account": ["account.models"], "umum": ["umum.models"]},
-    )
+        config=tortoise_config
+    )  # Inisialisasi menggunakan konfigurasi yang Anda definisikan
+    await Tortoise.generate_schemas()  # Opsi untuk generate schema jika diperlukan
 
-    print("Tortoise init.....!")
     register_tortoise(
         app,
-        db_url=DATABASE_URL,
-        modules={"account": ["account.models"], "umum": ["umum.models"]},
-        generate_schemas=False,
+        config=tortoise_config,
         add_exception_handlers=True,
     )
+
+    print("Tortoise ORM initialized!")

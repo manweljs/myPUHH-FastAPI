@@ -9,6 +9,7 @@ class User(CustomModel):
     password = fields.TextField()
     email = fields.CharField(max_length=255, unique=True)
     avatar = fields.TextField(null=True)
+    is_active = fields.BooleanField(default=False)
 
     class Meta:
         table = "users"
@@ -20,19 +21,19 @@ class User(CustomModel):
 class Perusahaan(CustomModel):
     nama = fields.CharField(255)
     kabupaten = fields.ForeignKeyField(
-        "umum.Kabupaten", on_delete=fields.SET_NULL, null=True
+        "models.Kabupaten", on_delete=fields.SET_NULL, null=True
     )
     alamat = fields.TextField(null=True)
     logo = fields.TextField(null=True)
 
 
 class Operator(CustomModel):
-    user = fields.ForeignKeyField("account.User", on_delete=fields.CASCADE)
-    perusahaan = fields.ForeignKeyField("account.Perusahaan", on_delete=fields.CASCADE)
+    user = fields.ForeignKeyField("models.User", on_delete=fields.CASCADE)
+    perusahaan = fields.ForeignKeyField("models.Perusahaan", on_delete=fields.CASCADE)
     nama = fields.CharField(255)
 
     class Meta:
-        table = "operators"
+        table = "operator"
 
 
 class Token(CustomModel):

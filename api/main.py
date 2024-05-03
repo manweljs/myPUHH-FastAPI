@@ -1,9 +1,8 @@
 from fastapi import FastAPI
 
 from db import init_db
-from account.models import *
 from tortoise.contrib.fastapi import register_tortoise
-from account.routers import router as account_routes
+from account.views import router as account_routes
 
 
 def create_application() -> FastAPI:
