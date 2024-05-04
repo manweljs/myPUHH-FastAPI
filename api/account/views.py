@@ -87,18 +87,18 @@ async def token(
 @router.post(
     "/Perusahaan",
     status_code=status.HTTP_201_CREATED,
-    response_model=schemas.Perusahaan,
+    response_model=schemas.PerusahaanSchema,
 )
 async def create_perusahaan(data: schemas.PerusahaanIn):
     perusahaan = await Perusahaan.create(**data.model_dump(exclude_unset=True))
-    return perusahaan
+    return await perusahaan
 
 
 @router.get(
     "/Perusahaan",
     status_code=status.HTTP_200_OK,
     description="Get perusahaan by ID",
-    response_model=schemas.Perusahaan,
+    response_model=schemas.PerusahaanSchema,
 )
 async def get_perusahaan(id: str):
     perusahaan = await Perusahaan.get_or_none(id=id)
@@ -108,9 +108,9 @@ async def get_perusahaan(id: str):
 @router.get(
     "/GetAllPerusahaan",
     status_code=status.HTTP_200_OK,
-    response_model=List[schemas.Perusahaan],
+    response_model=List[schemas.PerusahaanSchema],
     description="Get all perusahaan",
 )
 async def get_all_perusahaan():
-    perusahaan = await Perusahaan.all()
+    perusahaan = await Perusahaan.all().prefetch_related("kabupaten")
     return perusahaan

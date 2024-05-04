@@ -1,10 +1,11 @@
-from typing import Optional
+from typing import Optional, List
 from uuid import UUID, uuid4
 from enum import Enum
 from tortoise.contrib.pydantic import pydantic_model_creator
 from tortoise.contrib.pydantic.base import PydanticModel
 from tortoise import Tortoise
 from . import models
+from pydantic import validator
 
 Tortoise.init_models(["account.models", "umum.models"], "models")
 
@@ -47,17 +48,23 @@ class LoginResponse(PydanticModel):
     token_type: str
 
 
-Perusahaan = pydantic_model_creator(
-    models.Perusahaan,
-    name="PerusahaanSerializer",
-    exclude=(
-        "propinsi",
-        "operators",
-        "kabupaten.propinsi",
-        "kabupaten.created",
-        "kabupaten.modified",
-    ),
-)
+class KabupatenBase(PydanticModel):
+    id: UUID
+    nama: str
+
+    class Config:
+        orm_mode = True
+
+
+class PerusahaanSchema(PydanticModel):
+    id: UUID
+    nama: str
+    alamat: Optional[str]
+    logo: Optional[str]
+    kabupaten: Optional[KabupatenBase]  # Nested model untuk Kabupaten
+
+    class Config:
+        orm_mode = True
 
 
 class PerusahaanIn(PydanticModel):

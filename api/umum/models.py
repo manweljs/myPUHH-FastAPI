@@ -24,3 +24,23 @@ class Kabupaten(CustomModel):
 
 class RencanaTebangType(CustomModel):
     nama = fields.CharField(255)
+
+    class Meta:
+        table = "rencana_tebang_type"
+
+
+class KualifikasiGanis(CustomModel):
+    nama = fields.CharField(255)
+
+    class Meta:
+        table = "kualifikasi_ganis"
+
+
+class JabatanGanis(CustomModel):
+    nama = fields.CharField(255)
+    kualifikasi = fields.ForeignKeyField(
+        "models.KualifikasiGanis", on_delete=fields.CASCADE
+    )
+
+    class Meta:
+        table = "jabatan_ganis"

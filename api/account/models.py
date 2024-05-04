@@ -1,5 +1,6 @@
 from tortoise import fields
 from umum.models import CustomModel
+from consts import ROLE
 
 
 class User(CustomModel):
@@ -10,6 +11,10 @@ class User(CustomModel):
     email = fields.CharField(max_length=255, unique=True)
     avatar = fields.TextField(null=True)
     is_active = fields.BooleanField(default=False)
+    perusahaan = fields.ForeignKeyField(
+        "models.Perusahaan", on_delete=fields.SET_NULL, null=True
+    )
+    role = fields.CharField(max_length=50, default=ROLE.OPERATOR)
 
     class Meta:
         table = "users"

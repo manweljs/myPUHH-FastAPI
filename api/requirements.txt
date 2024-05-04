@@ -8,3 +8,4 @@ passlib
 python-jose
 bcrypt
 pytz
+fastapi-crudrouter
