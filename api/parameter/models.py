@@ -3,6 +3,7 @@ from tortoise.models import Model
 from tortoise import fields
 from datetime import datetime
 from umum.models import CustomModel
+from consts import KATEGORI_TPK
 
 
 class TahunKegiatan(CustomModel):
@@ -21,6 +22,8 @@ class TahunKegiatan(CustomModel):
 class TPK(CustomModel):
     nama = fields.CharField(255)
     perusahaan = fields.ForeignKeyField("models.Perusahaan", on_delete=fields.CASCADE)
+    kategori = fields.IntField(default=KATEGORI_TPK.TPK_HUTAN.value)
+    alamat = fields.CharField(255, null=True)
 
     class Meta:
         table = "tpk"

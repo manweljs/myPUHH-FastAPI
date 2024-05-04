@@ -7,7 +7,7 @@ from tortoise import Tortoise
 from . import models
 from pydantic import validator
 
-Tortoise.init_models(["account.models", "umum.models"], "models")
+# Tortoise.init_models(["account.models", "umum.models", "parameter.models"], "models")
 
 
 class User(PydanticModel):

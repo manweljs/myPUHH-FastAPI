@@ -106,7 +106,7 @@ async def get_perusahaan(id: str):
 
 
 @router.get(
-    "/GetAllPerusahaan",
+    "/Perusahaan/GetAll",
     status_code=status.HTTP_200_OK,
     response_model=List[schemas.PerusahaanSchema],
     description="Get all perusahaan",

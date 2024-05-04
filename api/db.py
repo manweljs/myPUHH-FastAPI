@@ -16,7 +16,12 @@ tortoise_config = {
     "connections": {"default": DATABASE_URL},
     "apps": {
         "models": {
-            "models": ["account.models", "umum.models", "aerich.models"],
+            "models": [
+                "account.models",
+                "umum.models",
+                "parameter.models",
+                "aerich.models",
+            ],
             "default_connection": "default",
         },
     },

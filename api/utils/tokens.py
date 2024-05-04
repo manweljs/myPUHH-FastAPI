@@ -43,3 +43,9 @@ async def get_current_user(token: str = Depends(oauth2_scheme)):
     except jwt.PyJWTError:
         raise HTTPException(status_code=401, detail="Invalid token")
     return user
+
+
+async def get_perusahaan(user: str = Depends(get_current_user)):
+    if not user.perusahaan_id:
+        raise HTTPException(status_code=404, detail="Perusahaan not found")
+    return user.perusahaan_id
