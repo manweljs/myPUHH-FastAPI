@@ -1,5 +1,5 @@
 from fastapi_crudrouter.core.tortoise import TortoiseCRUDRouter
-from .models import TahunKegiatan, TPK, Blok
+from .models import TahunKegiatan, TPK, Blok, Petak, Ganis
 from fastapi import APIRouter, status, Depends, HTTPException
 from typing import List
 from utils.tokens import get_current_user, User, get_perusahaan
@@ -240,11 +240,11 @@ async def create_blok(
     data: schemas.BlokInSchema,
     perusahaan: Perusahaan = Depends(get_perusahaan),
 ):
-    blok = data.model_dump()
-    blok["perusahaan_id"] = str(perusahaan)
+    data = data.model_dump()
+    data["perusahaan_id"] = perusahaan
     try:
-        created_blok = await Blok.create(**blok)
-        await created_blok.fetch_related("tahun", "perusahaan")
+        created_blok = await Blok.create(**data)
+        await created_blok.fetch_related("tahun")
         return created_blok
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
@@ -271,3 +271,188 @@ async def get_blok(id: str, perusahaan: Perusahaan = Depends(get_perusahaan)):
     if not data:
         raise HTTPException(status_code=404, detail="Data tidak ditemukan")
     return data
+
+
+@router.put(
+    "/Blok/{id}",
+    status_code=status.HTTP_200_OK,
+    response_model=Response,
+)
+async def update_blok(
+    id: str,
+    data: schemas.BlokInSchema,
+    perusahaan: Perusahaan = Depends(get_perusahaan),
+):
+
+    updated_count = await Blok.filter(id=id, perusahaan=perusahaan).update(
+        **data.model_dump(exclude_unset=True)
+    )
+    if updated_count == 0:
+        raise HTTPException(status_code=404, detail="Blok not found")
+    return Response(message="Data berhasil diupdate")
+
+
+@router.delete(
+    "/Blok/{id}",
+    status_code=status.HTTP_200_OK,
+    response_model=Response,
+)
+async def delete_blok(id: str, perusahaan: Perusahaan = Depends(get_perusahaan)):
+    blok = await Blok.get_or_none(id=id, perusahaan=perusahaan)
+    if blok:
+        await blok.delete()
+        return Response(message="Data berhasil dihapus")
+    raise HTTPException(
+        status_code=status.HTTP_404_NOT_FOUND, detail="Data tidak ditemukan"
+    )
+
+
+@router.post(
+    "/Petak/",
+    status_code=status.HTTP_201_CREATED,
+    response_model=schemas.PetakSchema,
+)
+async def create_petak(
+    data: schemas.PetakInSchema,
+    perusahaan: Perusahaan = Depends(get_perusahaan),
+):
+    data = data.model_dump()
+    data["perusahaan_id"] = perusahaan
+    try:
+        created_petak = await Petak.create(**data)
+        await created_petak.fetch_related("blok")
+        return created_petak
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+
+@router.get(
+    "/Petak/GetAll",
+    response_model=List[schemas.PetakSchema],
+    status_code=status.HTTP_200_OK,
+)
+async def get_all_petak(perusahaan: Perusahaan = Depends(get_perusahaan)):
+    data = await Petak.filter(perusahaan=perusahaan).prefetch_related("blok")
+    return data
+
+
+@router.get(
+    "/Petak/{id}",
+    response_model=schemas.PetakSchema,
+    status_code=status.HTTP_200_OK,
+)
+async def get_petak(id: str, perusahaan: Perusahaan = Depends(get_perusahaan)):
+    data = await Petak.filter(id=id, perusahaan=perusahaan).first()
+    if not data:
+        raise HTTPException(status_code=404, detail="Data tidak ditemukan")
+
+    await data.fetch_related("blok")
+    return data
+
+
+@router.put(
+    "/Petak/{id}",
+    status_code=status.HTTP_200_OK,
+    response_model=Response,
+)
+async def update_petak(
+    id: str,
+    data: schemas.PetakInSchema,
+    perusahaan: Perusahaan = Depends(get_perusahaan),
+):
+
+    updated_count = await Petak.filter(id=id, perusahaan=perusahaan).update(
+        **data.model_dump(exclude_unset=True)
+    )
+    if updated_count == 0:
+        raise HTTPException(status_code=404, detail="Petak not found")
+    return Response(message="Data berhasil diupdate")
+
+
+@router.delete(
+    "/Petak/{id}",
+    status_code=status.HTTP_200_OK,
+    response_model=Response,
+)
+async def delete_petak(id: str, perusahaan: Perusahaan = Depends(get_perusahaan)):
+    petak = await Petak.get_or_none(id=id, perusahaan=perusahaan)
+    if petak:
+        await petak.delete()
+        return Response(message="Data berhasil dihapus")
+    raise HTTPException(
+        status_code=status.HTTP_404_NOT_FOUND, detail="Data tidak ditemukan"
+    )
+
+
+@router.post(
+    "/Ganis/",
+    status_code=status.HTTP_201_CREATED,
+    response_model=schemas.GanisSchema,
+)
+async def create_ganis(
+    data: schemas.GanisInSchema,
+    perusahaan: Perusahaan = Depends(get_perusahaan),
+):
+    data = data.model_dump()
+    data["perusahaan_id"] = perusahaan
+    try:
+        return await Ganis.create(**data)
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+
+@router.get(
+    "/Ganis/GetAll",
+    response_model=List[schemas.GanisSchema],
+    status_code=status.HTTP_200_OK,
+)
+async def get_all_ganis(perusahaan: Perusahaan = Depends(get_perusahaan)):
+    data = await Ganis.filter(perusahaan=perusahaan).prefetch_related("jabatan")
+    return data
+
+
+@router.get(
+    "/Ganis/{id}",
+    response_model=schemas.GanisSchema,
+    status_code=status.HTTP_200_OK,
+)
+async def get_ganis(id: str, perusahaan: Perusahaan = Depends(get_perusahaan)):
+    data = await Ganis.filter(id=id, perusahaan=perusahaan).first()
+    if not data:
+        raise HTTPException(status_code=404, detail="Data tidak ditemukan")
+    await data.fetch_related("jabatan")
+    return data
+
+
+@router.put(
+    "/Ganis/{id}",
+    status_code=status.HTTP_200_OK,
+    response_model=Response,
+)
+async def update_ganis(
+    id: str,
+    data: schemas.GanisInSchema,
+    perusahaan: Perusahaan = Depends(get_perusahaan),
+):
+
+    updated_count = await Ganis.filter(id=id, perusahaan=perusahaan).update(
+        **data.model_dump(exclude_unset=True)
+    )
+    if updated_count == 0:
+        raise HTTPException(status_code=404, detail="Ganis not found")
+    return Response(message="Data berhasil diupdate")
+
+
+@router.delete(
+    "/Ganis/{id}",
+    status_code=status.HTTP_200_OK,
+    response_model=Response,
+)
+async def delete_ganis(id: str, perusahaan: Perusahaan = Depends(get_perusahaan)):
+    ganis = await Ganis.get_or_none(id=id, perusahaan=perusahaan)
+    if ganis:
+        await ganis.delete()
+        return Response(message="Data berhasil dihapus")
+    raise HTTPException(
+        status_code=status.HTTP_404_NOT_FOUND, detail="Data tidak ditemukan"
+    )

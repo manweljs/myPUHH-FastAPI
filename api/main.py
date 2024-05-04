@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from db import init_db
 from account.views import router as account_routes
 from parameter.views import router as parameter_routes
+from umum.views import router as umum_routes
 
 
 def create_application() -> FastAPI:
@@ -15,6 +16,7 @@ app = create_application()
 
 app.include_router(account_routes)
 app.include_router(parameter_routes)
+app.include_router(umum_routes)
 
 
 @app.on_event("startup")

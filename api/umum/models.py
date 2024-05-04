@@ -2,6 +2,7 @@ from uuid import uuid4, UUID
 from tortoise.models import Model
 from tortoise import fields
 from datetime import datetime
+from consts import TARIF_TYPE
 
 
 class CustomModel(Model):
@@ -44,3 +45,38 @@ class JabatanGanis(CustomModel):
 
     class Meta:
         table = "jabatan_ganis"
+
+
+class KelompokJenis(CustomModel):
+    nama = fields.CharField(255)
+
+    class Meta:
+        table = "kelompok_jenis"
+
+
+class Jenis(CustomModel):
+    nama = fields.CharField(255)
+    kelompok_jenis = fields.CharField(255)
+
+    class Meta:
+        table = "jenis"
+
+
+class Sortimen(CustomModel):
+    nama = fields.CharField(255)
+
+    class Meta:
+        table = "sortimen"
+
+
+class Tarif(CustomModel):
+    nama = fields.CharField(255)
+    jenis_tarif = fields.IntField(default=TARIF_TYPE.PSDH.value)
+    kelompok_jenis = fields.ForeignKeyField(
+        "models.KelompokJenis", on_delete=fields.CASCADE
+    )
+    sortimen = fields.ForeignKeyField("models.Sortimen", on_delete=fields.CASCADE)
+    harga = fields.FloatField(default=0)
+
+    class Meta:
+        table = "tarif"
