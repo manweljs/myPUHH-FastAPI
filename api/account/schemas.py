@@ -53,7 +53,7 @@ class KabupatenBase(PydanticModel):
     nama: str
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 
 class PerusahaanSchema(PydanticModel):
@@ -64,7 +64,7 @@ class PerusahaanSchema(PydanticModel):
     kabupaten: Optional[KabupatenBase]  # Nested model untuk Kabupaten
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 
 class PerusahaanIn(PydanticModel):

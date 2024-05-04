@@ -5,7 +5,8 @@ from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from typing import Optional, List
 import datetime
 from passlib.context import CryptContext
-from utils.tokens import create_access_token, get_current_user
+from utils.tokens import create_access_token, get_current_user, get_perusahaan
+from consts import ROLE
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
@@ -89,7 +90,11 @@ async def token(
     status_code=status.HTTP_201_CREATED,
     response_model=schemas.PerusahaanSchema,
 )
-async def create_perusahaan(data: schemas.PerusahaanIn):
+async def create_perusahaan(
+    data: schemas.PerusahaanIn, user: User = Depends(get_current_user)
+):
+    if user.role != ROLE.ADMIN.value:
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Forbidden")
     perusahaan = await Perusahaan.create(**data.model_dump(exclude_unset=True))
     return await perusahaan
 
@@ -100,8 +105,10 @@ async def create_perusahaan(data: schemas.PerusahaanIn):
     description="Get perusahaan by ID",
     response_model=schemas.PerusahaanSchema,
 )
-async def get_perusahaan(id: str):
-    perusahaan = await Perusahaan.get_or_none(id=id)
+async def get_perusahaan(perusahaan: Perusahaan = Depends(get_perusahaan)):
+    perusahaan = await Perusahaan.get_or_none(id=perusahaan).prefetch_related(
+        "kabupaten"
+    )
     return perusahaan
 
 
@@ -111,6 +118,8 @@ async def get_perusahaan(id: str):
     response_model=List[schemas.PerusahaanSchema],
     description="Get all perusahaan",
 )
-async def get_all_perusahaan():
+async def get_all_perusahaan(user: User = Depends(get_current_user)):
+    if user.role != ROLE.ADMIN.value:
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Forbidden")
     perusahaan = await Perusahaan.all().prefetch_related("kabupaten")
     return perusahaan

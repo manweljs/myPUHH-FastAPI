@@ -1,13 +1,13 @@
 from fastapi import FastAPI
-
 from db import init_db
-from tortoise.contrib.fastapi import register_tortoise
 from account.views import router as account_routes
 from parameter.views import router as parameter_routes
 
 
 def create_application() -> FastAPI:
-    application = FastAPI()
+    application = FastAPI(
+        title="myPUHH API", swagger_ui_parameters={"persistAuthorization": True}
+    )
     return application
 
 

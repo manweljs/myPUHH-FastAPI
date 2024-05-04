@@ -16,7 +16,6 @@ class TahunKegiatan(PydanticModel):
     tahun: int
     tanggal_mulai: date
     tanggal_selesai: date
-    perusahaan: BasePerusahaan
 
     class Config:
         from_attributes = True
@@ -76,7 +75,7 @@ class BlokSchema(PydanticModel):
 
 class BlokInSchema(PydanticModel):
     nama: str
-    tahun_id: UUID
+    tahun_id: str
 
     class Config:
         from_attributes = True

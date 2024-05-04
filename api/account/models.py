@@ -17,7 +17,7 @@ class User(CustomModel):
     role = fields.CharField(max_length=50, default=ROLE.OPERATOR)
 
     class Meta:
-        table = "users"
+        table = "user"
 
     def __str__(self):
         return self.username

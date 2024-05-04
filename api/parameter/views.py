@@ -1,11 +1,13 @@
 from fastapi_crudrouter.core.tortoise import TortoiseCRUDRouter
-from .models import TahunKegiatan, TPK
+from .models import TahunKegiatan, TPK, Blok
 from fastapi import APIRouter, status, Depends, HTTPException
 from typing import List
 from utils.tokens import get_current_user, User, get_perusahaan
 from . import schemas
 from umum.schemas import Response
 from account.schemas import PerusahaanSchema as Perusahaan
+from utils.decorators import login_required
+from uuid import UUID
 
 
 router = APIRouter(tags=["Parameter"], prefix="/api/Parameter")
@@ -234,13 +236,16 @@ async def delete_TPn(id: str, perusahaan: Perusahaan = Depends(get_perusahaan)):
     status_code=status.HTTP_201_CREATED,
     response_model=schemas.BlokSchema,
 )
-async def create_Blok(
-    data: schemas.BlokInSchema, perusahaan: Perusahaan = Depends(get_perusahaan)
+async def create_blok(
+    data: schemas.BlokInSchema,
+    perusahaan: Perusahaan = Depends(get_perusahaan),
 ):
     blok = data.model_dump()
-    blok["perusahaan_id"] = perusahaan
+    blok["perusahaan_id"] = str(perusahaan)
     try:
-        return await TPK.create(**blok)
+        created_blok = await Blok.create(**blok)
+        await created_blok.fetch_related("tahun", "perusahaan")
+        return created_blok
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
@@ -250,6 +255,19 @@ async def create_Blok(
     response_model=List[schemas.BlokSchema],
     status_code=status.HTTP_200_OK,
 )
-async def get_all_Blok(perusahaan: Perusahaan = Depends(get_perusahaan)):
-    data = await TPK.filter(perusahaan=perusahaan).prefetch_related("tahunkegiatan")
+async def get_all_blok(perusahaan: Perusahaan = Depends(get_perusahaan)):
+    data = await Blok.filter(perusahaan=perusahaan).prefetch_related("tahun")
+    return data
+
+
+@router.get(
+    "/Blok/{id}",
+    response_model=schemas.BlokSchema,
+    status_code=status.HTTP_200_OK,
+)
+async def get_blok(id: str, perusahaan: Perusahaan = Depends(get_perusahaan)):
+    data = await Blok.filter(id=id, perusahaan=perusahaan).first()
+    await data.fetch_related("tahun")
+    if not data:
+        raise HTTPException(status_code=404, detail="Data tidak ditemukan")
     return data
