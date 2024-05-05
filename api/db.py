@@ -12,19 +12,21 @@ DB_NAME = os.getenv("DB_NAME")
 
 DATABASE_URL = f"postgres://{DB_USER}:{DB_PASSWORD}@host.docker.internal:5432/{DB_NAME}"
 
+model_list = [
+    "account.models",
+    "umum.models",
+    "parameter.models",
+    "cruising.models",
+    "produksi.models",
+    "angkutan.models",
+    "aerich.models",
+]
+
 tortoise_config = {
     "connections": {"default": DATABASE_URL},
     "apps": {
         "models": {
-            "models": [
-                "account.models",
-                "umum.models",
-                "parameter.models",
-                "cruising.models",
-                "produksi.models",
-                "angkutan.models",
-                "aerich.models",
-            ],
+            "models": model_list,
             "default_connection": "default",
         },
     },

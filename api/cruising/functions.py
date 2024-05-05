@@ -25,7 +25,7 @@ async def get_upload_barcodes_from_file(file_url: str) -> list:
 
             # Menggunakan Pandas untuk membaca data dari memory
             data = io.BytesIO(body)
-            df = pd.read_csv(data, usecols=[0])
+            df = pd.read_csv(data, usecols=[0], header=None)
             barcodes = df.iloc[:, 0].tolist()
             return barcodes
         else:

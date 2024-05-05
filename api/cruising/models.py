@@ -9,15 +9,21 @@ class LHC(CustomModel):
     tahun = fields.ForeignKeyField("models.TahunKegiatan", on_delete=fields.CASCADE)
     tanggal = fields.DateField()
     obyek = fields.IntField(default=OBYEK.BLOK_PETAK.value)
+    barcode = fields.ReverseRelation["Barcode"]
 
     class Meta:
         table = "lhc"
+
+    class PydanticMeta:
+        exclude = ("perusahaan", "tahun")
 
 
 class Barcode(CustomModel):
     perusahaan = fields.ForeignKeyField("models.Perusahaan", on_delete=fields.CASCADE)
     barcode = fields.CharField(255, unique=True)
-    lhc = fields.ForeignKeyField("models.LHC", on_delete=fields.CASCADE)
+    lhc = fields.ForeignKeyField(
+        "models.LHC", on_delete=fields.CASCADE, related_name="barcode"
+    )
     rencana_tebang = fields.ForeignKeyField(
         "models.RencanaTebang", on_delete=fields.SET_NULL, null=True
     )
@@ -33,6 +39,12 @@ class Barcode(CustomModel):
 
     class Meta:
         table = "barcode"
+
+    class PydanticMeta:
+        include = (
+            "barcode",
+            "id",
+        )
 
 
 class RencanaTebang(CustomModel):

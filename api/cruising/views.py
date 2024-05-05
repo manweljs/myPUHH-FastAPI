@@ -28,19 +28,25 @@ async def create_lhc(
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
 
 
-@router.get("/LHC/GetAll", response_model=List[schemas.LHC])
+@router.get("/LHC/GetAll", response_model=List[schemas.LHCPydantic])
 async def get_all_lhc(perusahaan: Perusahaan = Depends(get_perusahaan)):
-    lhc = await LHC.filter(perusahaan=perusahaan).prefetch_related("tahun")
+    lhc = await LHC.filter(perusahaan=perusahaan).prefetch_related("tahun", "barcode")
     return lhc
 
 
 @router.get("/LHC/{id}", response_model=schemas.LHC)
 async def get_lhc(id: UUID, perusahaan: Perusahaan = Depends(get_perusahaan)):
-    lhc = await LHC.get_or_none(id=id, perusahaan=perusahaan).prefetch_related("tahun")
+    start_time = time.time()
+    lhc = await LHC.get_or_none(id=id, perusahaan=perusahaan).prefetch_related(
+        "tahun", "barcode"
+    )
     if not lhc:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="LHC not found"
         )
+    end_time = time.time()  # Waktu selesai proses
+    duration = end_time - start_time  # Durasi proses
+    print(f"Duration to process : {duration:.2f} seconds.")
     return lhc
 
 
@@ -103,5 +109,10 @@ async def upload_barcode(
 
 @router.get("/Barcode/GetAll", response_model=List[schemas.Barcode])
 async def get_all_barcode(perusahaan: Perusahaan = Depends(get_perusahaan)):
+    start_time = time.time()
+
     barcode = await Barcode.filter(perusahaan=perusahaan)
+    end_time = time.time()  # Waktu selesai proses
+    duration = end_time - start_time  # Durasi proses
+    print(f"Duration to process : {duration:.2f} seconds.")
     return barcode
