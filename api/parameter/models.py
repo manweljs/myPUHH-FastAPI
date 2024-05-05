@@ -1,7 +1,5 @@
 from uuid import uuid4, UUID
-from tortoise.models import Model
 from tortoise import fields
-from datetime import datetime
 from umum.models import CustomModel
 from consts import KATEGORI_TPK
 
@@ -77,6 +75,20 @@ class Ganis(CustomModel):
 
     class Meta:
         table = "ganis"
+
+    def __str__(self):
+        return self.nama
+
+
+class PerusahaanPembeli(CustomModel):
+    nama = fields.CharField(255)
+    alamat = fields.CharField(255, null=True)
+    kabupaten = fields.ForeignKeyField(
+        "models.Kabupaten", on_delete=fields.SET_NULL, null=True
+    )
+
+    class Meta:
+        table = "perusahaan_pembeli"
 
     def __str__(self):
         return self.nama
