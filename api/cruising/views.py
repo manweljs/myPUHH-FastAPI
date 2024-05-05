@@ -10,6 +10,7 @@ from uuid import UUID
 from .functions import get_upload_barcodes_from_file
 import time
 from tortoise.transactions import in_transaction
+from utils.decorators import timing_decorator
 
 router = APIRouter(tags=["Cruising"], prefix="/api/Cruising")
 
@@ -108,11 +109,7 @@ async def upload_barcode(
 
 
 @router.get("/Barcode/GetAll", response_model=List[schemas.Barcode])
+@timing_decorator
 async def get_all_barcode(perusahaan: Perusahaan = Depends(get_perusahaan)):
-    start_time = time.time()
-
     barcode = await Barcode.filter(perusahaan=perusahaan)
-    end_time = time.time()  # Waktu selesai proses
-    duration = end_time - start_time  # Durasi proses
-    print(f"Duration to process : {duration:.2f} seconds.")
     return barcode
