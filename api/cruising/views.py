@@ -180,17 +180,11 @@ async def delete_rencana_tebang(
 
 
 # CRUD Pohon
-
-
 @router.post(
     "/UploadPohon",
     response_model=schemas.Pohon,
     tags=["Cruising", "Upload"],
-    description="""Endpoint untuk menambahkan data pohon,
-    file yang diupload harus berupa file csv yang berisi list pohon,
-    dan request yg dikirimkan menyertakan url file csv yang diupload.
-    - template file : https://mypuhh.s3.ap-southeast-1.amazonaws.com/uploads/template_upload_pohon.csv
-    """,
+    description="## Endpoint untuk menambahkan data pohon\n\nfile yang diupload harus berupa file csv yang berisi list pohon, dan request yg dikirimkan menyertakan _file url_ .csv yang diupload.\n\n**template file** : [Download](https://mypuhh.s3.ap-southeast-1.amazonaws.com/uploads/template_upload_pohon.csv)",
 )
 async def upload_pohon(
     data: schemas.UploadPohonIn, perusahaan: Perusahaan = Depends(get_perusahaan)
