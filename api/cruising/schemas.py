@@ -87,3 +87,60 @@ class UploadBarcodeIn(PydanticModel):
 
     class Config:
         from_attributes = True
+
+
+class RencanaTebang(PydanticModel):
+    id: UUID
+    nomor: str
+    tahun_id: UUID
+    obyek: int
+    tanggal: date
+    faktor: float
+
+    class Config:
+        from_attributes = True
+
+
+class RencanaTebangIn(PydanticModel):
+    nomor: str
+    tahun_id: UUID
+    obyek: int
+    tanggal: date
+    faktor: float
+
+    class Config:
+        from_attributes = True
+
+
+class UploadPohonIn(PydanticModel):
+    file_url: str
+
+    class Config:
+        from_attributes = True
+
+
+class Pohon(PydanticModel):
+    id: UUID
+    nomor: str
+
+    class Config:
+        from_attributes = True
+
+
+class PohonIn(PydanticModel):
+    nomor: str
+    barcode_id: UUID
+    petak_id: UUID
+    jalur: Optional[str]
+    araj_jalur: Optional[str]
+    panjang_jalur: Optional[int]
+    jenis_id: UUID
+    tinggi: Optional[float]
+    diameter: Optional[float]
+    volume: Optional[float]
+    sortimen: Optional[int]
+    koordinat_x: Optional[float]
+    koordinat_y: Optional[float]
+
+    class Config:
+        from_attributes = True
