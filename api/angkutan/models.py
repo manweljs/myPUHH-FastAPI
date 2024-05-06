@@ -15,7 +15,7 @@ class DKBAngkutan(CustomModel):
         "models.TPK", on_delete=fields.CASCADE, related_name="tpk_tujuan"
     )
     alat_angkut = fields.IntField(default=ALAT_ANGKUT.LOGGING_TRUCK.value)
-    nama_alat_angkut = fields.CharField(255)
+    nama_alat_angkut = fields.CharField(255, null=True)
     dokumen_url = fields.TextField(null=True)
     barcodes = fields.ManyToManyField(
         "models.Barcode", related_name="dkb_angkutan", through="DKBBarcode"

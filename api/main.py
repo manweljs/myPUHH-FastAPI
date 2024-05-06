@@ -4,6 +4,7 @@ from account.views import router as account_routes
 from parameter.views import router as parameter_routes
 from umum.views import router as umum_routes
 from cruising.views import router as cruising_routes
+from angkutan.views import router as angkutan_routes
 
 
 def create_application() -> FastAPI:
@@ -20,6 +21,7 @@ app.include_router(account_routes)
 app.include_router(parameter_routes)
 app.include_router(umum_routes)
 app.include_router(cruising_routes)
+app.include_router(angkutan_routes)
 
 
 @app.on_event("startup")
