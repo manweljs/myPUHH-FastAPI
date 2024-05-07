@@ -85,3 +85,11 @@ class TarifSchema(PydanticModel):
 
     class Config:
         from_attributes = True
+
+
+class KelasDiameterSchema(PydanticModel):
+    id: UUID
+    nama: str
+
+    class Config:
+        from_attributes = True

@@ -17,13 +17,13 @@ DATABASE_URL = f"postgres://{DB_USER}:{ENCODED_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB
 
 
 model_list = [
+    "aerich.models",
     "account.models",
     "umum.models",
     "parameter.models",
     "cruising.models",
     "produksi.models",
     "angkutan.models",
-    "aerich.models",
 ]
 
 

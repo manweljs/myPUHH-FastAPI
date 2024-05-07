@@ -58,7 +58,9 @@ class Pohon(CustomModel):
     tinggi = fields.FloatField()
     diameter = fields.FloatField()
     volume = fields.FloatField()
-    sortimen = fields.IntField(default=SORTIMEN.KB.value)
+    kelas_diameter = fields.ForeignKeyField(
+        "models.KelasDiameter", on_delete=fields.SET_NULL, null=True
+    )
     koordinat_x = fields.FloatField(null=True)
     koordinat_y = fields.FloatField(null=True)
     barcode = fields.ReverseRelation["BarcodePohon"]

@@ -61,19 +61,19 @@ class Jenis(CustomModel):
         table = "jenis"
 
 
-class Sortimen(CustomModel):
-    nama = fields.CharField(255)
-
-    class Meta:
-        table = "sortimen"
-
-
 class Tarif(CustomModel):
     nama = fields.CharField(255)
     jenis_tarif = fields.IntField(default=TARIF_TYPE.PSDH.value)
     kelompok_jenis = fields.IntField(default=KELOMPOK_JENIS.KELOMPOK_MERANTI.value)
-    sortimen = fields.IntField(default=SORTIMEN.KB.value)
+    sortimen = fields.CharField(3, default=SORTIMEN.KB.value)
     harga = fields.FloatField(default=0)
 
     class Meta:
         table = "tarif"
+
+
+class KelasDiameter(Model):
+    nama = fields.CharField(255)
+
+    class Meta:
+        table = "kelas_diameter"

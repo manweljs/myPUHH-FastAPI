@@ -26,7 +26,7 @@ class BukuUkurInSchema(PydanticModel):
         from_attributes = True
 
 
-class TebanganSchema(PydanticModel):
+class DKSchema(PydanticModel):
     id: UUID
     buku_ukur_id: UUID
     barcode: BaseBarcodeSchema
@@ -47,7 +47,7 @@ class TebanganSchema(PydanticModel):
         from_attributes = True
 
 
-class TebanganInSchema(PydanticModel):
+class DKInSchema(PydanticModel):
     buku_ukur_id: UUID
     petak: Optional[UUID]
     barcode: BaseBarcodeSchema
@@ -63,6 +63,28 @@ class TebanganInSchema(PydanticModel):
     volume: float
     potongan: Optional[str]
     sortimen: str
+
+    class Config:
+        from_attributes = True
+
+
+class LHPSchema(PydanticModel):
+    id: UUID
+    perusahaan: UUID
+    tahun: UUID
+    nomor: str
+    tanggal: date
+    obyek: int
+
+    class Config:
+        from_attributes = True
+
+
+class LHPInSchema(PydanticModel):
+    tahun: UUID
+    nomor: str
+    tanggal: date
+    obyek: int
 
     class Config:
         from_attributes = True

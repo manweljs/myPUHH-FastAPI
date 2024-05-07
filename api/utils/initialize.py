@@ -1,5 +1,6 @@
-from account.models import User, Perusahaan
+from fastapi import APIRouter
 from consts import ROLE
+from account.models import User, Perusahaan
 from passlib.context import CryptContext
 
 # Inisialisasi objek CryptContext dengan algoritma bcrypt
@@ -15,12 +16,17 @@ role = ROLE.ADMIN.value
 
 nama_perusahaan = "PT. Mardhika Insan Mulia"
 
+router = APIRouter(prefix="/initapp")
 
-async def init_app():
+
+@router.post("/", tags=["default"], include_in_schema=False)
+async def init_app(params: str):
+
+    if params != "123":
+        return {"message": "Invalid parameter"}
+
     perusahaan = await Perusahaan.create(nama=nama_perusahaan)
-
     hashed_password = pwd_context.hash(password)
-
     user = await User.create(
         email=email,
         username=username,
@@ -31,3 +37,5 @@ async def init_app():
         role=role,
         perusahaan=perusahaan,
     )
+
+    return {"message": "App initialized!"}

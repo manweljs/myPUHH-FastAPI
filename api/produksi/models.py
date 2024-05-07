@@ -16,11 +16,11 @@ class BukuUkur(CustomModel):
         return self.nomor
 
 
-class Tebangan(CustomModel):
+class DK(CustomModel):
     perusahaan = fields.ForeignKeyField("models.Perusahaan", on_delete=fields.CASCADE)
     buku_ukur = fields.ForeignKeyField("models.BukuUkur", on_delete=fields.CASCADE)
     barcode = fields.ForeignKeyField(
-        "models.Barcode", on_delete=fields.SET_NULL, null=True, related_name="tebangan"
+        "models.Barcode", on_delete=fields.SET_NULL, null=True, related_name="dk"
     )
     petak = fields.ForeignKeyField("models.Petak", on_delete=fields.SET_NULL, null=True)
     nomor = fields.IntField()
@@ -35,9 +35,10 @@ class Tebangan(CustomModel):
     volume = fields.FloatField()
     potongan = fields.CharField(2, null=True)
     sortimen = fields.CharField(3, default=SORTIMEN.KB.value)
+    lhp = fields.ForeignKeyField("models.LHP", on_delete=fields.SET_NULL, null=True)
 
     class Meta:
-        table = "tebangan"
+        table = "DK"
 
     def __str__(self) -> str:
         return str(self.nomor)
@@ -55,11 +56,3 @@ class LHP(CustomModel):
 
     def __str__(self) -> str:
         return self.nomor
-
-
-class DKBLHP(CustomModel):
-    lhp = fields.ForeignKeyField("models.LHP", on_delete=fields.CASCADE)
-    tebangan = fields.ForeignKeyField("models.Tebangan", on_delete=fields.CASCADE)
-
-    class Meta:
-        table = "lhp_tebangan"

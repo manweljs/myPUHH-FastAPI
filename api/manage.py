@@ -1,6 +1,7 @@
 import sys
 import asyncio
 import subprocess
+from utils.functions import init_app
 
 
 async def makemigrations():
@@ -18,6 +19,8 @@ if __name__ == "__main__":
             asyncio.run(makemigrations())
         elif command == "migrate":
             asyncio.run(migrate())
+        elif command == "initapp":
+            asyncio.run(init_app())
         else:
             print("Unknown command")
     else:

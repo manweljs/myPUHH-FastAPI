@@ -5,10 +5,13 @@ from parameter.views import router as parameter_routes
 from umum.views import router as umum_routes
 from cruising.views import router as cruising_routes
 from angkutan.views import router as angkutan_routes
+from produksi.views import router as produksi_routes
+from utils.initialize import router as init_app
 
 
 def create_application() -> FastAPI:
     application = FastAPI(
+        docs_url="/",
         title="myPUHH API",
         swagger_ui_parameters={"persistAuthorization": True, "docExpansion": "none"},
     )
@@ -22,6 +25,8 @@ app.include_router(parameter_routes)
 app.include_router(umum_routes)
 app.include_router(cruising_routes)
 app.include_router(angkutan_routes)
+app.include_router(produksi_routes)
+app.include_router(init_app)
 
 
 @app.on_event("startup")

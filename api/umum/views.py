@@ -1,4 +1,5 @@
 from .models import (
+    KelasDiameter,
     Propinsi,
     Kabupaten,
     RencanaTebangType,
@@ -6,7 +7,6 @@ from .models import (
     JabatanGanis,
     KelompokJenis,
     Jenis,
-    Sortimen,
     Tarif,
 )
 from fastapi import APIRouter, status
@@ -88,13 +88,13 @@ async def get_all_jenis():
 
 
 @router.get(
-    "/Sortimen",
+    "/KelasDiameter",
     status_code=status.HTTP_200_OK,
-    response_model=List[schemas.SortimenSchema],
+    response_model=List[schemas.KelasDiameterSchema],
 )
-async def get_all_sortimen():
-    sortimen = await Sortimen.all()
-    return sortimen
+async def get_all_kelas_diameter():
+    kelas_diameter = await KelasDiameter.all()
+    return kelas_diameter
 
 
 @router.get(
