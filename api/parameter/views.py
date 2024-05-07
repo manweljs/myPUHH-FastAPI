@@ -1,13 +1,10 @@
-from fastapi_crudrouter.core.tortoise import TortoiseCRUDRouter
 from .models import TahunKegiatan, TPK, Blok, Petak, Ganis
 from fastapi import APIRouter, status, Depends, HTTPException
 from typing import List
-from utils.tokens import get_current_user, User, get_perusahaan
+from utils.tokens import get_perusahaan
 from . import schemas
 from umum.schemas import Response
 from account.schemas import PerusahaanSchema as Perusahaan
-from utils.decorators import login_required
-from uuid import UUID
 
 
 router = APIRouter(tags=["Parameter"], prefix="/api/Parameter")

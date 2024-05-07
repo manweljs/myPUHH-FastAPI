@@ -1,5 +1,5 @@
 from fastapi import Depends, HTTPException, status
-from account.models import User, Perusahaan
+from account.models import User
 from .tokens import get_current_user
 import functools
 import time

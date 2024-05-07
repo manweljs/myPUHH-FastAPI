@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from db import init_db
+from config.db import init_db
 from account.views import router as account_routes
 from parameter.views import router as parameter_routes
 from umum.views import router as umum_routes

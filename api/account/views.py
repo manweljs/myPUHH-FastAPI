@@ -1,9 +1,8 @@
 from .models import User, Perusahaan
 from . import schemas
 from fastapi import HTTPException, status, APIRouter, Depends
-from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
-from typing import Optional, List
-import datetime
+from fastapi.security import OAuth2PasswordRequestForm
+from typing import List
 from passlib.context import CryptContext
 from utils.tokens import create_access_token, get_current_user, get_perusahaan
 from consts import ROLE

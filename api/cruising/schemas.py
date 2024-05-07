@@ -1,15 +1,11 @@
 from tortoise.contrib.pydantic.base import PydanticModel
 from typing import Optional, List
-from uuid import UUID, uuid4
-from tortoise.contrib.pydantic import pydantic_model_creator
-from . import models
+from uuid import UUID
 from datetime import date
 from parameter.schemas import TahunKegiatan
-from fastapi import UploadFile
-from pydantic import Field
 from tortoise import Tortoise
-from db import model_list
-from pydantic import root_validator, BaseModel, validator
+from config.db import model_list
+from pydantic import BaseModel
 
 Tortoise.init_models(model_list, "models")
 
@@ -24,7 +20,7 @@ class BaseLHC(PydanticModel):
         from_attributes = True
 
 
-class BaseBarcode(PydanticModel):
+class BaseBarcodeSchema(PydanticModel):
     barcode: str
 
     class Config:
@@ -37,7 +33,7 @@ class LHC(PydanticModel):
     tahun: TahunKegiatan
     tanggal: date
     obyek: int
-    barcode: List[BaseBarcode]
+    barcode: List[BaseBarcodeSchema]
 
     class Config:
         from_attributes = True

@@ -1,12 +1,9 @@
 import os
 from datetime import datetime, timedelta
-from typing import Annotated
-
-from fastapi import Depends, FastAPI, HTTPException, status
-from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
-from jose import JWTError, jwt
+from fastapi import Depends, HTTPException
+from fastapi.security import OAuth2PasswordBearer
+from jose import jwt
 from passlib.context import CryptContext
-from pydantic import BaseModel
 from pytz import utc
 from fastapi import Depends, HTTPException
 from fastapi.security import OAuth2PasswordBearer

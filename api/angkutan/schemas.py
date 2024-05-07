@@ -1,15 +1,8 @@
 from tortoise.contrib.pydantic.base import PydanticModel
 from typing import Optional, List
-from uuid import UUID, uuid4
-from tortoise.contrib.pydantic import pydantic_model_creator
-from . import models
+from uuid import UUID
 from datetime import date
-from parameter.schemas import TahunKegiatan
-from fastapi import UploadFile
-from pydantic import Field
-from tortoise import Tortoise
-from db import model_list
-from pydantic import root_validator, BaseModel, validator
+
 
 # membuat schema untuk model angkutan
 

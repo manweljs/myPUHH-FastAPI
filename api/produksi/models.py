@@ -19,22 +19,22 @@ class BukuUkur(CustomModel):
 class Tebangan(CustomModel):
     perusahaan = fields.ForeignKeyField("models.Perusahaan", on_delete=fields.CASCADE)
     buku_ukur = fields.ForeignKeyField("models.BukuUkur", on_delete=fields.CASCADE)
-    petak = fields.ForeignKeyField("models.Petak", on_delete=fields.SET_NULL, null=True)
     barcode = fields.ForeignKeyField(
         "models.Barcode", on_delete=fields.SET_NULL, null=True, related_name="tebangan"
     )
+    petak = fields.ForeignKeyField("models.Petak", on_delete=fields.SET_NULL, null=True)
     nomor = fields.IntField()
     panjang = fields.FloatField()
     dp = fields.IntField()
     du = fields.IntField()
     diameter = fields.IntField()
     jenis = fields.ForeignKeyField("models.Jenis", on_delete=fields.CASCADE)
-    cacat = fields.IntField(default=CACAT.GEROWONG.value)
+    cacat = fields.IntField(default=CACAT.BAIK.value)
     cacat_cm = fields.IntField(null=True)
     cacat_persen = fields.FloatField(null=True)
     volume = fields.FloatField()
     potongan = fields.CharField(2, null=True)
-    sortimen = fields.IntField(default=SORTIMEN.KB.value)
+    sortimen = fields.CharField(3, default=SORTIMEN.KB.value)
 
     class Meta:
         table = "tebangan"

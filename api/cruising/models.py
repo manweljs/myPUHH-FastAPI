@@ -47,24 +47,9 @@ class Barcode(CustomModel):
         )
 
 
-class RencanaTebang(CustomModel):
-    perusahaan = fields.ForeignKeyField("models.Perusahaan", on_delete=fields.CASCADE)
-    nomor = fields.CharField(255)
-    tahun = fields.ForeignKeyField("models.TahunKegiatan", on_delete=fields.CASCADE)
-    obyek = fields.IntField(default=OBYEK.BLOK_PETAK.value)
-    tanggal = fields.DateField()
-    faktor = fields.FloatField(default=0.7)
-
-    class Meta:
-        table = "rencana_tebang"
-
-
 class Pohon(CustomModel):
     perusahaan = fields.ForeignKeyField("models.Perusahaan", on_delete=fields.CASCADE)
     nomor = fields.IntField()
-    barcode = fields.ForeignKeyField(
-        "models.Barcode", on_delete=fields.SET_NULL, null=True
-    )
     petak = fields.ForeignKeyField("models.Petak", on_delete=fields.CASCADE)
     jalur = fields.CharField(255, null=True)
     arah_jalur = fields.CharField(255, null=True)
@@ -76,6 +61,27 @@ class Pohon(CustomModel):
     sortimen = fields.IntField(default=SORTIMEN.KB.value)
     koordinat_x = fields.FloatField(null=True)
     koordinat_y = fields.FloatField(null=True)
+    barcode = fields.ReverseRelation["BarcodePohon"]
 
     class Meta:
         table = "pohon"
+
+
+class BarcodePohon(CustomModel):
+    barcode = fields.ForeignKeyField("models.Barcode", on_delete=fields.CASCADE)
+    pohon = fields.ForeignKeyField("models.Pohon", on_delete=fields.CASCADE)
+
+    class Meta:
+        table = "barcode_pohon"
+
+
+class RencanaTebang(CustomModel):
+    perusahaan = fields.ForeignKeyField("models.Perusahaan", on_delete=fields.CASCADE)
+    nomor = fields.CharField(255)
+    tahun = fields.ForeignKeyField("models.TahunKegiatan", on_delete=fields.CASCADE)
+    obyek = fields.IntField(default=OBYEK.BLOK_PETAK.value)
+    tanggal = fields.DateField()
+    faktor = fields.FloatField(default=0.7)
+
+    class Meta:
+        table = "rencana_tebang"

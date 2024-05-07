@@ -1,4 +1,3 @@
-from uuid import uuid4, UUID
 from tortoise import fields
 from umum.models import CustomModel
 from consts import KATEGORI_TPK

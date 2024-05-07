@@ -32,9 +32,9 @@ class OBYEK(Enum):
 
 
 class SORTIMEN(Enum):
-    KB = 0
-    KBS = 1
-    KBK = 2
+    KB = "KB"
+    KBS = "KBS"
+    KBK = "KBK"
 
     def __str__(self):
         return self.value
@@ -59,8 +59,9 @@ class ALAT_ANGKUT(Enum):
 
 
 class CACAT(Enum):
-    GEROWONG = 0
-    GUBAL_BUSUK = 1
+    BAIK = 0
+    GEROWONG = 1
+    GUBAL_BUSUK = 2
 
     def __str__(self):
         return self.value

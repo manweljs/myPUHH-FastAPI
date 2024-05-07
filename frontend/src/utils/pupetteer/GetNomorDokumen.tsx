@@ -12,16 +12,17 @@ export const GetNomorDokumen = async (username: string, password: string) => {
         await page.goto('https://sipuhh.phl.menlhk.go.id/auth/login');
 
         // Set screen size
-        await page.setViewport({ width: 1080, height: 1024 });
+        await page.setViewport({ width: 1920, height: 1080 });
 
         // Type into search box
         await page.type('input[name="username"]', username);
         await page.type('input[name="password"]', password);
         await page.click('.btn.btn-success');
+        await page.screenshot({ path: 'check_landing_page.png' });
 
-        await page.waitForNavigation({ waitUntil: 'networkidle0', timeout: timeout })
-        console.log('login success')
+        await page.waitForNavigation({ waitUntil: 'networkidle0' })
 
+        await page.screenshot({ path: 'check_landing_page2.png' });
         // Tunggu elemen <h2> muncul di halaman
         await page.waitForSelector('h2');
 
@@ -53,6 +54,7 @@ export const GetNomorDokumen = async (username: string, password: string) => {
         });
 
         console.log('Header Text:', headerText);
+
 
         // Cek jika teks header adalah 'DKB TPK Hutan'
         if (headerText === 'DKB TPK Hutan') {
@@ -95,14 +97,18 @@ export const GetNomorDokumen = async (username: string, password: string) => {
                 let obj: { [key: string]: string } = {}; // Define obj as an object with string keys and string or string[] values
                 cells.forEach((cell, idx) => {
                     const cellElement = cell as HTMLElement; // Change the type of cell to HTMLElement
+                    if (!cellElement) {
+                        obj[`cell${idx + 1}`] = 'N/A';
+                        return;
+                    }; // Jika sel kosong, isi dengan 'N/A'
                     obj[`cell${idx + 1}`] = cellElement.innerText.trim(); // Menyimpan teks dari sel
                 });
 
                 // Parse data ke dalam format yang diinginkan
                 const dkb = obj['cell4'].split('\n')[0].replace(/No\. /, '').trim();
-                const tanggalPenerbitan = obj['cell4'].split('\n')[1].replace(/Tgl\. /, '').trim();
+                const tanggalPenerbitan = obj['cell4'].split('\n')[1].replace(/Tgl\. /, '').trim() || 'N/A';
                 const nomorDokumen = obj['cell8'];
-                const tanggalDimatikan = obj['cell14'].split('\n')[1].trim();
+                const tanggalDimatikan = obj['cell14'].split('\n')[1].trim() || 'N/A';
 
                 return {
                     dkb,
@@ -113,7 +119,8 @@ export const GetNomorDokumen = async (username: string, password: string) => {
             });
         });
 
-
+        // logout dari sipuhh
+        await page.goto('https://sipuhh.phl.menlhk.go.id/auth/logout', { waitUntil: 'networkidle0', timeout: timeout });
         await browser.close();
         return NextResponse.json({ data: data });
     } catch (error: any) {

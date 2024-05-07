@@ -1,5 +1,3 @@
-from boto3 import client
-from botocore.exceptions import NoCredentialsError
 from aiobotocore.session import get_session
 
 from dotenv import load_dotenv

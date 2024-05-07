@@ -1,9 +1,8 @@
 from tracemalloc import start
-from fastapi_crudrouter.core.tortoise import TortoiseCRUDRouter
 from .models import LHC, Barcode, RencanaTebang, Pohon
 from fastapi import APIRouter, status, Depends, HTTPException
 from typing import List
-from utils.tokens import get_current_user, User, get_perusahaan
+from utils.tokens import get_perusahaan
 from . import schemas
 from umum.schemas import Response
 from account.schemas import PerusahaanSchema as Perusahaan

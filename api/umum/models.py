@@ -1,4 +1,4 @@
-from uuid import uuid4, UUID
+from uuid import uuid4
 from tortoise.models import Model
 from tortoise import fields
 from consts import TARIF_TYPE, SORTIMEN, KELOMPOK_JENIS

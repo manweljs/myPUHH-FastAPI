@@ -8,7 +8,6 @@ from . import schemas
 from umum.schemas import Response
 from account.schemas import PerusahaanSchema as Perusahaan
 from uuid import UUID
-import time
 from tortoise.transactions import in_transaction
 
 router = APIRouter(tags=["Angkutan"], prefix="/api/Angkutan")

@@ -9,14 +9,9 @@ from .models import (
     Sortimen,
     Tarif,
 )
-from fastapi import APIRouter, status, Depends, HTTPException
+from fastapi import APIRouter, status
 from typing import List
-from utils.tokens import get_current_user, User, get_perusahaan
 from . import schemas
-from umum.schemas import Response
-from account.schemas import PerusahaanSchema as Perusahaan
-from utils.decorators import login_required
-from uuid import UUID
 
 
 router = APIRouter(tags=["Umum"], prefix="/api/Umum")

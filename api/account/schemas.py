@@ -1,11 +1,6 @@
-from typing import Optional, List
+from typing import Optional
 from uuid import UUID, uuid4
-from enum import Enum
-from tortoise.contrib.pydantic import pydantic_model_creator
 from tortoise.contrib.pydantic.base import PydanticModel
-from tortoise import Tortoise
-from . import models
-from pydantic import validator
 
 # Tortoise.init_models(["account.models", "umum.models", "parameter.models"], "models")
 
