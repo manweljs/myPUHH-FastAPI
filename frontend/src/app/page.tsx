@@ -1,27 +1,22 @@
-"use client";
 import Image from "next/image";
 import styles from "./page.module.css";
-import { Button } from "antd";
-import { useState } from "react";
+import { ACCESS_TOKEN_KEY, PAGE } from "@/consts";
+import { redirect } from "next/navigation";
+import { cookies } from "next/headers";
+import dynamic from "next/dynamic";
 
-export default function Home() {
+const Home = dynamic(() => import("@/components/home/Home"), { ssr: false });
 
-  const [loading, setLoading] = useState(false);
 
-  const scrape = async () => {
-    setLoading(true);
-    const response = await fetch('/scrap');
-    console.log('response', response)
-    const result = await response.json();
-    console.log('result', result)
-    setLoading(false);
+export default function page() {
+
+  const cookieStore = cookies();
+  const accessToken = cookieStore.get(ACCESS_TOKEN_KEY);
+  if (!accessToken) {
+    redirect(PAGE.LOGIN.URL);
   }
+
   return (
-    <main className={styles.main}>
-      <Button
-        type="primary"
-        loading={loading}
-        onClick={() => scrape()}>Primary Button</Button>
-    </main>
+    <Home />
   );
 }

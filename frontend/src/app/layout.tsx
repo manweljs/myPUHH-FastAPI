@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
+import { _APP } from "./_APP";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -17,7 +18,9 @@ export default function RootLayout({
   const isDev = process.env.NODE_ENV === "development";
   return (
     <html lang="en" suppressHydrationWarning={isDev}>
-      <body className={inter.className} >{children}</body>
+      <_APP>
+        <body className={inter.className} >{children}</body>
+      </_APP>
     </html>
   );
 }

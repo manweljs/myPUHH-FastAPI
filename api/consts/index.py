@@ -65,3 +65,8 @@ class CACAT(Enum):
 
     def __str__(self):
         return self.value
+
+
+allowed_cors_origins = [
+    "http://localhost:3000",
+]

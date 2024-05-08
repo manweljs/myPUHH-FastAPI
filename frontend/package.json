@@ -13,11 +13,13 @@
     "next": "14.2.3",
     "puppeteer": "^22.7.1",
     "react": "^18",
+    "react-cookies": "^0.1.1",
     "react-dom": "^18"
   },
   "devDependencies": {
     "@types/node": "^20",
     "@types/react": "^18",
+    "@types/react-cookies": "^0.1.3",
     "@types/react-dom": "^18",
     "eslint": "^8",
     "eslint-config-next": "14.2.3",

@@ -1,0 +1,138 @@
+body {
+  color: #24292f;
+}
+
+#root {
+  display: grid;
+  grid-template-columns: 180px 1fr;
+  height: 100vh;
+}
+
+#root.public, body.min #root.public {
+  display: block;
+}
+
+body.min #root {
+  grid-template-columns: 65px 1fr;
+}
+body.min #root .navbar .menu {
+  grid-template-columns: 24px;
+}
+
+.home, .setting, .logout, .laporan, .stok,
+.lhc, .lhp, .angkutan, .rencana-tebang {
+  height: 100vh;
+}
+
+.tip {
+  font-size: 0.9em;
+  opacity: 0.8;
+}
+
+.ant-tabs .ant-tabs-nav-list {
+  margin-top: 16px;
+}
+.ant-tabs .ant-tabs-tab {
+  padding: 8px 30px 8px 16px !important;
+  margin: 0 !important;
+}
+
+.field .label {
+  font-size: 0.9em;
+  font-weight: 500;
+}
+
+.field-group {
+  display: flex;
+  gap: 10px;
+}
+
+.w-50 {
+  width: 50% !important;
+}
+
+.w-100 {
+  width: 100% !important;
+}
+
+.modal {
+  display: block;
+}
+.modal .overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: -1;
+  background-color: rgba(0, 0, 0, 0.7);
+  width: 100vw;
+  height: 100vh;
+}
+.modal .modal-box {
+  min-width: 400px;
+  background-color: white;
+  position: absolute;
+  top: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  border-radius: 10px;
+  overflow: hidden;
+}
+.modal .modal-header {
+  padding: 10px 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+.modal .modal-header h3 {
+  font-size: 1.2em;
+}
+.modal .modal-body {
+  padding: 10px 24px 24px 24px;
+}
+
+.ant-table th {
+  text-transform: capitalize;
+}
+.ant-table .ant-table-row .action {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.ant-tabs .ant-tabs-tabpane {
+  padding: 0 !important;
+}
+
+.setting .setting-tab {
+  height: calc(100vh - 50px);
+}
+.setting .main .header {
+  display: flex;
+  justify-content: space-between;
+}
+.setting .main .header h3 {
+  font-size: 1.4em;
+}
+.setting .ant-tabs-content {
+  padding: 10px 24px;
+}
+.setting .setting-Perusahaan .form {
+  width: 500px;
+}
+.setting .setting-Perusahaan .detail-perusahaan h2 {
+  font-size: 2.2em;
+}
+.setting .setting-Perusahaan .detail-perusahaan .name-box {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+.setting .setting-Perusahaan .detail-perusahaan .logo {
+  height: 80px;
+  width: 80px;
+  -o-object-fit: cover;
+     object-fit: cover;
+  -o-object-position: center;
+     object-position: center;
+}/*# sourceMappingURL=setting.css.map */

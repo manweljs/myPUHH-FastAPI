@@ -1,0 +1,86 @@
+@use "../../styles/variables.module" as *
+
+@mixin generate-active-bg-transform($index)
+    .menu:nth-of-type(#{$index}).active ~ .active-nav-bg
+        transform: translateY(calc(#{$index - 1} * 40px))
+
+.navbar
+    width: 100%
+    display: flex
+    flex-direction: column
+    gap: 3px
+    padding: 10px
+    border-right: $border
+    position: relative
+
+    .info-perusahaan
+        display: flex
+        font-size: .85em
+        gap: 10px
+
+    .logo-perusahaan
+        height: 40px
+        width: 40px
+
+    .separator
+        border-top: 1px dashed rgba(0, 0, 0, .1)
+        margin: 10px 0
+
+    .menu
+        align-items: center
+        justify-content: center
+        display: grid
+        grid-template-columns: 30px 1fr
+        padding: 5px 10px
+        border-radius: 16px
+        cursor: pointer
+        height: 40px
+        font-size: .9em
+        transition: .2s
+
+        &:hover
+            background-color: rgba(0, 179, 60, 0.185)
+
+        a
+            color: $text-primary
+
+        .kayulog
+            stroke: var(--primary-text)
+            padding-left: 3px
+
+        &.active
+            // background-color: $primary
+            color: white
+
+            .kayulog circle
+                stroke: white
+                stroke-width: 5px
+
+    .menu i
+        font-size: 1.4em
+        width: 24px
+        height: 24px
+        align-self: center
+        padding: 2px
+
+    .minimize-button .ant-float-btn-icon
+        font-size: 1em!important
+
+    .menu-container
+        position: relative
+
+        @for $i from 1 through 10
+            @include generate-active-bg-transform($i)
+
+.navbar .active-nav-bg
+    background-color: var(--primary)
+    width: 100%
+    height: 40px
+    border-radius: 16px
+    position: absolute
+    top: 0
+    z-index: -1
+    transition: all 0.2s cubic-bezier(0.75, .35, 0.75, 1)
+
+body.min .navbar .active-nav-bg
+    width: 45px
