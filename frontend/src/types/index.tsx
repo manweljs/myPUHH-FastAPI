@@ -14,3 +14,11 @@ export type Perusahaan = {
     logo: string;
 
 }
+
+
+export interface TahunKegiatan {
+    id: string;
+    tahun: number;
+    tanggal_mulai: string;
+    tanggal_selesai: string;
+}

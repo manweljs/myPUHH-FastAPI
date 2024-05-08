@@ -3,7 +3,7 @@ import { Tabs } from 'antd'
 import React, { useEffect } from 'react'
 import "./setting.css"
 import SettingBlok from './SettingBlok'
-import SettingRKT from './SettingRKT'
+import SettingRKT from './ParameterTahunKegiatan'
 import SettingPetak from './SettingPetak'
 import SettingTPn from './SettingTPn'
 import SettingTPK from './SettingTPK'

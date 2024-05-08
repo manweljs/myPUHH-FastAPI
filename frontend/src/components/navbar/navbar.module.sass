@@ -1,0 +1,88 @@
+@mixin generate-active-bg-transform($index)
+    .menu:nth-of-type(#{$index}).active ~ .active_nav_bg
+        transform: translateY(calc(#{$index - 1} * 45px))
+
+.navbar
+    width: 100%
+    display: flex
+    flex-direction: column
+    gap: 3px
+    padding: 10px
+    border-right: 1px solid var(--border-color)
+    position: relative
+    height: 100svh
+    background-color: var(--base-2)
+    color: var(--primary-text)
+
+    .info_perusahaan
+        display: flex
+        font-size: .85em
+        gap: 10px
+
+    .logo_perusahaan
+        height: 40px
+        width: 40px
+
+    .separator
+        border-top: 1px dashed rgba(0, 0, 0, .1)
+        margin: 10px 0
+
+    .menu
+        align-items: center
+        justify-content: center
+        display: grid
+        grid-template-columns: 30px 1fr
+        padding: 5px 10px
+        border-radius: 16px
+        cursor: pointer
+        height: 40px
+        font-size: .9em
+        transition: .2s
+        margin-bottom: 5px
+
+        &:hover
+            background-color: rgba(0, 179, 60, 0.185)
+
+        a
+            color: var(--primary-text)
+        .kayulog
+            stroke: var(--primary-text)
+            padding-left: 3px
+
+        &.active
+            // background-color: $primary
+            color: white
+
+            .kayulog circle
+                stroke: white
+                stroke-width: 5px
+
+    .menu i
+        font-size: 1.4em
+        width: 24px
+        height: 24px
+        align-self: center
+        padding: 2px
+
+    .minimize_button .ant-float-btn-icon
+        font-size: 1em!important
+
+    .menu_container
+        position: relative
+        isolation: isolate
+
+        @for $i from 1 through 10
+            @include generate-active-bg-transform($i)
+
+.navbar .active_nav_bg
+    background-color: var(--primary)
+    width: 100%
+    height: 40px
+    border-radius: 16px
+    position: absolute
+    top: 0
+    z-index: -1
+    transition: all 0.2s cubic-bezier(0.75, .35, 0.75, 1)
+
+body.min .navbar .active_nav_bg
+    width: 45px

@@ -1,5 +1,5 @@
 // UserContext.tsx
-import { GetUser } from '@/api';
+import { GetPerusahaan, GetUser } from '@/api';
 import { PAGE } from '@/consts';
 import { getToken } from '@/functions';
 import { Perusahaan, User } from '@/types';
@@ -15,6 +15,8 @@ type UserContextType = {
     navigate: (path: string) => void;
     page: string;
     setPage: (page: string) => void;
+    minimizeSidebar: boolean;
+    setMinimizeSidebar: Dispatch<SetStateAction<boolean>>;
 };
 
 const defaultState: UserContextType = {
@@ -24,7 +26,9 @@ const defaultState: UserContextType = {
     setPerusahaan: () => { },
     navigate: () => { },
     page: PAGE.HOME.TITLE,
-    setPage: () => { }
+    setPage: () => { },
+    minimizeSidebar: false,
+    setMinimizeSidebar: () => { },
 
 };
 
@@ -34,18 +38,30 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     const [user, setUser] = useState<User | null>(null);
     const [perusahaan, setPerusahaan] = useState<Perusahaan | null>(null)
     const [page, setPage] = useState<string>(PAGE.HOME.TITLE)
+    const [minimizeSidebar, setMinimizeSidebar] = useState<boolean>(false)
 
     const router = useRouter()
 
     const navigate = (path: string) => {
         router.push(path)
     }
-    const value = { user, setUser, perusahaan, setPerusahaan, navigate, page, setPage };
+    const value = {
+        user,
+        setUser,
+        perusahaan,
+        setPerusahaan,
+        navigate,
+        page,
+        setPage,
+        minimizeSidebar,
+        setMinimizeSidebar
+    };
 
     const handleGetUser = async () => {
-        const response = await GetUser()
-        console.log('response', response)
-        setUser(response)
+        const user = await GetUser()
+        const perusahaan = await GetPerusahaan()
+        setUser(user)
+        setPerusahaan(perusahaan)
     }
 
     useEffect(() => {
@@ -55,7 +71,6 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         }
     }, [user]);
 
-    // console.log('user', user)
     return (
         <UserContext.Provider value={value}>
             {children}

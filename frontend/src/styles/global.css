@@ -23350,9 +23350,15 @@ has-background-danger.is-hoverable:active {
 html, body {
   overflow-x: hidden;
   overflow-y: auto;
+  background-color: var(--base-1);
+  color: var(--primary-text);
 }
 
 body.has-navbar {
   display: grid;
   grid-template-columns: 180px auto;
+}
+
+body.has-navbar.min {
+  grid-template-columns: 60px auto;
 }/*# sourceMappingURL=global.css.map */

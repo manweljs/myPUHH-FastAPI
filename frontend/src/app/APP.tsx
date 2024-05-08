@@ -1,20 +1,37 @@
 "use client";
 import Navbar from '@/components/navbar/Navbar';
-import { getToken } from '@/functions';
 import { UserProvider, useUserContext } from '@/hooks/UserContext';
 import { ConfigProvider } from 'antd';
-import React, { useEffect } from 'react'
+import React from 'react'
 
-export function APP({ children, accessToken }: { children: React.ReactNode, accessToken?: string }) {
+interface Props {
+    children: React.ReactNode;
+    accessToken?: string;
+}
 
+export function APP({ children, accessToken }: Props) {
     return (
         <UserProvider>
             <ConfigProvider>
-                <body className={accessToken ? "has-navbar" : "public"} >
+                <Wrapper accessToken={accessToken}>
                     <Navbar />
                     {children}
-                </body>
+                </Wrapper>
             </ConfigProvider>
         </UserProvider>
+    )
+}
+
+
+const Wrapper = ({ children, accessToken }: Props) => {
+    const { minimizeSidebar } = useUserContext()
+    let className = minimizeSidebar ? "min" : ""
+    accessToken ? (className += " has-navbar") : (className += " public")
+
+    console.log('minimizeSidebar', minimizeSidebar)
+    return (
+        <body className={className} >
+            {children}
+        </body>
     )
 }
