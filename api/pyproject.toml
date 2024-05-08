@@ -30,6 +30,9 @@ pandas = "^2.2.2"
 boto3 = "1.34.69"
 botocore = "1.34.69"
 aiobotocore = "2.12.3"
+fastapi-pagination = "^0.12.24"
+aiofiles = "^23.2.1"
+openpyxl = "^3.1.2"
 
 
 

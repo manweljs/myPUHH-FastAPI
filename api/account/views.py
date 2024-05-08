@@ -30,9 +30,9 @@ async def authenticate_user(username, password):
 
 
 @router.post(
-    "/Register", status_code=status.HTTP_201_CREATED, response_model=schemas.User
+    "/Register", status_code=status.HTTP_201_CREATED, response_model=schemas.UserSchema
 )
-async def create_user(data: schemas.CreateUser):
+async def create_user(data: schemas.CreateUserSchema):
     password_hash = pwd_context.hash(data.password)
     user_data = data.model_dump(exclude_unset=True)
     user_data["password"] = password_hash
@@ -47,15 +47,15 @@ async def create_user(data: schemas.CreateUser):
     return await user
 
 
-@router.get("/User", status_code=status.HTTP_200_OK, response_model=schemas.User)
+@router.get("/User", status_code=status.HTTP_200_OK, response_model=schemas.UserSchema)
 async def get_user(user: User = Depends(get_current_user)):
     return await user
 
 
 @router.post(
-    "/Login", status_code=status.HTTP_200_OK, response_model=schemas.LoginResponse
+    "/Login", status_code=status.HTTP_200_OK, response_model=schemas.LoginResponseSchema
 )
-async def login(data: schemas.LoginUser):
+async def login(data: schemas.LoginUserSchema):
     user = await User.get_or_none(username=data.username)
     if not user:
         raise HTTPException(
@@ -72,7 +72,7 @@ async def login(data: schemas.LoginUser):
 @router.post(
     "/Token",
     status_code=status.HTTP_200_OK,
-    response_model=schemas.LoginResponse,
+    response_model=schemas.LoginResponseSchema,
 )
 async def token(
     form_data: OAuth2PasswordRequestForm = Depends(),
@@ -90,7 +90,7 @@ async def token(
     response_model=schemas.PerusahaanSchema,
 )
 async def create_perusahaan(
-    data: schemas.PerusahaanIn, user: User = Depends(get_current_user)
+    data: schemas.PerusahaanInSchema, user: User = Depends(get_current_user)
 ):
     if user.role != ROLE.ADMIN.value:
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Forbidden")
@@ -101,7 +101,7 @@ async def create_perusahaan(
 @router.get(
     "/Perusahaan",
     status_code=status.HTTP_200_OK,
-    description="Get perusahaan by ID",
+    description="Get perusahaan base on user credentials",
     response_model=schemas.PerusahaanSchema,
 )
 async def get_perusahaan(perusahaan: Perusahaan = Depends(get_perusahaan)):
@@ -115,7 +115,7 @@ async def get_perusahaan(perusahaan: Perusahaan = Depends(get_perusahaan)):
     "/Perusahaan/GetAll",
     status_code=status.HTTP_200_OK,
     response_model=List[schemas.PerusahaanSchema],
-    description="Get all perusahaan",
+    description="Get all perusahaan, only admin role can access this endpoint.",
 )
 async def get_all_perusahaan(user: User = Depends(get_current_user)):
     if user.role != ROLE.ADMIN.value:

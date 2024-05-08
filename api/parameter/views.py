@@ -3,7 +3,7 @@ from fastapi import APIRouter, status, Depends, HTTPException
 from typing import List
 from utils.tokens import get_perusahaan
 from . import schemas
-from umum.schemas import Response
+from umum.schemas import ResponseSchema as Response
 from account.schemas import PerusahaanSchema as Perusahaan
 
 
@@ -12,7 +12,7 @@ router = APIRouter(tags=["Parameter"], prefix="/api/Parameter")
 
 @router.get(
     "/TahunKegiatan/GetAll",
-    response_model=List[schemas.TahunKegiatan],
+    response_model=List[schemas.TahunKegiatanSchema],
     status_code=status.HTTP_200_OK,
 )
 async def get_all_tahun_kegiatan(perusahaan: Perusahaan = Depends(get_perusahaan)):
@@ -24,7 +24,7 @@ async def get_all_tahun_kegiatan(perusahaan: Perusahaan = Depends(get_perusahaan
 
 @router.get(
     "/TahunKegiatan/{id}",
-    response_model=schemas.TahunKegiatan,
+    response_model=schemas.TahunKegiatanSchema,
     status_code=status.HTTP_200_OK,
 )
 async def get_tahun_kegiatan(id: str, perusahaan: Perusahaan = Depends(get_perusahaan)):
@@ -37,10 +37,10 @@ async def get_tahun_kegiatan(id: str, perusahaan: Perusahaan = Depends(get_perus
 @router.post(
     "/TahunKegiatan/",
     status_code=status.HTTP_201_CREATED,
-    response_model=schemas.TahunKegiatan,
+    response_model=schemas.TahunKegiatanSchema,
 )
 async def create_tahun_kegiatan(
-    tahun_kegiatan: schemas.TahunKegiatanIn,
+    tahun_kegiatan: schemas.TahunKegiatanInSchema,
     perusahaan: Perusahaan = Depends(get_perusahaan),
 ):
     data = tahun_kegiatan.model_dump()
@@ -55,7 +55,7 @@ async def create_tahun_kegiatan(
 )
 async def update_tahun_kegiatan(
     id: str,
-    tahun_kegiatan: schemas.TahunKegiatanIn,
+    tahun_kegiatan: schemas.TahunKegiatanInSchema,
     perusahaan: Perusahaan = Depends(get_perusahaan),
 ):
 

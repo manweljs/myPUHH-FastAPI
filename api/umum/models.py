@@ -55,17 +55,30 @@ class KelompokJenis(CustomModel):
 
 class Jenis(CustomModel):
     nama = fields.CharField(255)
-    kelompok_jenis = fields.CharField(255)
+    kelompok_jenis = fields.ForeignKeyField(
+        "models.KelompokJenis", on_delete=fields.SET_NULL, null=True
+    )
 
     class Meta:
         table = "jenis"
 
 
+class Sortimen(CustomModel):
+    nama = fields.CharField(255)
+
+    class Meta:
+        table = "sortimen"
+
+
 class Tarif(CustomModel):
     nama = fields.CharField(255)
     jenis_tarif = fields.IntField(default=TARIF_TYPE.PSDH.value)
-    kelompok_jenis = fields.IntField(default=KELOMPOK_JENIS.KELOMPOK_MERANTI.value)
-    sortimen = fields.CharField(3, default=SORTIMEN.KB.value)
+    kelompok_jenis = fields.ForeignKeyField(
+        "models.KelompokJenis", on_delete=fields.SET_NULL, null=True
+    )
+    sortimen = fields.ForeignKeyField(
+        "models.Sortimen", on_delete=fields.SET_NULL, null=True
+    )
     harga = fields.FloatField(default=0)
 
     class Meta:

@@ -44,6 +44,17 @@ awscli = ["awscli (>=1.32.41,<1.32.70)"]
 boto3 = ["boto3 (>=1.34.41,<1.34.70)"]
 
 [[package]]
+name = "aiofiles"
+version = "23.2.1"
+description = "File support for asyncio."
+optional = false
+python-versions = ">=3.7"
+files = [
+    {file = "aiofiles-23.2.1-py3-none-any.whl", hash = "sha256:19297512c647d4b27a2cf7c34caa7e405c0d60b5560618a29a9fe027b18b0107"},
+    {file = "aiofiles-23.2.1.tar.gz", hash = "sha256:84ec2218d8419404abcb9f0c02df3f34c6e0a68ed41072acfb1cef5cbc29051a"},
+]
+
+[[package]]
 name = "aiohttp"
 version = "3.9.5"
 description = "Async http client/server framework (asyncio)"
@@ -483,6 +494,17 @@ dnspython = ">=2.0.0"
 idna = ">=2.0.0"
 
 [[package]]
+name = "et-xmlfile"
+version = "1.1.0"
+description = "An implementation of lxml.xmlfile for the standard library"
+optional = false
+python-versions = ">=3.6"
+files = [
+    {file = "et_xmlfile-1.1.0-py3-none-any.whl", hash = "sha256:a2ba85d1d6a74ef63837eed693bcb89c3f752169b0e3e7ae5b16ca5e1b3deada"},
+    {file = "et_xmlfile-1.1.0.tar.gz", hash = "sha256:8eb9e2bc2f8c97e37a2dc85a09ecdcdec9d8a396530a6d5a33b30b9a92da0c5c"},
+]
+
+[[package]]
 name = "exceptiongroup"
 version = "1.2.1"
 description = "Backport of PEP 654 (exception groups)"
@@ -552,6 +574,39 @@ files = [
 
 [package.dependencies]
 fastapi = "*"
+
+[[package]]
+name = "fastapi-pagination"
+version = "0.12.24"
+description = "FastAPI pagination"
+optional = false
+python-versions = "<4.0,>=3.8"
+files = [
+    {file = "fastapi_pagination-0.12.24-py3-none-any.whl", hash = "sha256:a639df7301a89414244c6763bb97cff043815cb839070b8a38c58c007cf75d48"},
+    {file = "fastapi_pagination-0.12.24.tar.gz", hash = "sha256:c9c6508e0182aab679a13b1de261d4923e3b530b410500dcb271638ff714fb14"},
+]
+
+[package.dependencies]
+fastapi = ">=0.93.0"
+pydantic = ">=1.9.1"
+typing-extensions = ">=4.8.0,<5.0.0"
+
+[package.extras]
+all = ["SQLAlchemy (>=1.3.20)", "asyncpg (>=0.24.0)", "beanie (>=1.25.0)", "bunnet (>=1.1.0,<2.0.0)", "databases (>=0.6.0)", "django (<5.0.0)", "mongoengine (>=0.23.1,<0.29.0)", "motor (>=2.5.1,<4.0.0)", "orm (>=0.3.1)", "ormar (>=0.11.2)", "piccolo (>=0.89,<0.122)", "pony (>=0.7.16,<0.8.0)", "scylla-driver (>=3.25.6,<4.0.0)", "sqlakeyset (>=2.0.1680321678,<3.0.0)", "sqlmodel (>=0.0.8,<0.0.15)", "tortoise-orm (>=0.16.18,<0.21.0)"]
+asyncpg = ["SQLAlchemy (>=1.3.20)", "asyncpg (>=0.24.0)"]
+beanie = ["beanie (>=1.25.0)"]
+bunnet = ["bunnet (>=1.1.0,<2.0.0)"]
+databases = ["databases (>=0.6.0)"]
+django = ["databases (>=0.6.0)", "django (<5.0.0)"]
+mongoengine = ["mongoengine (>=0.23.1,<0.29.0)"]
+motor = ["motor (>=2.5.1,<4.0.0)"]
+orm = ["databases (>=0.6.0)", "orm (>=0.3.1)"]
+ormar = ["ormar (>=0.11.2)"]
+piccolo = ["piccolo (>=0.89,<0.122)"]
+scylla-driver = ["scylla-driver (>=3.25.6,<4.0.0)"]
+sqlalchemy = ["SQLAlchemy (>=1.3.20)", "sqlakeyset (>=2.0.1680321678,<3.0.0)"]
+sqlmodel = ["sqlakeyset (>=2.0.1680321678,<3.0.0)", "sqlmodel (>=0.0.8,<0.0.15)"]
+tortoise = ["tortoise-orm (>=0.16.18,<0.21.0)"]
 
 [[package]]
 name = "frozenlist"
@@ -1051,6 +1106,20 @@ files = [
     {file = "numpy-1.26.4-pp39-pypy39_pp73-win_amd64.whl", hash = "sha256:7e50d0a0cc3189f9cb0aeb3a6a6af18c16f59f004b866cd2be1c14b36134a4a0"},
     {file = "numpy-1.26.4.tar.gz", hash = "sha256:2a02aba9ed12e4ac4eb3ea9421c420301a0c6460d9830d74a9df87efa4912010"},
 ]
+
+[[package]]
+name = "openpyxl"
+version = "3.1.2"
+description = "A Python library to read/write Excel 2010 xlsx/xlsm files"
+optional = false
+python-versions = ">=3.6"
+files = [
+    {file = "openpyxl-3.1.2-py2.py3-none-any.whl", hash = "sha256:f91456ead12ab3c6c2e9491cf33ba6d08357d802192379bb482f1033ade496f5"},
+    {file = "openpyxl-3.1.2.tar.gz", hash = "sha256:a6f5977418eff3b2d5500d54d9db50c8277a368436f4e4f8ddb1be3422870184"},
+]
+
+[package.dependencies]
+et-xmlfile = "*"
 
 [[package]]
 name = "orjson"
@@ -2225,4 +2294,4 @@ multidict = ">=4.0"
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "b2f168c1283193fd051a8207644188c506b1d9b3aa90e7dd5af82226212f127d"
+content-hash = "4979e8931d68af318bd86f0b2dc35ecfc0e3b120a818a4a9c32c6c01adbea4fd"

@@ -5,17 +5,10 @@ from fastapi import APIRouter, status, Depends, HTTPException
 from typing import List
 from . import schemas
 from utils.tokens import get_perusahaan
-from umum.schemas import Response
+from umum.schemas import ResponseSchema as Response
 
 
 router = APIRouter(tags=["Produksi"], prefix="/api/Produksi")
-
-#  updated_count = await LHC.filter(id=id, perusahaan=perusahaan).update(
-#         **data.model_dump(exclude_unset=True)
-#     )
-#     if updated_count == 0:
-#         raise HTTPException(status_code=404, detail="Blok not found")
-#     return Response(message="Data berhasil diupdate")
 
 
 @router.post(

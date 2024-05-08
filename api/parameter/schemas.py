@@ -4,12 +4,12 @@ from uuid import UUID, uuid4
 from datetime import date
 
 
-class BasePerusahaan(PydanticModel):
+class BasePerusahaanSchema(PydanticModel):
     id: Optional[UUID] = uuid4()
     nama: str
 
 
-class TahunKegiatan(PydanticModel):
+class TahunKegiatanSchema(PydanticModel):
     id: Optional[UUID] = uuid4()
     tahun: int
     tanggal_mulai: date
@@ -19,7 +19,7 @@ class TahunKegiatan(PydanticModel):
         from_attributes = True
 
 
-class TahunKegiatanIn(PydanticModel):
+class TahunKegiatanInSchema(PydanticModel):
     tahun: int
     tanggal_mulai: date
     tanggal_selesai: date
@@ -65,7 +65,7 @@ class TPnInSchema(PydanticModel):
 class BlokSchema(PydanticModel):
     id: UUID
     nama: str
-    tahun: TahunKegiatan
+    tahun: TahunKegiatanSchema
 
     class Config:
         from_attributes = True

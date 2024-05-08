@@ -5,7 +5,7 @@ from fastapi import APIRouter, status, Depends, HTTPException
 from typing import List
 from utils.tokens import get_perusahaan
 from . import schemas
-from umum.schemas import Response
+from umum.schemas import ResponseSchema as Response
 from account.schemas import PerusahaanSchema as Perusahaan
 from uuid import UUID
 from tortoise.transactions import in_transaction
@@ -13,9 +13,9 @@ from tortoise.transactions import in_transaction
 router = APIRouter(tags=["Angkutan"], prefix="/api/Angkutan")
 
 
-@router.post("/DKBAngkutan", response_model=schemas.DKBAngkutan)
+@router.post("/DKBAngkutan", response_model=schemas.DKBAngkutanSchema)
 async def create_dkb_angkutan(
-    dkb_angkutan: schemas.DKBAngkutanIn,
+    dkb_angkutan: schemas.DKBAngkutanInSchema,
     perusahaan: Perusahaan = Depends(get_perusahaan),
 ):
     data = dkb_angkutan.model_dump()
@@ -35,7 +35,7 @@ async def create_dkb_angkutan(
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
 
 
-@router.get("/DKBAngkutan/GetAll", response_model=List[schemas.DKBAngkutan])
+@router.get("/DKBAngkutan/GetAll", response_model=List[schemas.DKBAngkutanSchema])
 async def get_all_dkb_angkutan(
     perusahaan: Perusahaan = Depends(get_perusahaan),
 ):
@@ -45,7 +45,7 @@ async def get_all_dkb_angkutan(
     return dkb_angkutan
 
 
-@router.get("/DKBAngkutan/{id}", response_model=schemas.DKBAngkutan)
+@router.get("/DKBAngkutan/{id}", response_model=schemas.DKBAngkutanSchema)
 async def get_dkb_angkutan(
     id: UUID,
     perusahaan: Perusahaan = Depends(get_perusahaan),
@@ -64,7 +64,7 @@ async def get_dkb_angkutan(
 @router.put("/DKBAngkutan/{id}", response_model=Response)
 async def update_dkb_angkutan(
     id: UUID,
-    data: schemas.DKBAngkutanIn,
+    data: schemas.DKBAngkutanInSchema,
     perusahaan: Perusahaan = Depends(get_perusahaan),
 ):
     updated_count = await DKBAngkutan.filter(id=id, perusahaan=perusahaan).update(

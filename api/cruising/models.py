@@ -1,4 +1,5 @@
 from tortoise import fields
+from tortoise.exceptions import IntegrityError
 from umum.models import CustomModel
 from consts import OBYEK, SORTIMEN
 
@@ -16,6 +17,26 @@ class LHC(CustomModel):
 
     class PydanticMeta:
         exclude = ("perusahaan", "tahun")
+
+    async def save(self, *args, **kwargs):
+        existing_entry = (
+            await LHC.filter(nomor=self.nomor, tahun_id=self.tahun_id)
+            .exclude(id=self.pk)
+            .first()
+        )
+
+        if existing_entry:
+            raise IntegrityError(f"Kombinasi nomor dan tahun sudah ada.")
+        await super().save(*args, **kwargs)
+
+    async def validate_unique(self, id):
+        existing_entry = (
+            await LHC.filter(nomor=self.nomor, tahun_id=self.tahun_id)
+            .exclude(id=id)
+            .exists()
+        )
+        if existing_entry:
+            raise IntegrityError("Kombinasi nomor dan tahun sudah ada.")
 
 
 class Barcode(CustomModel):

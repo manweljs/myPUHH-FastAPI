@@ -5,7 +5,7 @@ from tortoise.contrib.pydantic.base import PydanticModel
 # Tortoise.init_models(["account.models", "umum.models", "parameter.models"], "models")
 
 
-class User(PydanticModel):
+class UserSchema(PydanticModel):
     id: Optional[UUID] = uuid4()
     username: str
     first_name: str
@@ -18,7 +18,7 @@ class User(PydanticModel):
         from_attributes = True
 
 
-class CreateUser(PydanticModel):
+class CreateUserSchema(PydanticModel):
     username: str
     first_name: str
     last_name: str
@@ -30,7 +30,7 @@ class CreateUser(PydanticModel):
         from_attributes = True
 
 
-class LoginUser(PydanticModel):
+class LoginUserSchema(PydanticModel):
     username: str
     password: str
 
@@ -38,12 +38,12 @@ class LoginUser(PydanticModel):
         from_attributes = True
 
 
-class LoginResponse(PydanticModel):
+class LoginResponseSchema(PydanticModel):
     access_token: str
     token_type: str
 
 
-class KabupatenBase(PydanticModel):
+class KabupatenBaseSchema(PydanticModel):
     id: UUID
     nama: str
 
@@ -56,13 +56,13 @@ class PerusahaanSchema(PydanticModel):
     nama: str
     alamat: Optional[str]
     logo: Optional[str]
-    kabupaten: Optional[KabupatenBase]  # Nested model untuk Kabupaten
+    kabupaten: Optional[KabupatenBaseSchema]  # Nested model untuk Kabupaten
 
     class Config:
         from_attributes = True
 
 
-class PerusahaanIn(PydanticModel):
+class PerusahaanInSchema(PydanticModel):
     nama: str
     alamat: Optional[str] = None
     logo: Optional[str] = None

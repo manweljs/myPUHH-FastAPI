@@ -7,7 +7,7 @@ from datetime import date
 # membuat schema untuk model angkutan
 
 
-class DKBAngkutanIn(PydanticModel):
+class DKBAngkutanInSchema(PydanticModel):
     nomor_dkb: str
     nomor_dokumen: str
     tanggal: date
@@ -22,7 +22,7 @@ class DKBAngkutanIn(PydanticModel):
         from_attributes = True
 
 
-class DKBAngkutan(PydanticModel):
+class DKBAngkutanSchema(PydanticModel):
     perusahaan_id: UUID
     id: UUID
     nomor_dkb: str
@@ -39,7 +39,7 @@ class DKBAngkutan(PydanticModel):
         from_attributes = True
 
 
-class DKBBarcode(PydanticModel):
+class DKBBarcodeSchema(PydanticModel):
     dkb: UUID
     barcode: UUID
 

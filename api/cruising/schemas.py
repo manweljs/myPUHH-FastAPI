@@ -2,15 +2,16 @@ from tortoise.contrib.pydantic.base import PydanticModel
 from typing import Optional, List
 from uuid import UUID
 from datetime import date
-from parameter.schemas import TahunKegiatan
+from parameter.schemas import TahunKegiatanSchema
 from tortoise import Tortoise
 from config.db import model_list
 from pydantic import BaseModel
+from fastapi_pagination import Page
 
 Tortoise.init_models(model_list, "models")
 
 
-class BaseLHC(PydanticModel):
+class BaseLHCSchema(PydanticModel):
     nomor: str
     tahun_id: UUID
     tanggal: date
@@ -27,35 +28,33 @@ class BaseBarcodeSchema(PydanticModel):
         from_attributes = True
 
 
-class LHC(PydanticModel):
+class LHCSchema(PydanticModel):
     id: UUID
     nomor: str
-    tahun: TahunKegiatan
+    tahun: TahunKegiatanSchema
     tanggal: date
     obyek: int
-    barcode: List[BaseBarcodeSchema]
 
     class Config:
         from_attributes = True
 
 
-class BarcodeModel(BaseModel):
+class BarcodeModelSchema(BaseModel):
     barcode: str
 
 
-class LHCPydantic(BaseModel):
+class LHCPydanticSchema(BaseModel):
     id: UUID
     nomor: str
     tahun_id: UUID
     tanggal: date
     obyek: int
-    barcode: List[BarcodeModel]
 
     class Config:
         from_attributes = True
 
 
-class LHCIn(PydanticModel):
+class LHCInSchema(PydanticModel):
     nomor: str
     tahun_id: UUID
     tanggal: date
@@ -65,19 +64,23 @@ class LHCIn(PydanticModel):
         from_attributes = True
 
 
-class Barcode(PydanticModel):
+class BarcodeSchema(PydanticModel):
     id: UUID
     barcode: str
     lhc_id: UUID
 
     class Config:
         from_attributes = True
+
+
+class LHCBarcodeSchema(PydanticModel):
+    barcode: Page[str]
 
 
 # Barcode = pydantic_model_creator(models.Barcode, name="BarcodeModel")
 
 
-class UploadBarcodeIn(PydanticModel):
+class UploadBarcodeInSchema(PydanticModel):
     lhc_id: UUID
     file_url: str
 
@@ -85,7 +88,7 @@ class UploadBarcodeIn(PydanticModel):
         from_attributes = True
 
 
-class RencanaTebang(PydanticModel):
+class RencanaTebangSchema(PydanticModel):
     id: UUID
     nomor: str
     tahun_id: UUID
@@ -97,7 +100,7 @@ class RencanaTebang(PydanticModel):
         from_attributes = True
 
 
-class RencanaTebangIn(PydanticModel):
+class RencanaTebangInSchema(PydanticModel):
     nomor: str
     tahun_id: UUID
     obyek: int
@@ -108,14 +111,14 @@ class RencanaTebangIn(PydanticModel):
         from_attributes = True
 
 
-class UploadPohonIn(PydanticModel):
+class UploadPohonInSchema(PydanticModel):
     file_url: str
 
     class Config:
         from_attributes = True
 
 
-class Pohon(PydanticModel):
+class PohonSchema(PydanticModel):
     id: UUID
     nomor: str
 
@@ -123,7 +126,7 @@ class Pohon(PydanticModel):
         from_attributes = True
 
 
-class PohonIn(PydanticModel):
+class PohonInSchema(PydanticModel):
     nomor: str
     barcode_id: UUID
     petak_id: UUID
