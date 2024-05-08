@@ -14,3 +14,10 @@ export const GetPerusahaan = async () => {
     const method = "GET"
     return await sendRequest(endpoint, method);
 }
+
+
+export const GetUser = async () => {
+    const endpoint = `${API_URL}/api/Account/User`;
+    const method = "GET"
+    return await sendRequest(endpoint, method);
+}

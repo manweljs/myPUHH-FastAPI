@@ -3,7 +3,7 @@ import { getToken } from "@/functions";
 export const sendRequest = async (url: string, method: string, data?: any) => {
     const headers = {
         'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + getToken()
+        'Authorization': `Bearer ${getToken()}`
     };
     // Ciptakan objek konfigurasi dengan 'method' dan 'headers'
     const options: RequestInit = { method, headers };

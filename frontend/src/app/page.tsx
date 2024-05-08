@@ -1,5 +1,4 @@
-import Image from "next/image";
-import styles from "./page.module.css";
+
 import { ACCESS_TOKEN_KEY, PAGE } from "@/consts";
 import { redirect } from "next/navigation";
 import { cookies } from "next/headers";

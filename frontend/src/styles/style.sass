@@ -1,0 +1,138 @@
+@use './variables.module' as *
+
+html
+    overflow: hidden auto
+body
+    color: var(--primary-text)
+    background: var(--base-1)
+    border-color: var(--border-color)
+    transition: .5s
+
+    .navbar
+        background-color: var(--base-2)
+
+    h1, h2, h3, h4, h5, h6, p
+        color: var(--primary-text)
+
+#root
+    display: grid
+    grid-template-columns: 180px 1fr
+    height: 100vh
+
+    a
+        color: var(--primary)
+body.public
+    #root
+        display: block
+    .navbar
+        display: none
+
+body.min #root
+    grid-template-columns: 65px 1fr
+
+    .navbar .menu
+        grid-template-columns: 24px
+
+.title
+    color: var(--primary-text)
+
+.home, .setting, .logout, .laporan, .stok,
+.lhc, .lhp, .angkutan, .rencana-tebang
+    height: 100vh
+
+.is-number
+    display: inline-block
+    width: 100%
+    text-align: right
+.tip
+    font-size: .9em
+    opacity: .8
+.ant-tabs
+    .ant-tabs-nav-list
+        margin-top: 16px
+
+    .ant-tabs-tab
+        padding: 8px 30px 8px 16px!important
+        margin: 0!important
+
+.field
+    .label
+        font-size: .85em
+        font-weight: 400
+        color: var(--primary-text)
+
+.field-group
+    display: flex
+    gap: 10px
+
+.w-50
+    width: 50%!important
+
+.w-100
+    width: 100%!important
+
+.modal
+    display: block
+
+    .overlay
+        position: absolute
+        top: 0
+        left: 0
+        z-index: -1
+        background-color: rgba(0, 0, 0, .7)
+        width: 100vw
+        height: 100vh
+
+    .modal-box
+        min-width: 400px
+        background-color: var(--base-1)
+        position: absolute
+        top: 30px
+        left: 50%
+        transform: translateX(-50%)
+        border-radius: 10px
+        overflow: hidden
+
+    .modal-header
+        background-color: var(--base-2)
+        padding: 10px 24px
+        display: flex
+        justify-content: space-between
+        align-items: center
+        border-bottom: $border
+        h3
+            font-size: 1.2em
+
+    .modal-body
+        padding: 24px
+
+.ant-table
+    .ant-table-tbody
+        color: var(--secondary-text)
+    th
+        text-transform: capitalize
+
+    .ant-table-row
+        .action
+            display: flex
+            justify-content: flex-end
+            gap: 10px
+
+.ant-tabs
+    .ant-tabs-tabpane
+        padding: 0!important
+
+// scrollbar 
+
+::-webkit-scrollbar
+    width: 12px
+
+::-webkit-scrollbar-track
+    background: var(--base-5)
+
+::-webkit-scrollbar-thumb
+    background: var(--primary)
+    border: 2px solid var(--base-5)
+
+::-webkit-scrollbar-thumb:hover
+    background: var(--primary-100)

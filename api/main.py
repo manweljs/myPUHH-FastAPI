@@ -20,13 +20,6 @@ def create_application() -> FastAPI:
     )
 
     # Add CORS middleware first
-    application.add_middleware(
-        CORSMiddleware,
-        allow_origins=allowed_cors_origins,
-        allow_credentials=True,
-        allow_methods=["*"],
-        allow_headers=["*"],
-    )
 
     return application
 
@@ -34,6 +27,13 @@ def create_application() -> FastAPI:
 app = create_application()
 
 add_pagination(app)
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=allowed_cors_origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 app.include_router(account_routes)
 app.include_router(parameter_routes)

@@ -11,12 +11,8 @@ export default function Home() {
     const { setPage, setPerusahaan, perusahaan } = useUserContext()
 
     const handleGetPerusahaan = async () => {
-        console.log('masuk sini', perusahaan)
         const response = await GetPerusahaan()
-        console.log(response)
-        console.log('masuk sudah get perusahaan', perusahaan)
-
-        setPerusahaan(response.data)
+        setPerusahaan(response)
     }
 
 
@@ -28,8 +24,16 @@ export default function Home() {
         }
     }, [perusahaan]);
 
+
+
     return (
         <div className="home">
+            <h1>myPUHH</h1>
+            {perusahaan &&
+                <div>
+                    <h2>{perusahaan.nama}</h2>
+                </div>
+            }
         </div>
     )
 }

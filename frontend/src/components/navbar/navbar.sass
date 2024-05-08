@@ -2,7 +2,7 @@
 
 @mixin generate-active-bg-transform($index)
     .menu:nth-of-type(#{$index}).active ~ .active-nav-bg
-        transform: translateY(calc(#{$index - 1} * 40px))
+        transform: translateY(calc(#{$index - 1} * 45px))
 
 .navbar
     width: 100%
@@ -10,7 +10,7 @@
     flex-direction: column
     gap: 3px
     padding: 10px
-    border-right: $border
+    border-right: 1px solid var(--border-color)
     position: relative
 
     .info-perusahaan
@@ -37,13 +37,13 @@
         height: 40px
         font-size: .9em
         transition: .2s
+        margin-bottom: 5px
 
         &:hover
             background-color: rgba(0, 179, 60, 0.185)
 
         a
-            color: $text-primary
-
+            color: var(--primary-text)
         .kayulog
             stroke: var(--primary-text)
             padding-left: 3px

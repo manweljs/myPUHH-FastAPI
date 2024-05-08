@@ -16,4 +16,5 @@ export const PAGE: Record<string, PageInfo> = {
     DASHBOARD: { TITLE: "Dashboard", URL: "/dashboard" },
     ADMIN: { TITLE: "Admin", URL: "/admin" },
     USER: { TITLE: "User", URL: "/user" },
+    PARAMETER: { TITLE: "Parameter", URL: "/parameter" },
 };

@@ -65,7 +65,7 @@ async def login(data: schemas.LoginUserSchema):
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST, detail="User not found"
         )
-    access_token = create_access_token(data={"sub": user.username})
+    access_token = create_access_token(data={"sub": str(user.id)})
     return {"access_token": access_token, "token_type": "bearer"}
 
 
@@ -105,6 +105,7 @@ async def create_perusahaan(
     response_model=schemas.PerusahaanSchema,
 )
 async def get_perusahaan(perusahaan: Perusahaan = Depends(get_perusahaan)):
+    print("masuk disini")
     perusahaan = await Perusahaan.get_or_none(id=perusahaan).prefetch_related(
         "kabupaten"
     )

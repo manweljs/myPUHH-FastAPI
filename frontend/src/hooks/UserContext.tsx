@@ -1,8 +1,10 @@
 // UserContext.tsx
+import { GetUser } from '@/api';
 import { PAGE } from '@/consts';
+import { getToken } from '@/functions';
 import { Perusahaan, User } from '@/types';
 import { useRouter } from 'next/navigation';
-import React, { createContext, ReactNode, useContext, useState } from 'react';
+import React, { createContext, Dispatch, ReactNode, SetStateAction, useContext, useEffect, useState } from 'react';
 
 
 type UserContextType = {
@@ -40,6 +42,20 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     }
     const value = { user, setUser, perusahaan, setPerusahaan, navigate, page, setPage };
 
+    const handleGetUser = async () => {
+        const response = await GetUser()
+        console.log('response', response)
+        setUser(response)
+    }
+
+    useEffect(() => {
+        const accessToken = getToken()
+        if (!user && accessToken) {
+            handleGetUser()
+        }
+    }, [user]);
+
+    // console.log('user', user)
     return (
         <UserContext.Provider value={value}>
             {children}
@@ -55,3 +71,5 @@ export const useUserContext = (): UserContextType => {
     }
     return context;
 };
+
+
