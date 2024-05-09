@@ -37,7 +37,7 @@ const UserContext = createContext<UserContextType>(defaultState);
 export const UserProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     const [user, setUser] = useState<User | null>(null);
     const [perusahaan, setPerusahaan] = useState<Perusahaan | null>(null)
-    const [page, setPage] = useState<string>(PAGE.HOME.TITLE)
+    const [page, setPage] = useState<string>(PAGE.DASHBOARD.TITLE)
     const [minimizeSidebar, setMinimizeSidebar] = useState<boolean>(false)
 
     const router = useRouter()

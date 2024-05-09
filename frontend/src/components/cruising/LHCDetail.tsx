@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { GetLHC, GetLHCDetails } from "./CruisingAPI";
+import { GetLHC, GetLHCDetails } from "../../api/CruisingAPI";
 import PageHeader from "components/global/PageHeader";
 import {
     SearchOutlined,

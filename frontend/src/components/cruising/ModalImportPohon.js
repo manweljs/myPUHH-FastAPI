@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Alert, Button, Modal, Spin, Upload, message } from 'antd'
 import { SearchOutlined, InboxOutlined } from '@ant-design/icons'
-import { ImportPohonLHC } from "./CruisingAPI";
+import { ImportPohonLHC } from "../../api/CruisingAPI";
 
 export default function ModalImportPohon(props) {
     const { open, close, reload, lhcId } = props;

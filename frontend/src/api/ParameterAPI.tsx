@@ -1,7 +1,7 @@
-import { TahunKegiatan } from "@/types";
+import { TahunKegiatanType } from "@/types";
 import { sendRequest } from "./Main";
 
-export const CreateTahunKegiatan = async (data: TahunKegiatan) => {
+export const CreateTahunKegiatan = async (data: TahunKegiatanType) => {
     const method = 'POST';
     return await sendRequest(`/Parameter/TahunKegiatan`, method, data);
 
@@ -19,7 +19,7 @@ export const GetTahunKegiatan = async (id: string) => {
 
 }
 
-export const UpdateTahunKegiatan = async (data: TahunKegiatan) => {
+export const UpdateTahunKegiatan = async (data: TahunKegiatanType) => {
     const method = 'PUT';
     return await sendRequest(`/Parameter/TahunKegiatan`, method, data);
 

@@ -6,6 +6,9 @@
     width: 100%
     display: flex
     flex-direction: column
+    grid-template-columns: 1fr
+    grid-template-rows: 40px 1px auto
+    grid-template-areas: "info menu"
     gap: 3px
     padding: 10px
     border-right: 1px solid var(--border-color)
@@ -18,6 +21,7 @@
         display: flex
         font-size: .85em
         gap: 10px
+        height: 40px
 
     .logo_perusahaan
         height: 40px
@@ -57,14 +61,7 @@
                 stroke: white
                 stroke-width: 5px
 
-    .menu i
-        font-size: 1.4em
-        width: 24px
-        height: 24px
-        align-self: center
-        padding: 2px
-
-    .minimize_button .ant-float-btn-icon
+    .minimize_button
         font-size: 1em!important
 
     .menu_container
@@ -86,3 +83,6 @@
 
 body.min .navbar .active_nav_bg
     width: 45px
+
+.navbar_min .menu
+    text-align: center

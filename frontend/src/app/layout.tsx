@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import { APP } from "./APP";
 import "@/styles/global.css";
-import "@/styles/line-awesome/css/line-awesome.min.css";
-import "@/styles/uicons-thin-rounded/css/uicons-thin-rounded.css";
+import "@flaticon/flaticon-uicons/css/all/all.css"
+import "@/styles/variables.css"
 import { cookies } from "next/headers";
 import { ACCESS_TOKEN_KEY } from "@/consts";
 

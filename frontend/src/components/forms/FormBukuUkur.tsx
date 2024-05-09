@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from "react";
 import dayjs from "dayjs";
-import { CreateBukuUkur, GetBukuUkur, UpdateBukuUkur } from "components/buku-ukur/BukuUkurAPI";
 import { Button, Modal, message } from "antd";
-import { FieldTanggal, dateFormat } from "./fields/FieldTanggal";
+import { FieldTanggal } from "./fields/FieldTanggal";
 import { FieldRKT } from "./fields/FieldRKT";
 import { FieldNomor } from "./fields/FieldNomor";
 import { FieldObyek } from "./fields/FieldObyek";
+import { CreateBukuUkur, GetBukuUkur, UpdateBukuUkur } from "@/api";
+import { BukuUkurType } from "@/types";
+import { FORMAT } from "@/consts";
 
 interface FormBukuUkurProps {
     id: string | null;
@@ -16,11 +18,12 @@ interface FormBukuUkurProps {
 
 const page = "Buku Ukur"
 
+
 export const FormBukuUkur: React.FC<FormBukuUkurProps> = (props) => {
-    const initial = {
-        rkt: null,
+    const initial: BukuUkurType = {
+        tahun_id: '',
         nomor: '',
-        tanggal: dayjs().format(dateFormat),
+        tanggal: dayjs().format(FORMAT.DATE),
         obyek: 1,
     };
 
@@ -46,8 +49,7 @@ export const FormBukuUkur: React.FC<FormBukuUkurProps> = (props) => {
 
     const handleSave = async () => {
         setLoading(true);
-        const data = JSON.stringify(object);
-        const response = id ? await UpdateBukuUkur(data, id) : await CreateBukuUkur(data);
+        const response = id ? await UpdateBukuUkur(object, id) : await CreateBukuUkur(object);
         console.log(response);
         if (response.status) {
             message.success(`${page} Disimpan!`); // Assuming page is defined

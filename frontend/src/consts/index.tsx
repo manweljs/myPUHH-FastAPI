@@ -7,14 +7,28 @@ type PageInfo = {
     URL: string
 };
 
+type PageTitle = "HOME" | "LOGIN" | "LOGOUT" | "REGISTER" | "PROFILE" | "DASHBOARD" | "ADMIN" | "USER" | "PARAMETER" | "LAPORAN" | "LHP" | "LHC" | "PENGANGKUTAN" | "RENCANA_TEBANG" | "STOK" | "BUKU_UKUR";
 // Objek konstan yang memiliki informasi halaman
-export const PAGE: Record<string, PageInfo> = {
+export const PAGE: Record<PageTitle, PageInfo> = {
     HOME: { TITLE: "Home", URL: "/" },
     LOGIN: { TITLE: "Login", URL: "/login" },
+    LOGOUT: { TITLE: "Logout", URL: "/logout" },
     REGISTER: { TITLE: "Register", URL: "/register" },
     PROFILE: { TITLE: "Profile", URL: "/profile" },
-    DASHBOARD: { TITLE: "Dashboard", URL: "/dashboard" },
+    DASHBOARD: { TITLE: "Dashboard", URL: "/" },
     ADMIN: { TITLE: "Admin", URL: "/admin" },
     USER: { TITLE: "User", URL: "/user" },
     PARAMETER: { TITLE: "Parameter", URL: "/parameter" },
+    LAPORAN: { TITLE: "Laporan", URL: "/laporan" },
+    LHP: { TITLE: "LHP", URL: "/lhp" },
+    LHC: { TITLE: "LHC", URL: "/lhc" },
+    PENGANGKUTAN: { TITLE: "Pengangkutan", URL: "/pengangkutan" },
+    RENCANA_TEBANG: { TITLE: "Rencana Tebang", URL: "/rencana-tebang" },
+    STOK: { TITLE: "Stok", URL: "/stok" },
+    BUKU_UKUR: { TITLE: "Buku Ukur", URL: "/buku-ukur" },
 };
+
+
+export enum FORMAT {
+    DATE = "YYYY-MM-DD",
+}

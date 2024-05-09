@@ -4,7 +4,7 @@ import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
 import dynamic from "next/dynamic";
 
-const Home = dynamic(() => import("@/components/home/Home"), { ssr: false });
+const Dashboard = dynamic(() => import("@/components/dashboard/Dashboard"), { ssr: false });
 
 
 export default function page() {
@@ -16,6 +16,6 @@ export default function page() {
   }
 
   return (
-    <Home />
+    <Dashboard />
   );
 }

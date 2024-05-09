@@ -4,7 +4,7 @@ import { ArrowLeftOutlined } from '@ant-design/icons'
 import { useUserContext } from '@/hooks/UserContext'
 import "./global.css"
 
-export default function PageHeader(props: {
+export function PageHeader(props: {
     page: string,
     back?: string,
     size?: "small" | "large"

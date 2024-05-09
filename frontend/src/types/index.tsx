@@ -16,9 +16,49 @@ export type Perusahaan = {
 }
 
 
-export interface TahunKegiatan {
+export interface TahunKegiatanType {
     id: string;
     tahun: number;
     tanggal_mulai: string;
     tanggal_selesai: string;
 }
+
+
+export interface LHPType {
+    id?: string;
+    tahun: string;
+    nomor: string;
+    tanggal: string;
+    obyek: number;
+}
+
+export interface RencanaTebangType {
+    id?: string;
+    nomor: string;
+    tahun_id: string | null;
+    obyek: number;
+    tanggal: string;
+    faktor: number;
+}
+
+export interface UploadBarcodeType {
+    lhc_id: string,
+    file_url: string
+}
+
+export interface LHCType {
+    id?: string;
+    nomor: string;
+    tahun_id: string;
+    tanggal: string;
+    obyek: number;
+}
+
+export interface BukuUkurType {
+    id?: string;
+    nomor: string;
+    tanggal: string;
+    obyek: number;
+    tahun_id: string;
+}
+

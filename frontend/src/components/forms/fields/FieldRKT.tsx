@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { FieldProps } from "./FieldObyek";
-import { GetAllRKT } from "api/SettingAPI";
 import { Select } from "antd";
-import { TahunKegiatanType } from 'types'
+import { GetAllTahunKegiatan } from "@/api";
+import { TahunKegiatanType } from "@/types";
 
 
 export const FieldRKT: React.FC<FieldProps> = (props) => {
@@ -11,7 +11,7 @@ export const FieldRKT: React.FC<FieldProps> = (props) => {
     const [objects, setObjects] = useState<TahunKegiatanType[]>([])
     const [loading, setLoading] = useState(true)
     const handleGetAll = async () => {
-        const response = await GetAllRKT()
+        const response = await GetAllTahunKegiatan()
         console.log('response', response)
         setObjects(response.data)
         setLoading(false)

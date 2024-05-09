@@ -1,16 +1,17 @@
 import React, { useEffect, useState, memo } from 'react'
-import { FloatButton } from 'antd'
+import { FloatButton, Spin } from 'antd'
 import { LeftOutlined, RightOutlined } from "@ant-design/icons"
-import { kayulog } from '../misc/Icons'
 import { useUserContext } from '@/hooks/UserContext'
 import Image from 'next/image'
 import style from "./navbar.module.sass"
 import { PAGE } from '@/consts'
 import { motion } from 'framer-motion'
+import FIcon from '@/components/global/FIcon'
 
 function Navbar() {
     const { perusahaan, setPerusahaan, page, user, setUser, minimizeSidebar, setMinimizeSidebar } = useUserContext()
 
+    const [loading, setLoading] = useState(true)
 
     useEffect(() => {
         if (minimizeSidebar) {
@@ -20,86 +21,104 @@ function Navbar() {
         }
     }, [minimizeSidebar])
 
-    console.log('user di navbar', user)
+    useEffect(() => {
+        if (perusahaan) {
+            setLoading(false)
+        }
+    }, [perusahaan]);
 
 
     return (
-        <div className={style.navbar}>
-            {perusahaan &&
-                <div className={style.info_perusahaan}>
-                    < div className={style.logo_perusahaan}>
-                        <Image src={perusahaan.logo ? perusahaan.logo : "/images/office.png"}
-                            width={minimizeSidebar ? 40 : 50}
-                            height={minimizeSidebar ? 40 : 50}
-                            alt="" loading="lazy"
-                        />
-                    </div>
-                    {!minimizeSidebar && <p>{perusahaan.nama}</p>}
-                </div>
-            }
+        <div className={minimizeSidebar ? `${style.navbar} ${style.navbar_min}` : style.navbar}>
+            <div className={style.info_perusahaan}>
+                {perusahaan ?
+                    <>
+                        < div className={style.logo_perusahaan}>
+                            <Image
+                                alt=""
+                                src={perusahaan.logo ? perusahaan.logo : "/images/office.png"}
+                                width={40}
+                                height={40}
+                                loading="lazy"
+                            />
+                        </div>
+                        {!minimizeSidebar && <p>{perusahaan.nama}</p>}
+                    </> :
+                    <Spin />
+                }
+            </div>
 
-            <div className="separator"></div>
+            <div className={style.separator}></div>
             <Menu minimize={minimizeSidebar} />
 
-            <FloatButton
-                onClick={() => setMinimizeSidebar(prev => !prev)}
-                type="default"
-                style={{ left: minimizeSidebar ? 40 : 160 }}
-                className={style.minimize_button}
-                icon={minimizeSidebar ? <RightOutlined /> : <LeftOutlined />} />
+
+            {!loading &&
+                <FloatButton
+                    onClick={() => setMinimizeSidebar(prev => !prev)}
+                    type="default"
+                    style={{ left: minimizeSidebar ? 40 : 160 }}
+                    className={style.minimize_button}
+                    icon={minimizeSidebar ? <RightOutlined /> : <LeftOutlined />}
+                />
+            }
+
         </div >
     )
 }
 
 export default memo(Navbar)
 
+const menuItems = [
+    { title: PAGE.DASHBOARD.TITLE, icon: "fi-rr-house-chimney", path: PAGE.DASHBOARD.URL },
+    { title: PAGE.LHC.TITLE, icon: "fi-rr-trees-alt", path: PAGE.LHC.URL, tooltip: "Laporan Hasil Cruising (LHC)" },
+    { title: PAGE.RENCANA_TEBANG.TITLE, icon: "fi-rr-inventory-alt", path: PAGE.RENCANA_TEBANG.URL },
+    { title: PAGE.BUKU_UKUR.TITLE, icon: "fi-rr-ruler-combined", path: PAGE.BUKU_UKUR.URL },
+    { title: PAGE.LHP.TITLE, icon: "fi-rr-supplier-alt", path: PAGE.LHP.URL },
+    { title: PAGE.STOK.TITLE, icon: "fi-rr-warehouse-alt", path: PAGE.STOK.URL },
+    { title: PAGE.PENGANGKUTAN.TITLE, icon: "fi-rr-truck-container", path: PAGE.PENGANGKUTAN.URL },
+    { title: PAGE.LAPORAN.TITLE, icon: "fi-rr-curve-arrow", path: PAGE.LAPORAN.URL },
+    { title: PAGE.PARAMETER.TITLE, icon: "fi-rr-tools", path: PAGE.PARAMETER.URL },
+    { title: PAGE.LOGOUT.TITLE, icon: "fi-rr-sign-out-alt", path: PAGE.LOGOUT.URL }
+];
+
 const Menu = (props: { minimize: boolean }) => {
     const { navigate, page } = useUserContext();
     const { minimize } = props;
 
-    const menuItems = [
-        { title: "Home", icon: "fi fi-tr-house-chimney", path: "/", alias: "Dashboard" },
-        { title: "LHC", icon: "fi fi-tr-trees-alt", path: "/lhc", tooltip: "Laporan Hasil Cruising (LHC)" },
-        { title: "Rencana Tebang", icon: "fi fi-tr-inventory-alt", path: "/rencana-tebang" },
-        { title: "Buku Ukur", icon: "fi fi-tr-ruler-combined", path: "/buku-ukur" },
-        { title: "LHP", icon: kayulog, path: "/lhp" },
-        { title: "Stok", icon: "fi fi-tr-warehouse-alt", path: "/stok" },
-        { title: "Pengangkutan", icon: "fi fi-tr-truck-container", path: "/pengangkutan" },
-        { title: "Laporan", icon: "fi fi-tr-curve-arrow", path: "/laporan" },
-        { title: PAGE.PARAMETER.TITLE, icon: "fi fi-tr-tools", path: PAGE.PARAMETER.URL },
-        { title: "Logout", icon: "fi fi-tr-sign-out-alt", path: "/logout" }
-    ];
+    const [yOffset, setYOffset] = useState(0);
 
+    useEffect(() => {
+        // Calculate the active index
+        const activeIndex = menuItems.findIndex(item => item.title === page);
 
-    // Calculate the active index
-    const activeIndex = menuItems.findIndex(item => item.title === page);
+        console.log('page', page)
+        console.log('activeIndex', activeIndex)
+        const offset = activeIndex * 45; // Assuming each menu item has a height of 45px
+        console.log('offset', offset)
+        setYOffset(offset);
+    }, [page]);
 
-    // Calculate the y offset for active_nav_bg based on activeIndex
-    const yOffset = activeIndex * 45; // Assuming each menu item has a height of 45px
+    console.log('yOffset', yOffset)
+
 
     return (
         <div className={style.menu_container}>
-            {menuItems.map((item) => (
+            {menuItems.map((item, index) => (
                 <div
-                    key={item.title}
+                    key={index}
                     className={page === item.title ? `${style.menu} ${style.active} menu active` : `${style.menu} menu`}
                     title={item.tooltip || item.title}
                     onClick={() => navigate(item.path)}
                 >
-                    {item.icon === kayulog ? (
-                        <span className='mr-2'>{item.icon}</span>
-                    ) : (
-                        <i className={`las ${item.icon} mr-2`}></i>
-
-                    )}
-                    {minimize ? "" : (item.alias || item.title)}
+                    <FIcon name={item.icon} size={16} />
+                    {minimize ? "" : item.title}
                 </div>
             ))}
             <motion.div
                 className={style.active_nav_bg}
-                initial={{ y: 0 }}
+                initial={{ y: yOffset }}
                 animate={{ y: yOffset }}
-                transition={{ type: "tween", duration: 0.15, ease: "easeInOut" }}
+                transition={{ type: "tween", duration: 0.05, ease: "easeInOut" }}
             />
         </div>
     );

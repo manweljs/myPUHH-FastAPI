@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { GetBarcodeForTebangan, GetBukuUkur, GetDKBBukuUkur } from './BukuUkurAPI'
+import { GetBarcodeForTebangan, GetBukuUkur, GetDKBBukuUkur } from '../../api/BukuUkurAPI'
 import { EditOutlined, DeleteOutlined, SearchOutlined, UploadOutlined } from '@ant-design/icons'
 import { Button, Popconfirm, Table } from 'antd'
 import style from "./buku-ukur.module.css"

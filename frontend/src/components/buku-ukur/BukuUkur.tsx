@@ -1,20 +1,20 @@
+"use client";
 import React, { useEffect, useState } from 'react'
-import style from "./buku-ukur.module.css"
-import PageHeader from 'components/global/PageHeader'
-import { useUser } from 'UserContext'
+import style from "./buku-ukur.module.sass"
 import { SearchOutlined, DeleteOutlined, EditOutlined } from '@ant-design/icons'
-import { DeleteBukuUkur, GetAllBukuUkur } from './BukuUkurAPI'
+import { DeleteBukuUkur, GetAllBukuUkur } from '@/api'
 import { Button, Popconfirm, Table, message } from 'antd'
-import { Link } from 'react-router-dom'
-import { FormBukuUkur } from 'components/forms/FormBukuUkur'
+import { FormBukuUkur } from '@/components/forms/FormBukuUkur'
 import dayjs from 'dayjs'
-import { BukuUkurType } from 'types'
-
-const page = "Buku Ukur"
-document.title = page
+import { BukuUkurType } from '@/types'
+import { useUserContext } from '@/hooks/UserContext';
+import Link from 'next/link';
+import { PAGE } from '@/consts';
+import { PageHeader } from '@/components/global/PageHeader';
+const page = PAGE.BUKU_UKUR.TITLE
 
 export default function BukuUkur() {
-    const { setPage } = useUser()
+    const { setPage } = useUserContext()
     const [objects, setObjects] = useState<BukuUkurType[]>([])
     const [objectId, setObjectId] = useState<string | null>(null)
 
@@ -34,7 +34,7 @@ export default function BukuUkur() {
             key: 'nomor',
             title: 'nomor',
             dataIndex: 'nomor',
-            render: (nomor:string, record:BukuUkurType) => <Link to={"/buku-ukur/" + record.id}>{nomor}</Link>
+            render: (nomor: string, record: BukuUkurType) => <Link href={`${PAGE.BUKU_UKUR.URL}/${record.id}`}>{nomor}</Link>
 
         },
         {
@@ -53,19 +53,19 @@ export default function BukuUkur() {
             key: 'tanggal',
             title: 'Tanggal',
             dataIndex: 'tanggal',
-            render: (tanggal:string) => <span>{dayjs(tanggal).format("DD/MM/YYYY")}</span>
+            render: (tanggal: string) => <span>{dayjs(tanggal).format("DD/MM/YYYY")}</span>
         },
         {
             key: 'action',
             title: '',
-            render: (record:BukuUkurType) => (
+            render: (record: BukuUkurType) => (
                 <div className="action">
-                    <EditOutlined onClick={() => handleEdit(record.id)} />
+                    <EditOutlined onClick={() => record.id && handleEdit(record.id)} />
                     <Popconfirm
                         placement="bottomRight"
                         title={`Hapus ${page}`}
                         description={`Apakah anda yakin menghapus ${page} ini ?`}
-                        onConfirm={() => handleDelete(record.id)}
+                        onConfirm={() => record.id && handleDelete(record.id)}
                         okText="Hapus"
                         cancelText="Batal"
                         okButtonProps={{ loading: loading }}
@@ -82,12 +82,12 @@ export default function BukuUkur() {
         setDisplayForm(true)
     }
 
-    const handleEdit = async (/** @type {any} */ id:string) => {
+    const handleEdit = async (/** @type {any} */ id: string) => {
         setObjectId(id)
         setDisplayForm(true)
     }
 
-    const handleDelete = async (/** @type {any} */ id:string) => {
+    const handleDelete = async (/** @type {any} */ id: string) => {
         setLoading(true)
         const response = await DeleteBukuUkur(id)
         console.log(response)

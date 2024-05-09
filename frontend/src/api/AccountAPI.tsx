@@ -2,7 +2,6 @@ import { API_URL } from "@/consts";
 import { sendPublicRequest, sendRequest } from "./Main";
 
 export const LoginUser = async (username: string, password: string) => {
-    console.log('API_URL', API_URL)
     const endpoint = `${API_URL}/api/Account/Login`;
     const method = "POST"
     const body = { username, password };

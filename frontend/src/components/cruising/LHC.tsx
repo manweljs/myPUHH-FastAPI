@@ -1,6 +1,7 @@
+"use client";
 import React, { useEffect, useState } from "react";
-import PageHeader from "../global/PageHeader";
-import { CreateLHC, DeleteLHC, GetAllLHC, GetLHC, UpdateLHC } from "./CruisingAPI";
+import { PageHeader } from "@/components/global";
+import { CreateLHC, DeleteLHC, GetAllLHC, GetLHC, UpdateLHC } from "@/api";
 import {
   Button,
   DatePicker,
@@ -15,19 +16,19 @@ import { SearchOutlined } from "@ant-design/icons";
 import FormModal from "../global/FormModal";
 import dayjs from "dayjs";
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
-import { GetAllRKT } from "../../api/SettingAPI";
-import { useUser } from "UserContext";
-import { Link } from "react-router-dom";
-import style from "./cruising.module.css";
-import { LHCType } from "types/Cruising";
-import { TahunKegiatanType } from "types";
+import style from "./cruising.module.sass";
+import { useUserContext } from "@/hooks/UserContext";
+import { LHCType, TahunKegiatanType } from "@/types";
+import Link from "next/link";
+import { PAGE } from "@/consts";
+import { GetAllTahunKegiatan } from "@/api";
 
 const dateFormat = "YYYY-MM-DD";
 const page = "LHC";
 document.title = page;
 
 export default function LHC() {
-  const { setPage } = useUser();
+  const { setPage } = useUserContext();
   const [objects, setObjects] = useState<LHCType[]>([]);
   const [objectId, setObjectId] = useState<string | null>(null);
 
@@ -37,7 +38,7 @@ export default function LHC() {
   const handleGetAll = async () => {
     const response = await GetAllLHC();
     console.log(response);
-    setObjects(response.data);
+    setObjects(response);
     setLoading(false);
   };
 
@@ -46,12 +47,13 @@ export default function LHC() {
     handleGetAll();
   }, [setPage]);
 
+
   const columns = [
     {
       key: "nomor",
       title: "nomor",
       dataIndex: "nomor",
-      render: (nomor: string, record: LHCType) => <Link to={"/lhc/" + record.id}>{nomor}</Link>,
+      render: (nomor: string, record: LHCType) => <Link href={`${PAGE.LHC.URL}/${record.id}`}>{nomor}</Link>,
     },
     {
       key: "tanggal",
@@ -87,12 +89,12 @@ export default function LHC() {
       title: "",
       render: (record: LHCType) => (
         <div className="action">
-          <EditOutlined onClick={() => handleEdit(record.id)} />
+          <EditOutlined onClick={() => record.id && handleEdit(record.id)} />
           <Popconfirm
             placement="bottomRight"
             title={"Hapus LHC"}
             description={`Apakah anda yakin menghapus LHC ini ?`}
-            onConfirm={() => handleDelete(record.id)}
+            onConfirm={() => record.id && handleDelete(record.id)}
             okText="Hapus"
             cancelText="Batal"
           >
@@ -159,16 +161,16 @@ const FormLHC = (props: {
   reload: () => void;
 
 }) => {
-  const initial = {
-    nama: "",
+  const initial: LHCType = {
+    nomor: "",
     obyek: 1,
-    rkt: null,
+    tahun_id: "",
     tanggal: dayjs().format(dateFormat),
   };
 
   const { id, close, reload } = props;
   const [loading, setLoading] = useState(false);
-  const [object, setObject] = useState(initial);
+  const [object, setObject] = useState<LHCType>(initial);
 
   const handleGet = async () => {
     if (!id) return;
@@ -188,8 +190,7 @@ const FormLHC = (props: {
 
   const handleSave = async () => {
     setLoading(true);
-    const data = JSON.stringify(object);
-    const response = id ? await UpdateLHC(data, id) : await CreateLHC(data);
+    const response = id ? await UpdateLHC(object, id) : await CreateLHC(object);
     console.log(response);
     if (response.status) {
       message.success(`${page} Disimpan!`);
@@ -304,7 +305,7 @@ const FieldTahunKegiatan = (props: {
   const [objects, setObjects] = useState([]);
   const [loading, setLoading] = useState(true);
   const handleGetAll = async () => {
-    const response = await GetAllRKT();
+    const response = await GetAllTahunKegiatan();
     console.log("response", response);
     setObjects(response.data);
     setLoading(false);

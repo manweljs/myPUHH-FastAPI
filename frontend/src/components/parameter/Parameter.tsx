@@ -13,7 +13,7 @@ import SettingAlatAngkut from './SettingAlatAngkut'
 import SettingPerusahaan from './SettingPerusahaan'
 import { useUserContext } from '@/hooks/UserContext'
 import { PAGE } from '@/consts'
-import PageHeader from '@/components/global/PageHeader';
+import { PageHeader } from '@/components/global/PageHeader';
 
 
 export function Parameter() {

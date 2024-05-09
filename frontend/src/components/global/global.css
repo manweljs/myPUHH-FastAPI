@@ -28,8 +28,7 @@
   --primary: #0AAA08;
   --primary-100: #038501;
   --border: 1px solid var(--border--color);
-}
-
+} 
 .page-header {
   padding: 6px 16px;
   border-bottom: 1px solid var(--border-color);
