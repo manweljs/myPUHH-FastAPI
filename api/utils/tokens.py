@@ -31,7 +31,6 @@ def create_access_token(data: dict, expires_delta: timedelta = None):
 
 
 async def get_current_user(token: str = Depends(oauth2_scheme)):
-    print("masuk disini")
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=ALGORITHM)
         user_id: str = payload.get("sub")

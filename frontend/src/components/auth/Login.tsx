@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useState } from 'react'
-import "./auth.css"
+import style from "./auth.module.sass"
 import { Button, Input, notification } from 'antd'
 import cookie from "react-cookies"
 import { GetPerusahaan, LoginUser } from '@/api'
@@ -29,7 +29,7 @@ export default function Login() {
             if (response.access_token) {
                 const token = response.access_token
                 cookie.save(ACCESS_TOKEN_KEY, token, { path: '/', expires: expires })
-                navigate("/")
+                window.location.href = "/"
             } else {
                 setError(response.message)
                 api.error({
@@ -53,12 +53,12 @@ export default function Login() {
     }, [accessToken])
 
     return (
-        <div className="login">
+        <div className={style.login}>
             {contextHolder}
-            <div className="login-form">
+            <div className={style.login_form}>
                 <div className="title is-text-primary">myPUHH</div>
                 {error &&
-                    <div className="login-err">{error}</div>
+                    <div className={style.login_error}>{error}</div>
                 }
                 <div className="field">
                     <div className="label" >Username</div>

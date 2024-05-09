@@ -14,7 +14,9 @@ export function APP({ children, accessToken }: Props) {
         <UserProvider>
             <ConfigProvider>
                 <Wrapper accessToken={accessToken}>
-                    <Navbar />
+                    {accessToken &&
+                        <Navbar />
+                    }
                     {children}
                 </Wrapper>
             </ConfigProvider>

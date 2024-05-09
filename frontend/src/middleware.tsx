@@ -14,7 +14,7 @@ export function middleware(request: NextRequest) {
 
     const accessToken = cookie.get(ACCESS_TOKEN_KEY);
     if (!accessToken) {
-        return NextResponse.redirect('/login');
+        return NextResponse.rewrite(new URL('/login', request.url))
     }
     return NextResponse.next();
 }

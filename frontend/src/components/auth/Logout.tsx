@@ -1,33 +1,31 @@
+"use client";
+import { ACCESS_TOKEN_KEY } from '@/consts';
+import { useUserContext } from '@/hooks/UserContext'
 import { Button } from 'antd'
 import React, { useEffect, useState } from 'react'
 import cookie from "react-cookies"
-import { useNavigate } from 'react-router-dom'
-import { useUser } from '../../UserContext'
+import style from "./auth.module.sass"
 
 const page = "Logout"
-document.title = page
+
 export default function Logout() {
-    const navigate = useNavigate()
-    const { reset, setPage } = useUser()
+    const { setPage, navigate } = useUserContext()
     const [loading, setLoading] = useState<boolean>(false)
 
     const handleLogout = () => {
         setLoading(true)
-        cookie.remove("ta_")
-        reset()
-        navigate("/login")
+        cookie.remove(ACCESS_TOKEN_KEY)
+        window.location.href = "/"
     }
 
     useEffect(() => {
         setPage(page);
-    }, [setPage]);
-
-    useEffect(() => {
-
     }, []);
+
+
     return (
-        <div className="logout">
-            <div className="logout-form" style={{ height: "100vh" }}>
+        <div className={style.logout}>
+            <div className={style.logout_form} >
                 <h1>
                     Anda yakin ingin keluar ?
                 </h1>
