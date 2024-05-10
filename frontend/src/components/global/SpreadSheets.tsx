@@ -35,8 +35,13 @@ export function SpreadSheets(props: Props) {
         args.cancel = true;
     };
 
+    const handleChange = (e: any) => {
+        console.log('e', e)
+    }
+
     return (
         <SpreadsheetComponent
+            onChange={handleChange}
             ref={spreadsheetRef}
             className={styles.spreadsheet}
             allowOpen={true}
@@ -45,7 +50,6 @@ export function SpreadSheets(props: Props) {
             allowSave={true}
             saveUrl='https://services.syncfusion.com/react/production/api/spreadsheet/save'
             beforeSave={beforeSave}
-
         >
             <SheetsDirective>
                 <SheetDirective>
