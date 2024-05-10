@@ -1,12 +1,13 @@
 "use client";
 import React, { useEffect, useState } from 'react'
 import style from "./auth.module.sass"
-import { Button, Input, notification } from 'antd'
+import { Button, Form, Input, notification } from 'antd'
 import cookie from "react-cookies"
 import { GetPerusahaan, LoginUser } from '@/api'
 import { getToken } from '@/functions'
 import { useUserContext } from '@/hooks/UserContext'
 import { ACCESS_TOKEN_KEY } from '@/consts';
+import { Field } from '@/components/global';
 
 
 const expires = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
@@ -60,19 +61,31 @@ export default function Login() {
                 {error &&
                     <div className={style.login_error}>{error}</div>
                 }
-                <div className="field">
-                    <div className="label" >Username</div>
-                    <Input onChange={e => setUsername(e.target.value)} value={username} />
-                </div>
-                <div className="field">
-                    <div className="label">Password</div>
-                    <Input.Password onChange={e => setPassword(e.target.value)} value={password} />
-                </div>
 
-                <Button
-                    loading={loading}
-                    type='primary'
-                    onClick={handleLogin}>Login</Button>
+                <Form layout='vertical'>
+                    <Field
+                        type='char'
+                        name='username'
+                        onChange={e => setUsername(e.target.value)}
+                        value={username}
+                        required={true}
+                    />
+
+                    <Field
+                        type='password'
+                        name='password'
+                        onChange={e => setPassword(e.target.value)}
+                        value={password}
+                        required
+                    />
+
+                    <Button
+                        loading={loading}
+                        type='primary'
+                        onClick={handleLogin}>Login
+                    </Button>
+
+                </Form>
             </div>
         </div>
     )

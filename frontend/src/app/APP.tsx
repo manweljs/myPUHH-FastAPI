@@ -1,9 +1,10 @@
 "use client";
 import Navbar from '@/components/navbar/Navbar';
 import { UserProvider, useUserContext } from '@/hooks/UserContext';
-import { ConfigProvider } from 'antd';
+import { ConfigProvider, theme } from 'antd';
 import React, { useEffect } from 'react'
 import { registerLicense } from '@syncfusion/ej2-base';
+import { PRIMARY_COLOR } from '@/consts';
 
 
 interface Props {
@@ -20,18 +21,16 @@ export function APP({ children, accessToken, syncfusionKey }: Props) {
 
     return (
         <UserProvider>
-            <ConfigProvider>
-                <Wrapper accessToken={accessToken} syncfusionKey={syncfusionKey}>
-                    {children}
-                </Wrapper>
-            </ConfigProvider>
+            <Wrapper accessToken={accessToken} syncfusionKey={syncfusionKey}>
+                {children}
+            </Wrapper>
         </UserProvider>
     )
 }
 
 
 const Wrapper = ({ children, accessToken, syncfusionKey }: Props) => {
-    const { minimizeSidebar } = useUserContext()
+    const { minimizeSidebar, theme: userTheme } = useUserContext()
 
     useEffect(() => {
         syncfusionKey && registerLicense(syncfusionKey)
@@ -43,11 +42,20 @@ const Wrapper = ({ children, accessToken, syncfusionKey }: Props) => {
 
     console.log('minimizeSidebar', minimizeSidebar)
     return (
-        <body className={className} >
-            {accessToken &&
-                <Navbar />
-            }
-            {children}
-        </body>
+        <ConfigProvider
+            theme={{
+                token: {
+                    colorPrimary: PRIMARY_COLOR,
+                },
+                algorithm: userTheme === "dark" ? theme.darkAlgorithm : theme.defaultAlgorithm,
+            }}
+        >
+            <body className={className} >
+                {accessToken &&
+                    <Navbar />
+                }
+                {children}
+            </body>
+        </ConfigProvider>
     )
 }
