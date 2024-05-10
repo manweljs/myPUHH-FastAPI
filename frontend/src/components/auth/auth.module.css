@@ -1,0 +1,30 @@
+.login {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.login .login_form {
+  width: 400px;
+  margin: auto;
+}
+
+.logout {
+  height: 100vh;
+}
+.logout .logout_form {
+  width: 400px;
+  height: 100svh;
+  margin: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+.logout .logout_form h1 {
+  font-size: 2em;
+  margin-bottom: 15px;
+}
+.logout .logout_form button {
+  width: 60%;
+}/*# sourceMappingURL=auth.module.css.map */

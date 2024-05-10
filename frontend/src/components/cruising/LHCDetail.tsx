@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import { GetLHC, GetLHCDetails } from "../../api/CruisingAPI";
-import PageHeader from "components/global/PageHeader";
+import { GetLHC, GetLHCDetails } from "@/api";
 import {
     SearchOutlined,
     EditOutlined,
@@ -15,10 +13,13 @@ import {
 } from "antd";
 import ModalImportPohon from "./ModalImportPohon";
 import style from "./cruising.module.css";
-import { LHCType, PohonType } from "types/Cruising";
+import { LHCType, PohonType } from "@/types";
+import { PageHeader } from "../global";
 
-export default function LHCDetail() {
-    const { id } = useParams();
+export default function LHCDetail(props: {
+    id: string
+}) {
+    const { id } = props;
     const [lhc, setLHC] = useState<LHCType | null>(null);
     const [pohon, setPohon] = useState([]);
     const [count, setCount] = useState(0);

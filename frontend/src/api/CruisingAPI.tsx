@@ -51,3 +51,9 @@ export const ImportPohonLHC = async (data: any, id: string) => {
     return await sendRequest(endpoint, method, data)
 }
 
+
+export const GetAllBarcode = async () => {
+    const endpoint = `${API_URL}/api/Cruising/Barcode/GetAll`
+    const method = "GET"
+    return await sendRequest(endpoint, method)
+}

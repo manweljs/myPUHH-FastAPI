@@ -17,6 +17,8 @@ type UserContextType = {
     setPage: (page: string) => void;
     minimizeSidebar: boolean;
     setMinimizeSidebar: Dispatch<SetStateAction<boolean>>;
+    theme: string;
+    setTheme: Dispatch<SetStateAction<string>>;
 };
 
 const defaultState: UserContextType = {
@@ -29,6 +31,8 @@ const defaultState: UserContextType = {
     setPage: () => { },
     minimizeSidebar: false,
     setMinimizeSidebar: () => { },
+    theme: "light",
+    setTheme: () => { }
 
 };
 
@@ -39,6 +43,7 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     const [perusahaan, setPerusahaan] = useState<Perusahaan | null>(null)
     const [page, setPage] = useState<string>(PAGE.DASHBOARD.TITLE)
     const [minimizeSidebar, setMinimizeSidebar] = useState<boolean>(false)
+    const [theme, setTheme] = useState<string>("light")
 
     const router = useRouter()
 
@@ -54,7 +59,9 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         page,
         setPage,
         minimizeSidebar,
-        setMinimizeSidebar
+        setMinimizeSidebar,
+        theme,
+        setTheme
     };
 
     const handleGetUser = async () => {

@@ -62,3 +62,14 @@ export interface BukuUkurType {
     tahun_id: string;
 }
 
+export interface PohonType {
+    id: string,
+    nomor: string
+}
+
+
+export interface LHCBarcodeType {
+    id: string;
+    barcode: string;
+    lhc_id: string;
+}
