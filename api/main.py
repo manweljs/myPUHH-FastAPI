@@ -10,6 +10,7 @@ from utils.initialize import router as init_app
 from fastapi_pagination import add_pagination
 from fastapi.middleware.cors import CORSMiddleware
 from consts import allowed_cors_origins
+import uvicorn
 
 
 def create_application() -> FastAPI:
@@ -53,3 +54,8 @@ async def startup_event():
 @app.on_event("shutdown")
 async def shutdown_event():
     print("Shutting down...")
+
+
+if __name__ == "__main__":
+
+    uvicorn.run(app, host="localhost", port=8000)
