@@ -1,26 +1,45 @@
-export type User = {
+export type UserType = {
     id: number;
     username: string;
     email: string;
     role: string;
-    perusahaan: Perusahaan;
+    perusahaan: PerusahaanType;
 
 }
 
-export type Perusahaan = {
+export type FileType = {
+    uid: string
+    name: string
+    url?: string
+    status?: string
+    thumbUrl?: string
+    percent?: number
+    originFileObj?: File
+
+}
+export type PerusahaanType = {
     id: number;
     nama: string;
-    alamat: string;
-    logo: string;
-
+    alamat?: string;
+    logo?: string;
+    telepon?: string;
+    kabupaten?: KabupatenType;
 }
 
+export type PerusahaanInType = {
+    id: number;
+    nama: string;
+    alamat?: string;
+    logo?: string;
+    telepon?: string;
+    kabupaten_id: string;
+}
 
 export interface TahunKegiatanType {
-    id: string;
+    id?: string;
     tahun: number;
-    tanggal_mulai: string;
-    tanggal_selesai: string;
+    tanggal_mulai?: string;
+    tanggal_selesai?: string;
 }
 
 
@@ -73,3 +92,12 @@ export interface LHCBarcodeType {
     barcode: string;
     lhc_id: string;
 }
+
+
+export interface KabupatenType {
+    id: string;
+    nama: string;
+    propinsi_id: string;
+    propinsi?: string;
+}
+

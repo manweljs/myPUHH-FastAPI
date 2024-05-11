@@ -1,6 +1,11 @@
 import React from 'react'
 
-export default function FormModal(props) {
+interface Props {
+    children: React.ReactNode;
+    width?: string | number;
+    close?: () => void;
+}
+export default function FormModal(props: Props) {
     const { width, close } = props
     return (
         <div className="modal form-modal">
@@ -16,7 +21,7 @@ export default function FormModal(props) {
 
 
 
-const Header = (props) => {
+const Header = (props: { children: React.ReactNode }) => {
     return (
         <div className="modal-header">
             {props.children}
@@ -24,7 +29,7 @@ const Header = (props) => {
     )
 }
 
-const Body = (props) => {
+const Body = (props: { children: React.ReactNode }) => {
 
     return (
         <div className="modal-body" {...props}>
@@ -33,7 +38,7 @@ const Body = (props) => {
     )
 }
 
-const Footer = (props) => {
+const Footer = (props: Props) => {
     return (
         <div className="modal-footer">
 

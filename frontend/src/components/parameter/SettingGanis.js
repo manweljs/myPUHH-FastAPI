@@ -1,7 +1,7 @@
 import { Button, Input, InputNumber, Popconfirm, Radio, Select, Table, message } from 'antd'
 import React, { useEffect, useState } from 'react'
 import { CreateGanis, CreateTPK, CreateTPn, DeleteGanis, DeleteTPK, DeleteTPn, GetAllBlok, GetAllGanis, GetAllJabatanGanis, GetAllTPK, GetAllTPn, GetGanis, GetTPK, GetTPn, UpdateGanis, UpdateTPK, UpdateTPn } from '../../api/SettingAPI'
-import FormModal from '../global/FormModal'
+import FormModal from '../forms/FormModal'
 import dayjs from 'dayjs'
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons"
 

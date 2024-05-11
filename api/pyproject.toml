@@ -11,6 +11,7 @@ authors = ["manweljs <manweljs@gmail.com>"]
 readme = "README.md"
 package-mode = false
 
+
 [tool.poetry.dependencies]
 python = "^3.10"
 aerich = "^0.7.2"
@@ -39,3 +40,4 @@ openpyxl = "^3.1.2"
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+

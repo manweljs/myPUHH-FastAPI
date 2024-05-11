@@ -90,15 +90,11 @@ const Menu = (props: { minimize: boolean }) => {
     useEffect(() => {
         // Calculate the active index
         const activeIndex = menuItems.findIndex(item => item.title === page);
-
-        console.log('page', page)
-        console.log('activeIndex', activeIndex)
         const offset = activeIndex * 45; // Assuming each menu item has a height of 45px
-        console.log('offset', offset)
         setYOffset(offset);
     }, [page]);
 
-    console.log('yOffset', yOffset)
+    // console.log('yOffset', yOffset)
 
 
     return (

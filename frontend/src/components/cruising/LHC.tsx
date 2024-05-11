@@ -13,7 +13,7 @@ import {
   message,
 } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
-import FormModal from "../global/FormModal";
+import FormModal from "../forms/FormModal";
 import dayjs from "dayjs";
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
 import style from "./cruising.module.sass";

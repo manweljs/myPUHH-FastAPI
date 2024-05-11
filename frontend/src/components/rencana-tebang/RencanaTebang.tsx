@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import { PageHeader } from '../global/PageHeader';
 import { Button, DatePicker, Input, InputNumber, Popconfirm, Radio, Select, Table, message } from 'antd';
-import FormModal from '../global/FormModal';
+import FormModal from '../forms/FormModal';
 import dayjs from 'dayjs';
 import { EditOutlined, DeleteOutlined, SearchOutlined } from "@ant-design/icons";
 import styles from "./rencana-tebang.module.sass"

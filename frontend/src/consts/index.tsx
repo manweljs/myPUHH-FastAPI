@@ -2,6 +2,9 @@
 export const ACCESS_TOKEN_KEY = "access_token";
 export const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 export const PRIMARY_COLOR = "#0AAA08"
+
+export const LOGO_DEFAULT = "/images/office.png";
+
 type PageInfo = {
     TITLE: string,
     URL: string

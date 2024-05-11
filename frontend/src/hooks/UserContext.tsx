@@ -2,16 +2,17 @@
 import { GetPerusahaan, GetUser } from '@/api';
 import { PAGE } from '@/consts';
 import { getToken } from '@/functions';
-import { Perusahaan, User } from '@/types';
+import { PerusahaanType, UserType } from '@/types';
+import { notification } from 'antd';
 import { useRouter } from 'next/navigation';
 import React, { createContext, Dispatch, ReactNode, SetStateAction, useContext, useEffect, useState } from 'react';
 
 
 type UserContextType = {
-    user: User | null;
-    setUser: (user: User) => void;
-    perusahaan: Perusahaan | null;
-    setPerusahaan: (perusahaan: Perusahaan) => void;
+    user: UserType | null;
+    setUser: (user: UserType) => void;
+    perusahaan: PerusahaanType | null;
+    setPerusahaan: (perusahaan: PerusahaanType) => void;
     navigate: (path: string) => void;
     page: string;
     setPage: (page: string) => void;
@@ -39,11 +40,12 @@ const defaultState: UserContextType = {
 const UserContext = createContext<UserContextType>(defaultState);
 
 export const UserProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-    const [user, setUser] = useState<User | null>(null);
-    const [perusahaan, setPerusahaan] = useState<Perusahaan | null>(null)
+    const [user, setUser] = useState<UserType | null>(null);
+    const [perusahaan, setPerusahaan] = useState<PerusahaanType | null>(null)
     const [page, setPage] = useState<string>(PAGE.DASHBOARD.TITLE)
     const [minimizeSidebar, setMinimizeSidebar] = useState<boolean>(false)
     const [theme, setTheme] = useState<string>("light")
+    const [api, contextHolder] = notification.useNotification()
 
     const router = useRouter()
 

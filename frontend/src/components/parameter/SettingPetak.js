@@ -1,7 +1,7 @@
 import { Button, Input, InputNumber, Popconfirm, Select, Table, message } from 'antd'
 import React, { useEffect, useState } from 'react'
 import { CreatePetak, DeletePetak, GetAllBlok, GetAllPetak, GetPetak, UpdatePetak } from '../../api/SettingAPI'
-import FormModal from '../global/FormModal'
+import FormModal from '../forms/FormModal'
 import { EditOutlined, DeleteOutlined, UploadOutlined } from "@ant-design/icons"
 import { FormUploadCSV } from 'components/forms/FormUploadCSV'
 

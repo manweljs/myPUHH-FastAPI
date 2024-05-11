@@ -1,3 +1,5 @@
+from turtle import update
+from umum.schemas import ResponseSchema
 from .models import User, Perusahaan
 from . import schemas
 from fastapi import HTTPException, status, APIRouter, Depends
@@ -105,11 +107,29 @@ async def create_perusahaan(
     response_model=schemas.PerusahaanSchema,
 )
 async def get_perusahaan(perusahaan: Perusahaan = Depends(get_perusahaan)):
-    print("masuk disini")
     perusahaan = await Perusahaan.get_or_none(id=perusahaan).prefetch_related(
         "kabupaten"
     )
     return perusahaan
+
+
+@router.put(
+    "/Perusahaan",
+    status_code=status.HTTP_200_OK,
+    response_model=ResponseSchema,
+)
+async def update_perusahaan(
+    data: schemas.PerusahaanInSchema,
+    perusahaan: Perusahaan = Depends(get_perusahaan),
+):
+
+    dump = data.model_dump(exclude_unset=True)
+    dump["kabupaten_id"] = dump.pop("kabupaten", None)
+    for key, value in dump.items():
+        setattr(perusahaan, key, value)
+
+    await perusahaan.save()
+    return ResponseSchema(message="Data berhasil diupdate")
 
 
 @router.get(

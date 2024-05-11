@@ -40,7 +40,6 @@ const Wrapper = ({ children, accessToken, syncfusionKey }: Props) => {
     let className = minimizeSidebar ? "min" : ""
     accessToken ? (className += " has-navbar") : (className += " public")
 
-    console.log('minimizeSidebar', minimizeSidebar)
     return (
         <ConfigProvider
             theme={{
