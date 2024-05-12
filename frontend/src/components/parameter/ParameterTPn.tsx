@@ -1,16 +1,16 @@
-import { Button, Popconfirm, Table } from 'antd'
+import { Button, Input, InputNumber, Popconfirm, Select, Table, message } from 'antd'
 import React, { useEffect, useState } from 'react'
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons"
-import { TPKType } from '@/types'
-import { DeleteTPK, GetAllTPK } from '@/api'
-import { FormTPK } from '@/components/forms/FormTPK'
+import { TPnType } from '@/types'
+import { DeleteTPn, GetAllTPn } from '@/api'
+import { FormTPn } from '@/components/forms/FormTPn'
 
-const page = "TPK"
+const page = "TPn"
 
-export function ParameterTPK() {
+export function ParameterTPn() {
 
-    const [TPKId, setTPKId] = useState<string | null>(null)
-    const [listTPK, setListTPK] = useState<TPKType[]>([])
+    const [TPnId, setTPnId] = useState<string | null>(null)
+    const [listTPn, setListTPn] = useState<TPnType[]>([])
     const [displayForm, setDisplayForm] = useState(false)
     const [loading, setLoading] = useState(true)
 
@@ -21,22 +21,14 @@ export function ParameterTPK() {
             dataIndex: 'nama',
         },
         {
-            key: 'kategori',
-            title: 'kategori',
-            dataIndex: 'kategori',
-            render: (kategori: number) => (
-                <span>{kategori === 0 ? "TPK Hutan" : "TPK Antara"}</span>
-            )
-        },
-        {
-            key: 'alamat',
-            title: 'Alamat',
-            dataIndex: 'alamat',
+            key: 'blok',
+            title: 'Blok',
+            render: (record: TPnType) => record.blok.nama
         },
         {
             key: 'action',
             title: '',
-            render: (record: TPKType) => (
+            render: (record: TPnType) => (
                 <div className="action">
                     <EditOutlined onClick={() => record.id && handleEdit(record.id)} />
                     <Popconfirm
@@ -57,7 +49,7 @@ export function ParameterTPK() {
 
     const handleClose = () => {
         setDisplayForm(false)
-        setTPKId(null)
+        setTPnId(null)
     }
 
     const handleAdd = () => {
@@ -66,23 +58,24 @@ export function ParameterTPK() {
     }
 
     const handleEdit = (id: string) => {
-        setTPKId(id)
+        setTPnId(id)
         setDisplayForm(true)
     }
 
     const handleDelete = async (id: string) => {
-        const response = await DeleteTPK(id)
+        const response = await DeleteTPn(id)
         console.log(response)
         if (response.success) {
+            message.success(`${page} Dihapus!`)
             handleGetAll()
         }
     }
 
     const handleGetAll = async () => {
         setLoading(false)
-        const response = await GetAllTPK()
+        const response = await GetAllTPn()
         console.log(response)
-        setListTPK(response)
+        setListTPn(response)
         setLoading(false)
     }
 
@@ -104,15 +97,15 @@ export function ParameterTPK() {
             <Table
                 className={`table-${page}`}
                 columns={columns}
-                dataSource={listTPK}
+                dataSource={listTPn}
                 loading={loading}
                 rowKey={"id"}
             />
 
             {displayForm &&
-                <FormTPK
+                <FormTPn
                     open={displayForm}
-                    id={TPKId}
+                    id={TPnId}
                     close={handleClose}
                     reload={handleGetAll}
                 />
@@ -121,5 +114,10 @@ export function ParameterTPK() {
     )
 }
 
+const initial = {
+    rkt: null,
+    nama: "",
+    luas: 0,
 
+}
 

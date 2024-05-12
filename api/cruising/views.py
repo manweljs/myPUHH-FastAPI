@@ -35,7 +35,7 @@ async def create_lhc(
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
 
 
-@router.get("/LHC/GetAll", response_model=List[schemas.LHCPydanticSchema])
+@router.get("/LHC/GetAll", response_model=List[schemas.LHCSchema])
 async def get_all_lhc(perusahaan: Perusahaan = Depends(get_perusahaan)):
     lhc = await LHC.filter(perusahaan=perusahaan).prefetch_related("tahun")
     return lhc

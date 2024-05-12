@@ -3,18 +3,16 @@ import { Tabs } from 'antd'
 import React, { useEffect } from 'react'
 import "./setting.css"
 import { ParameterTahunKegiatan } from './ParameterTahunKegiatan'
-import SettingPetak from './ParameterPetak'
-import SettingTPn from './SettingTPn'
+import { ParameterTPn } from './ParameterTPn'
 import { ParameterTPK } from './ParameterTPK'
-import SettingGanis from './SettingGanis'
+import { ParameterGanis } from './ParameterGanis'
 import SettingPerusahaanPembeli from './SettingPerusahaanPembeli'
-import SettingAlatAngkut from './SettingAlatAngkut'
 import { ParameterPerusahaan } from './ParameterPerusahaan'
 import { useUserContext } from '@/hooks/UserContext'
 import { PAGE } from '@/consts'
 import { PageHeader } from '@/components/global/PageHeader';
 import { ParameterBlok } from './ParameterBlok';
-import ParameterPetak from './ParameterPetak';
+import { ParameterPetak } from './ParameterPetak';
 
 
 export function Parameter() {
@@ -45,21 +43,21 @@ export function Parameter() {
             label: "Petak",
             children: <ParameterPetak />
         },
-        //     {
-        //         key: "TPn",
-        //         label: "TPn",
-        //         children: <SettingTPn />
-        //     },
+        {
+            key: "TPn",
+            label: "TPn",
+            children: <ParameterTPn />
+        },
         {
             key: "TPK ",
             label: "TPK ",
             children: <ParameterTPK />
         },
-        //     {
-        //         key: "Ganis",
-        //         label: "Ganis",
-        //         children: <SettingGanis />
-        //     },
+        {
+            key: "Ganis",
+            label: "Ganis",
+            children: <ParameterGanis />
+        },
         //     {
         //         key: "Buyer",
         //         label: "Perusahaan Pembeli",

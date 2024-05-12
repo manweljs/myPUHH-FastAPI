@@ -1,4 +1,4 @@
-import { BlokInType, PetakInType, TahunKegiatanType, TPKInType } from "@/types";
+import { BlokInType, GanisInType, PetakInType, TahunKegiatanType, TPKInType } from "@/types";
 import { sendRequest } from "./Main";
 import { API_URL } from "@/consts";
 
@@ -142,3 +142,77 @@ export const DeleteTPK = async (id: string) => {
     return await sendRequest(endpoint, method);
 
 }
+
+
+export const CreateTPn = async (data: any) => {
+    const endpoint = `${API_URL}/api/Parameter/TPn/`;
+    const method = 'POST';
+    return await sendRequest(endpoint, method, data);
+}
+
+export const GetAllTPn = async () => {
+    const endpoint = `${API_URL}/api/Parameter/TPn/GetAll`;
+    const method = 'GET';
+    return await sendRequest(endpoint, method);
+
+}
+
+export const GetTPn = async (id: string) => {
+    const endpoint = `${API_URL}/api/Parameter/TPn/${id}`;
+    const method = 'GET';
+    return await sendRequest(endpoint, method);
+
+}
+
+
+export const UpdateTPn = async (data: any, id: string) => {
+    const endpoint = `${API_URL}/api/Parameter/TPn/${id}`;
+    const method = 'PUT';
+    return await sendRequest(endpoint, method, data);
+
+}
+
+
+export const DeleteTPn = async (id: string) => {
+    const endpoint = `${API_URL}/api/Parameter/TPn/${id}`;
+    const method = 'DELETE';
+    return await sendRequest(endpoint, method);
+
+}
+
+
+export const CreateGanis = async (data: GanisInType) => {
+    const endpoint = `${API_URL}/api/Parameter/Ganis/`;
+    const method = 'POST';
+    return await sendRequest(endpoint, method, data);
+}
+
+export const GetAllGanis = async () => {
+    const endpoint = `${API_URL}/api/Parameter/Ganis/GetAll`;
+    const method = 'GET';
+    return await sendRequest(endpoint, method);
+
+}
+
+export const GetGanis = async (id: string) => {
+    const endpoint = `${API_URL}/api/Parameter/Ganis/${id}`;
+    const method = 'GET';
+    return await sendRequest(endpoint, method);
+
+}
+
+export const UpdateGanis = async (data: GanisInType, id: string) => {
+    const endpoint = `${API_URL}/api/Parameter/Ganis/${id}`;
+    const method = 'PUT';
+    return await sendRequest(endpoint, method, data);
+
+}
+
+export const DeleteGanis = async (id: string) => {
+    const endpoint = `${API_URL}/api/Parameter/Ganis/${id}`;
+    const method = 'DELETE';
+    return await sendRequest(endpoint, method);
+
+}
+
+

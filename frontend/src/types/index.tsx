@@ -68,7 +68,15 @@ export interface UploadBarcodeType {
 export interface LHCType {
     id?: string;
     nomor: string;
-    tahun_id: string;
+    tahun: TahunKegiatanType;
+    tanggal: string;
+    obyek: number;
+}
+
+export interface LHCInType {
+    id?: string | null;
+    nomor: string;
+    tahun_id: string | null;
     tanggal: string;
     obyek: number;
 }
@@ -140,4 +148,39 @@ export interface TPKInType {
     nama: string;
     kategori: number;
     alamat?: string | null;
+}
+
+
+export interface TPnType {
+    id: string;
+    nama: string;
+    blok: BlokType;
+}
+
+export interface TPnInType {
+    id?: string | null;
+    nama: string;
+    blok_id?: string | null;
+}
+
+export interface JabatanGanisType {
+    id: string;
+    nama: string;
+}
+
+export interface GanisType {
+    id: string;
+    nama: string;
+    jabatan: JabatanGanisType;
+    berlaku_dari: string;
+    berlaku_sampai: string;
+}
+
+
+export interface GanisInType {
+    id?: string | null;
+    nama: string;
+    jabatan_id: string | null;
+    berlaku_dari?: string | null;
+    berlaku_sampai?: string | null;
 }

@@ -42,9 +42,6 @@ export const UploadFileToAWS = async (file: any) => {
 
 }
 
-
-
-
 export const GetAllKabupaten = async () => {
     const endpoint = `${API_URL}/api/Umum/Kabupaten`
     const method = "GET"
@@ -55,5 +52,12 @@ export const GetAllKabupaten = async () => {
 export const GetPresignedUrl = async (filename: string, contentType: string) => {
     const endpoint = `${API_URL}/api/Umum/GetPresignedUrl?file_name=${filename}&content_type=${contentType}`
     const method = "GET"
+    return await sendRequest(endpoint, method)
+}
+
+export const GetAllJabatanGanis = async () => {
+    const endpoint = `${API_URL}/api/Umum/JabatanGanis`
+    const method = "GET"
+
     return await sendRequest(endpoint, method)
 }

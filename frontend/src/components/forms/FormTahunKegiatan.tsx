@@ -5,7 +5,6 @@ import { CreateTahunKegiatan, GetTahunKegiatan, UpdateTahunKegiatan } from '@/ap
 import { Button, Form, notification, message, Spin, DatePicker } from 'antd'
 import FormModal from './FormModal'
 import { Field } from './Field'
-import { FORMAT } from '@/consts'
 
 interface Props {
     id?: string | null,
@@ -18,8 +17,8 @@ interface Props {
 
 const initialTahunKegiatan = {
     tahun: parseInt(dayjs().format("YYYY"), 10),
-    tanggal_mulai: dayjs().format(FORMAT.DATE),
-    tanggal_selesai: dayjs().format(FORMAT.DATE),
+    tanggal_mulai: dayjs().toString(),
+    tanggal_selesai: dayjs().toString(),
 }
 
 
@@ -60,7 +59,7 @@ export const FormTahunKegiatan = (props: Props) => {
         }
         const response = id ? await UpdateTahunKegiatan(data, id) : await CreateTahunKegiatan(data)
         console.log(response)
-        if (response.success) {
+        if (response.success || response.id) {
             message.success('Data berhasil disimpan')
             reload()
             close()

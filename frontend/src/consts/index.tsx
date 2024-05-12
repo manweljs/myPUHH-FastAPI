@@ -41,3 +41,8 @@ export enum JENIS_TPK {
     TPK_HUTAN = 0,
     TPK_ANTARA = 1
 }
+
+export enum OBYEK {
+    BLOK_PETAK = 0,
+    TRASE_JALAN = 1
+}

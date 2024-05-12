@@ -1,11 +1,11 @@
 import React from 'react'
 import styles from "./field.module.sass"
-import { Checkbox, DatePicker, Form, Input, InputNumber, message, Select } from 'antd'
+import { Checkbox, DatePicker, Form, Input, InputNumber, message, Radio, Select } from 'antd'
 import FormItem from 'antd/es/form/FormItem'
 import { FORMAT } from '@/consts'
 import dayjs from 'dayjs'
 
-type FieldType = "char" | "checkbox" | "select" | "textArea" | "date" | "number" | "file" | "image" | "password" | "email" | "phone" | "time" | "dateTime"
+type FieldType = "char" | "checkbox" | "select" | "textArea" | "date" | "number" | "file" | "image" | "password" | "email" | "phone" | "time" | "dateTime" | "radioSelect"
 
 export interface FieldsProps {
     type: FieldType
@@ -37,6 +37,8 @@ export function Field(props: FieldsProps) {
         className
     } = props
 
+
+
     return (
         <div className={styles.field}>
             <FormItem
@@ -44,9 +46,8 @@ export function Field(props: FieldsProps) {
                 name={name}
                 rules={[{ required: required, message: message }]}
                 className={styles.form_item}
-                initialValue={type === "date" ? dayjs(value) : value}
+                initialValue={getInitialValue(value, type)}
             >
-
                 {type === "char" &&
                     <Input
                         name={name}
@@ -124,9 +125,29 @@ export function Field(props: FieldsProps) {
                     />
                 }
 
+                {type === "radioSelect" &&
+                    <Radio.Group>
+                        {options.map((item: { value: any, label: string }, index: number) => (
+                            <Radio.Button value={item.value} key={index}>
+                                {item.label}
+                            </Radio.Button>
+                        ))}
+                    </Radio.Group>
+                }
+
             </FormItem>
             <div className={styles.tip}>{tip}</div>
 
         </div>
     )
+}
+
+
+const getInitialValue = (value: any, type: FieldType) => {
+    if (type === "date") {
+        const now = dayjs().format(FORMAT.DATE)
+        const dateValue = value ? dayjs(value) : now
+        return dateValue
+    }
+    return value
 }

@@ -1,4 +1,4 @@
-from .models import TahunKegiatan, TPK, Blok, Petak, Ganis
+from .models import TPn, TahunKegiatan, TPK, Blok, Petak, Ganis
 from fastapi import APIRouter, status, Depends, HTTPException
 from typing import List
 from utils.tokens import get_perusahaan
@@ -159,45 +159,51 @@ async def delete_TPK(id: str, perusahaan: Perusahaan = Depends(get_perusahaan)):
 
 
 @router.post(
-    "/TPN/",
+    "/TPn/",
     status_code=status.HTTP_201_CREATED,
-    response_model=schemas.TPnInSchema,
+    response_model=schemas.TPnSchema,
 )
 async def create_TPn(
     data: schemas.TPnInSchema, perusahaan: Perusahaan = Depends(get_perusahaan)
 ):
+    print("masuk create TPn")
     tpn = data.model_dump()
     tpn["perusahaan_id"] = perusahaan
+    print(tpn)
     try:
-        return await TPK.create(**tpn)
+        tpn = await TPn.create(**tpn)
+        await tpn.fetch_related("blok")
+        return tpn
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
 
 @router.get(
-    "/TPN/GetAll",
+    "/TPn/GetAll",
     response_model=List[schemas.TPnSchema],
     status_code=status.HTTP_200_OK,
 )
 async def get_all_TPn(perusahaan: Perusahaan = Depends(get_perusahaan)):
-    data = await TPK.filter(perusahaan=perusahaan)
+    data = await TPn.filter(perusahaan=perusahaan).prefetch_related("blok")
     return data
 
 
 @router.get(
-    "/TPN/{id}",
+    "/TPn/{id}",
     response_model=schemas.TPnSchema,
     status_code=status.HTTP_200_OK,
 )
 async def get_TPN(id: str, perusahaan: Perusahaan = Depends(get_perusahaan)):
-    data = await TPK.filter(id=id, perusahaan=perusahaan).first()
+    data = (
+        await TPn.filter(id=id, perusahaan=perusahaan).first().prefetch_related("blok")
+    )
     if not data:
         raise HTTPException(status_code=404, detail="Data tidak ditemukan")
     return data
 
 
 @router.put(
-    "/TPN/{id}",
+    "/TPn/{id}",
     status_code=status.HTTP_200_OK,
     response_model=Response,
 )
@@ -206,8 +212,8 @@ async def update_TPn(
     data: schemas.TPnInSchema,
     perusahaan: Perusahaan = Depends(get_perusahaan),
 ):
-
-    updated_count = await TPK.filter(id=id, perusahaan=perusahaan).update(
+    print("masuk update TPn")
+    updated_count = await TPn.filter(id=id, perusahaan=perusahaan).update(
         **data.model_dump(exclude_unset=True)
     )
     if updated_count == 0:
@@ -216,12 +222,12 @@ async def update_TPn(
 
 
 @router.delete(
-    "/TPN/{id}",
+    "/TPn/{id}",
     status_code=status.HTTP_200_OK,
     response_model=Response,
 )
 async def delete_TPn(id: str, perusahaan: Perusahaan = Depends(get_perusahaan)):
-    tpn = await TPK.get_or_none(id=id, perusahaan=perusahaan)
+    tpn = await TPn.get_or_none(id=id, perusahaan=perusahaan)
     if tpn:
         await tpn.delete()
         return Response(message="Data berhasil dihapus")
@@ -395,7 +401,9 @@ async def create_ganis(
     data = data.model_dump()
     data["perusahaan_id"] = perusahaan
     try:
-        return await Ganis.create(**data)
+        ganis = await Ganis.create(**data)
+        await ganis.fetch_related("jabatan")
+        return ganis
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 

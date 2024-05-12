@@ -1,0 +1,15 @@
+.tip {
+  font-size: 0.85rem;
+  opacity: 0.7;
+}
+
+.field .form_item {
+  margin-bottom: 0.75rem;
+}
+.field .form_item label {
+  text-transform: capitalize;
+}
+
+.form_perusahaan {
+  width: clamp(300px, 100%, 500px);
+}/*# sourceMappingURL=field.module.css.map */

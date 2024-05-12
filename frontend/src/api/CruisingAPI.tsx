@@ -1,6 +1,6 @@
 import { API_URL } from "@/consts"
 import { sendRequest } from "./Main"
-import { LHCType } from "@/types"
+import { LHCInType, LHCType } from "@/types"
 
 
 export const GetAllLHC = async () => {
@@ -17,14 +17,14 @@ export const GetLHC = async (id: string) => {
 
 }
 
-export const CreateLHC = async (data: LHCType) => {
+export const CreateLHC = async (data: LHCInType) => {
     const endpoint = `${API_URL}/api/Cruising/LHC`
     const method = "POST"
     return await sendRequest(endpoint, method, data)
 
 }
 
-export const UpdateLHC = async (data: LHCType, id: string) => {
+export const UpdateLHC = async (data: LHCInType, id: string) => {
     const endpoint = `${API_URL}/api/Cruising/LHC/${id}`
     const method = "PUT"
     return await sendRequest(endpoint, method, data)

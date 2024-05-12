@@ -128,9 +128,13 @@ body.min #root .navbar .menu {
 .ant-table th {
   text-transform: capitalize;
 }
-.ant-table .ant-table-row .action {
-  display: flex;
+.ant-table .ant-table-cell {
+  padding: 0.6rem !important;
+}
+.ant-table .ant-table-cell .action {
+  display: inline-flex;
   justify-content: flex-end;
+  width: 100%;
   gap: 10px;
 }
 

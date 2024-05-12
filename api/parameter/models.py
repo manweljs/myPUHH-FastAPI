@@ -31,6 +31,7 @@ class TPK(CustomModel):
 
 class TPn(CustomModel):
     nama = fields.CharField(255)
+    blok = fields.ForeignKeyField("models.Blok", on_delete=fields.SET_NULL, null=True)
     perusahaan = fields.ForeignKeyField("models.Perusahaan", on_delete=fields.CASCADE)
 
     class Meta:

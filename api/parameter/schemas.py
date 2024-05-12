@@ -47,21 +47,6 @@ class TPKInSchema(PydanticModel):
         from_attributes = True
 
 
-class TPnSchema(PydanticModel):
-    id: UUID
-    nama: str
-
-    class Config:
-        from_attributes = True
-
-
-class TPnInSchema(PydanticModel):
-    nama: str
-
-    class Config:
-        from_attributes = True
-
-
 class BlokSchema(PydanticModel):
     id: UUID
     nama: str
@@ -101,6 +86,31 @@ class PetakInSchema(PydanticModel):
     nama: str
     blok_id: UUID
     luas: float
+
+    class Config:
+        from_attributes = True
+
+
+class BaseBlokSchema(PydanticModel):
+    id: UUID
+    nama: str
+
+    class Config:
+        from_attributes = True
+
+
+class TPnSchema(PydanticModel):
+    id: UUID
+    nama: str
+    blok: BaseBlokSchema
+
+    class Config:
+        from_attributes = True
+
+
+class TPnInSchema(PydanticModel):
+    nama: str
+    blok_id: UUID
 
     class Config:
         from_attributes = True

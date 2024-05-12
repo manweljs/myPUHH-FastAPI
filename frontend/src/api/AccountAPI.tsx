@@ -1,6 +1,6 @@
 import { API_URL } from "@/consts";
 import { sendPublicRequest, sendRequest } from "./Main";
-import { PerusahaanInType, PerusahaanType } from "@/types";
+import { PerusahaanInType } from "@/types";
 
 export const LoginUser = async (username: string, password: string) => {
     const endpoint = `${API_URL}/api/Account/Login`;

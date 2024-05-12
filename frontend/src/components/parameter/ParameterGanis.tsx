@@ -1,50 +1,56 @@
-import { Button, Input, InputNumber, Popconfirm, Table, message } from 'antd'
+import { Button, Popconfirm, Table } from 'antd'
 import React, { useEffect, useState } from 'react'
-import FormModal from '../forms/FormModal'
+
 import dayjs from 'dayjs'
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons"
-import { TahunKegiatanType } from '@/types'
-import { DeleteTahunKegiatan, GetAllTahunKegiatan } from '@/api'
-import { FormTahunKegiatan } from '../forms/FormTahunKegiatan'
+import { GanisType } from '@/types'
+import { FormGanis } from '../forms/FormGanis'
+import { DeleteGanis, GetAllGanis } from '@/api'
 import { FORMAT } from '@/consts'
 
-export function ParameterTahunKegiatan() {
+const page = "Ganis"
 
-    const [tahunKegiatanId, setTahunKegiatanId] = useState<string | null>(null)
-    const [listTahunKegiatan, setListTahunKegiatan] = useState<TahunKegiatanType[]>([])
+export function ParameterGanis() {
+
+    const [ganisId, setGanisId] = useState<string | null>(null)
+    const [listGanis, setListGanis] = useState<GanisType[]>([])
     const [displayForm, setDisplayForm] = useState(false)
     const [loading, setLoading] = useState(true)
 
     const columns = [
         {
-            key: 'tahun',
-            title: 'Tahun',
-            dataIndex: 'tahun',
+            key: 'nama',
+            title: 'nama',
+            dataIndex: 'nama',
         },
-
         {
-            key: 'tanggal_mulai',
-            title: 'Tanggal Mulai',
-            dataIndex: 'tanggal_mulai',
+            key: 'jabatan',
+            title: 'jabatan',
+            render: (record: GanisType) => record.jabatan.nama
+        },
+        {
+            key: 'berlaku_dari',
+            title: 'berlaku dari',
+            dataIndex: 'berlaku_dari',
             render: (date: string) => (dayjs(date).format(FORMAT.DATE))
         },
-
         {
-            key: 'tanggal_selesai',
-            title: 'Tanggal Selesai',
-            dataIndex: 'tanggal_selesai',
+            key: 'berlaku_sampai',
+            title: 'berlaku sampai',
+            dataIndex: 'berlaku_sampai',
             render: (date: string) => (dayjs(date).format(FORMAT.DATE))
+
         },
         {
             key: 'action',
             title: '',
-            render: (record: TahunKegiatanType) => (
+            render: (record: GanisType) => (
                 <div className="action">
                     <EditOutlined onClick={() => record.id && handleEdit(record.id)} />
                     <Popconfirm
                         placement="bottomRight"
-                        title={"Hapus RKT"}
-                        description={"Apakah anda yakin menghapus RKT ini ?"}
+                        title={`Hapus ${page}`}
+                        description={`Apakah anda yakin menghapus ${page} ini ?`}
                         onConfirm={() => record.id && handleDelete(record.id)}
                         okText="Hapus"
                         cancelText="Batal"
@@ -59,7 +65,7 @@ export function ParameterTahunKegiatan() {
 
     const handleClose = () => {
         setDisplayForm(false)
-        setTahunKegiatanId(null)
+        setGanisId(null)
     }
 
     const handleAdd = () => {
@@ -68,32 +74,32 @@ export function ParameterTahunKegiatan() {
     }
 
     const handleEdit = (id: string) => {
-        setTahunKegiatanId(id)
+        setGanisId(id)
         setDisplayForm(true)
     }
 
     const handleDelete = async (id: string) => {
-        const response = await DeleteTahunKegiatan(id)
+        const response = await DeleteGanis(id)
         console.log(response)
-        response.success && handleGetAllRKT()
+        response.status && handleGetAll()
     }
 
-    const handleGetAllRKT = async () => {
+    const handleGetAll = async () => {
         setLoading(false)
-        const response = await GetAllTahunKegiatan()
+        const response = await GetAllGanis()
         console.log(response)
-        setListTahunKegiatan(response)
+        setListGanis(response)
         setLoading(false)
     }
 
     useEffect(() => {
-        handleGetAllRKT()
+        handleGetAll()
     }, []);
 
     return (
-        <div className="setting-rkt">
+        <div className={`setting-${page}`}>
             <div className="header mb-3">
-                <h3>Tahun Kegiatan</h3>
+                <h3>{page}</h3>
                 <Button
                     type='primary'
                     onClick={handleAdd}
@@ -102,18 +108,19 @@ export function ParameterTahunKegiatan() {
 
 
             <Table
-                className='table-rkt'
+                className={`table-${page}`}
                 columns={columns}
-                dataSource={listTahunKegiatan}
+                dataSource={listGanis}
                 loading={loading}
                 rowKey={"id"}
             />
 
             {displayForm &&
-                <FormTahunKegiatan
-                    id={tahunKegiatanId}
+                <FormGanis
+                    id={ganisId}
+                    open={displayForm}
                     close={handleClose}
-                    reload={handleGetAllRKT}
+                    reload={handleGetAll}
                 />
             }
         </div>

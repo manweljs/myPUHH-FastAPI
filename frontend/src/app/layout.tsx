@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
 import { APP } from "./APP";
-import "@/styles/global.css";
-import "@flaticon/flaticon-uicons/css/all/all.css"
 import "@/styles/variables.css"
+import "@/styles/global.css";
+import "@/styles/style.css";
+import "@flaticon/flaticon-uicons/css/all/all.css"
 import '@syncfusion/ej2-base/styles/material.css';
 import '@syncfusion/ej2-inputs/styles/material.css';
 import '@syncfusion/ej2-buttons/styles/material.css';

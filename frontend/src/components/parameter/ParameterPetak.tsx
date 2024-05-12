@@ -8,7 +8,7 @@ import { FormPetak } from '@/components/forms/FormPetak'
 
 const page = "Petak"
 
-export default function ParameterPetak() {
+export function ParameterPetak() {
 
     const [objectId, setObjectId] = useState<string | null>(null)
     const [objects, setObjects] = useState<PetakType[]>([])
