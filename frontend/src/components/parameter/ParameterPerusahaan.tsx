@@ -5,6 +5,7 @@ import { FormPerusahaan } from '../forms/FormPerusahaan'
 import { LOGO_DEFAULT } from '@/consts'
 import { Button } from 'antd'
 import { useUserContext } from '@/hooks/UserContext'
+import Image from 'next/image'
 
 
 const page = "Perusahaan"
@@ -49,7 +50,9 @@ export function ParameterPerusahaan() {
                 !displayForm && perusahaan &&
                 <div className="detail-perusahaan mb-6">
                     <div className="name-box">
-                        <img src={perusahaan.logo || LOGO_DEFAULT} alt="" className="logo" />
+
+                        <Image src={perusahaan.logo || LOGO_DEFAULT} alt="" width={80} height={80} />
+
                         <div className="group">
                             <h2>{perusahaan.nama}</h2>
                             <p>{perusahaan.alamat}

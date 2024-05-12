@@ -38,8 +38,8 @@ export type PerusahaanInType = {
 export interface TahunKegiatanType {
     id?: string;
     tahun: number;
-    tanggal_mulai?: string;
-    tanggal_selesai?: string;
+    tanggal_mulai?: string | null;
+    tanggal_selesai?: string | null;
 }
 
 
@@ -101,3 +101,43 @@ export interface KabupatenType {
     propinsi?: string;
 }
 
+export interface BlokType {
+    id?: string | null;
+    nama: string;
+    tahun: TahunKegiatanType;
+}
+
+export interface BlokInType {
+    id?: string | null;
+    nama: string;
+    tahun_id?: string | null;
+}
+
+export interface PetakType {
+    id?: string;
+    nama: string;
+    blok: BlokType;
+    luas?: number | null;
+}
+
+export interface PetakInType {
+    id?: string | null;
+    nama: string;
+    blok_id?: string | null;
+    luas?: number | null;
+}
+
+
+export interface TPKType {
+    id: string;
+    nama: string;
+    kategori: number;
+    alamat?: string | null;
+}
+
+export interface TPKInType {
+    id?: string | null;
+    nama: string;
+    kategori: number;
+    alamat?: string | null;
+}

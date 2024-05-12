@@ -24,6 +24,13 @@ const initialData: PerusahaanInType = {
 
 }
 
+const getOriginalFileUrl = (url: string) => {
+    console.log('url untuk di parse', url)
+    const decodedUrl = decodeURIComponent(url.split('?')[0])
+    console.log('url yg di kembalikan', decodedUrl)
+    return decodedUrl
+}
+
 export const FormPerusahaan = (props: Props) => {
     const { perusahaan, close, reload } = props
     const [loading, setLoading] = useState(false)
@@ -83,12 +90,12 @@ export const FormPerusahaan = (props: Props) => {
                 type="textArea"
                 name="alamat"
                 label='Alamat'
-                value={perusahaan.alamat}
+                value={formData.alamat}
             />
 
             <FieldKabupaten value={formData.kabupaten_id} />
 
-            <FieldLogo data={perusahaan} handleUpdate={handleFormChange} />
+            <FieldLogo data={formData} handleUpdate={handleFormChange} />
 
             <Space>
                 <Button
@@ -105,7 +112,7 @@ export const FormPerusahaan = (props: Props) => {
 }
 
 const FieldLogo = (props: {
-    data: PerusahaanType,
+    data: PerusahaanInType,
     handleUpdate: (arg: any) => void
 }) => {
 
@@ -114,13 +121,12 @@ const FieldLogo = (props: {
 
     const handleChange = async (e: any) => {
         console.log('response', e)
-        // setFile(e.file)
         handleUpdate({
             logo: e
         })
     }
 
-
+    console.log('data di field logo', data)
     useEffect(() => {
         if (data.logo) {
             setFile({
@@ -130,6 +136,7 @@ const FieldLogo = (props: {
             })
         }
     }, []);
+
     return (
         <AntdAWSFileUpload
             label="logo"

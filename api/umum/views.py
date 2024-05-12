@@ -112,7 +112,7 @@ async def get_all_tarif():
     "/GetPresignedUrl",
     status_code=status.HTTP_200_OK,
 )
-async def get_presigned_url(file_name: str, content_type: str):
+async def get_presigned_url_for_upload(file_name: str, content_type: str):
     print("Get presigned url", content_type)
     url = await create_presigned_url(file_name, content_type)
     return {"presigned": url}

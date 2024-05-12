@@ -1,3 +1,5 @@
+from utils.functions import decode_url
+from utils.storage import get_presigned_url
 from umum.schemas import ResponseSchema
 from .models import User, Perusahaan
 from . import schemas
@@ -109,6 +111,7 @@ async def get_perusahaan(perusahaan: Perusahaan = Depends(get_perusahaan)):
     perusahaan = await Perusahaan.get_or_none(id=perusahaan).prefetch_related(
         "kabupaten"
     )
+    perusahaan.logo = await get_presigned_url(perusahaan.logo)
     return perusahaan
 
 
@@ -118,13 +121,14 @@ async def get_perusahaan(perusahaan: Perusahaan = Depends(get_perusahaan)):
     response_model=ResponseSchema,
 )
 async def update_perusahaan(
-    data: schemas.PerusahaanInSchema,
+    new_data: schemas.PerusahaanInSchema,
     perusahaan: Perusahaan = Depends(get_perusahaan),
 ):
 
-    dump = data.model_dump(exclude_unset=True)
-    print(dump)
-    for key, value in dump.items():
+    data = new_data.model_dump(exclude_unset=True)
+    data["logo"] = decode_url(data["logo"].split("?")[0])
+    print(data)
+    for key, value in data.items():
         setattr(perusahaan, key, value)
 
     await perusahaan.save()

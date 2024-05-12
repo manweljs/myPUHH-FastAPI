@@ -16,8 +16,10 @@ router = APIRouter(tags=["Parameter"], prefix="/api/Parameter")
     status_code=status.HTTP_200_OK,
 )
 async def get_all_tahun_kegiatan(perusahaan: Perusahaan = Depends(get_perusahaan)):
-    data = await TahunKegiatan.filter(perusahaan=perusahaan).prefetch_related(
-        "perusahaan"
+    data = (
+        await TahunKegiatan.filter(perusahaan=perusahaan)
+        .prefetch_related("perusahaan")
+        .order_by("tahun")
     )
     return data
 

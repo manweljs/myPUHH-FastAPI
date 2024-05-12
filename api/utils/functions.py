@@ -2,6 +2,7 @@ from account.models import User, Perusahaan
 from consts import ROLE
 from passlib.context import CryptContext
 from datetime import datetime
+from urllib.parse import quote, unquote
 
 # Inisialisasi objek CryptContext dengan algoritma bcrypt
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
@@ -42,3 +43,11 @@ def generate_unique_filename(original_filename):
     # Gabungkan nama file dengan timestamp dan ekstensi
     unique_filename = f"{name_part}_{timestamp}.{extension}"
     return unique_filename
+
+
+def encode_url(url):
+    return quote(url, safe="/:?&=")
+
+
+def decode_url(url):
+    return unquote(url)

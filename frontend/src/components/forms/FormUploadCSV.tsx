@@ -1,10 +1,9 @@
 import React, { useState } from 'react'
-import { Alert, Modal, Upload, message } from 'antd';
+import { Alert, Modal, Upload, UploadFile, message } from 'antd';
 import { InboxOutlined } from '@ant-design/icons'
-import { UploadDKBBukuUkur } from 'components/buku-ukur/BukuUkurAPI';
-import { getToken } from 'functions';
-import { HOST } from 'index';
-import { FileType } from 'types';
+import { API_URL } from '@/consts';
+import { getToken } from '@/functions';
+import { FileType } from '@/types';
 
 interface FormUploadCSVProps {
     url: string;
@@ -17,7 +16,7 @@ interface FormUploadCSVProps {
 
 
 const UploadCSV = async (url: string, data: FormData, id: string): Promise<any> => {
-    const endpoint = `${HOST}${url}?pk=${id}`;
+    const endpoint = `${API_URL}${url}?pk=${id}`;
     const method = "POST";
     const headers = {
         'Authorization': `Bearer ${getToken()}`
@@ -31,7 +30,7 @@ const UploadCSV = async (url: string, data: FormData, id: string): Promise<any> 
 
 export function FormUploadCSV(props: FormUploadCSVProps) {
     const { url, open, close, reload, id, title } = props;
-    const [fileList, setFileList] = useState<FileType[]>([]);
+    const [fileList, setFileList] = useState<UploadFile[]>([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
 

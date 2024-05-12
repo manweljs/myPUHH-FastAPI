@@ -33,5 +33,11 @@ export const PAGE: Record<PageTitle, PageInfo> = {
 
 
 export enum FORMAT {
-    DATE = "YYYY-MM-DD",
+    DATE = "DD-MM-YYYY",
+}
+
+
+export enum JENIS_TPK {
+    TPK_HUTAN = 0,
+    TPK_ANTARA = 1
 }

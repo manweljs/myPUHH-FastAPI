@@ -39,7 +39,6 @@ export default function AntdAWSFileUpload(props: Props) {
             file.percent = 30
             setFileList([file]);
             const url = await handleUpload(info.file)
-
             const updatedFileList = info.fileList[0]
             updatedFileList.percent = 100
             setFileList([updatedFileList])
@@ -60,7 +59,7 @@ export default function AntdAWSFileUpload(props: Props) {
     }
 
 
-    // console.log(fileList)
+    console.log("fileList ", fileList)
 
     return (
         <FormItem
