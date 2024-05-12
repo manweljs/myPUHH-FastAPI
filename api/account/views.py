@@ -1,4 +1,3 @@
-from turtle import update
 from umum.schemas import ResponseSchema
 from .models import User, Perusahaan
 from . import schemas
@@ -124,7 +123,7 @@ async def update_perusahaan(
 ):
 
     dump = data.model_dump(exclude_unset=True)
-    dump["kabupaten_id"] = dump.pop("kabupaten", None)
+    print(dump)
     for key, value in dump.items():
         setattr(perusahaan, key, value)
 

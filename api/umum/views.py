@@ -1,3 +1,4 @@
+from utils.storage import AWS_STORAGE_BUCKET_NAME, create_presigned_url, get_s3_client
 from .models import (
     KelasDiameter,
     Propinsi,
@@ -9,7 +10,7 @@ from .models import (
     Jenis,
     Tarif,
 )
-from fastapi import APIRouter, status
+from fastapi import APIRouter, UploadFile, status
 from typing import List
 from . import schemas
 
@@ -105,3 +106,28 @@ async def get_all_kelas_diameter():
 async def get_all_tarif():
     tarif = await Tarif.all().prefetch_related("kelompok_jenis", "sortimen")
     return tarif
+
+
+@router.get(
+    "/GetPresignedUrl",
+    status_code=status.HTTP_200_OK,
+)
+async def get_presigned_url(file_name: str, content_type: str):
+    print("Get presigned url", content_type)
+    url = await create_presigned_url(file_name, content_type)
+    return {"presigned": url}
+
+
+@router.post(
+    "/UploadFile",
+    status_code=status.HTTP_200_OK,
+    tags=["Upload"],
+)
+async def upload_file(file: UploadFile):
+    client = await get_s3_client()
+    data = await file.read()
+    response = await client.put_object(
+        Bucket=AWS_STORAGE_BUCKET_NAME, Key=f"test/{file.filename}", Body=data
+    )
+    await client.close()
+    return {"message": "File uploaded successfully", "response": response}

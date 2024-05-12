@@ -1,6 +1,7 @@
 from account.models import User, Perusahaan
 from consts import ROLE
 from passlib.context import CryptContext
+from datetime import datetime
 
 # Inisialisasi objek CryptContext dengan algoritma bcrypt
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
@@ -31,3 +32,13 @@ async def init_app():
         role=role,
         perusahaan=perusahaan,
     )
+
+
+def generate_unique_filename(original_filename):
+    # Mendapatkan waktu saat ini
+    timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
+    # Pisahkan ekstensi file
+    name_part, extension = original_filename.rsplit(".", 1)
+    # Gabungkan nama file dengan timestamp dan ekstensi
+    unique_filename = f"{name_part}_{timestamp}.{extension}"
+    return unique_filename

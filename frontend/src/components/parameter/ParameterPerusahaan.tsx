@@ -16,18 +16,17 @@ export function ParameterPerusahaan() {
     const [displayForm, setDisplayForm] = useState(false)
     const [loading, setLoading] = useState(true)
 
-    console.log('perusahaan', perusahaan)
 
     const handleClose = () => {
         setDisplayForm(false)
-        handleGet()
+        handleGetPerusahaan()
     }
 
     const handleEdit = () => {
         setDisplayForm(true)
     }
 
-    const handleGet = async () => {
+    const handleGetPerusahaan = async () => {
         setLoading(false)
         const response = await GetPerusahaan()
         setPerusahaan(response)
@@ -36,7 +35,7 @@ export function ParameterPerusahaan() {
 
     useEffect(() => {
         if (!perusahaan) {
-            handleGet()
+            handleGetPerusahaan()
         }
 
     }, [perusahaan]);
@@ -69,7 +68,7 @@ export function ParameterPerusahaan() {
             }
 
             {displayForm && perusahaan ?
-                <FormPerusahaan perusahaan={perusahaan} setPerusahaan={setPerusahaan} close={handleClose} />
+                <FormPerusahaan perusahaan={perusahaan} reload={handleGetPerusahaan} close={handleClose} />
                 :
                 <Button
                     type='primary'

@@ -93,3 +93,17 @@ class KelasDiameterSchema(PydanticModel):
 
     class Config:
         from_attributes = True
+
+
+class PresignedUrlSchema(PydanticModel):
+    url: str
+
+    class Config:
+        from_attributes = True
+
+
+class PresignedUrlInSchema(PydanticModel):
+    file_name: str
+
+    class Config:
+        from_attributes = True

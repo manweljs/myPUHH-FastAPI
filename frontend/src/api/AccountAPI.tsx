@@ -1,6 +1,6 @@
 import { API_URL } from "@/consts";
 import { sendPublicRequest, sendRequest } from "./Main";
-import { PerusahaanType } from "@/types";
+import { PerusahaanInType, PerusahaanType } from "@/types";
 
 export const LoginUser = async (username: string, password: string) => {
     const endpoint = `${API_URL}/api/Account/Login`;
@@ -15,7 +15,7 @@ export const GetPerusahaan = async () => {
     return await sendRequest(endpoint, method);
 }
 
-export const UpdatePerusahaan = async (data: PerusahaanType) => {
+export const UpdatePerusahaan = async (data: PerusahaanInType) => {
     const endpoint = `${API_URL}/api/Account/Perusahaan`;
     const method = "PUT"
     return await sendRequest(endpoint, method, data);

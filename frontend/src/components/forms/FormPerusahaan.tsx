@@ -1,34 +1,53 @@
-import { FileType, PerusahaanType } from "@/types"
-import React, { Dispatch, SetStateAction, useEffect, useState } from "react"
-import { Button, Form, notification } from "antd"
+import { FileType, PerusahaanInType, PerusahaanType } from "@/types"
+import React, { Dispatch, SetStateAction, useEffect, useMemo, useState } from "react"
+import { Button, Form, notification, Space } from "antd"
 import { Field } from "../global"
 import { FieldKabupaten } from "./fields/FieldKabupaten"
-import { UpdatePerusahaan } from "@/api"
+import { GetAllKabupaten, GetPresignedUrl, UpdatePerusahaan } from "@/api"
 import AntdFileUpload from "./AntdFileUpload"
 import styles from "./field.module.sass"
+import AntdAWSFileUpload from "./AntdAWSFileUpload"
 
 interface Props {
     perusahaan: PerusahaanType,
-    setPerusahaan: Dispatch<SetStateAction<PerusahaanType | null>>
-    close: () => void
+    close: () => void,
+    reload: () => void,
 
 }
 
+const initialData: PerusahaanInType = {
+    nama: "",
+    alamat: "",
+    telepon: "",
+    kabupaten_id: null,
+    logo: null,
+
+}
 
 export const FormPerusahaan = (props: Props) => {
-    const { perusahaan, setPerusahaan, close } = props
+    const { perusahaan, close, reload } = props
     const [loading, setLoading] = useState(false)
     const [api, contextHolder] = notification.useNotification()
+    const [formData, setFormData] = useState<PerusahaanInType>(perusahaan ? {
+        ...perusahaan,
+        kabupaten_id: perusahaan.kabupaten?.id,
+    } : initialData)
 
-    const handleUpdate = ({ name, value }: any) => {
-        setPerusahaan((prev: any) => ({
-            ...prev, [name]: value
-        }))
-    }
+    console.log('data', formData)
+
+    useEffect(() => {
+        setFormData({
+            ...perusahaan,
+            kabupaten_id: perusahaan.kabupaten?.id,
+        })
+
+    }, [perusahaan]);
+
 
     const handleSave = async () => {
         setLoading(true)
-        const response = await UpdatePerusahaan(perusahaan)
+        console.log('perusahaan to save', formData)
+        const response = await UpdatePerusahaan(formData)
         console.log(response)
         if (response.success) {
             api.success({
@@ -39,47 +58,47 @@ export const FormPerusahaan = (props: Props) => {
         setLoading(false)
     }
 
-    console.log('perusahaan', perusahaan)
+
+    const handleFormChange = (e: any) => {
+        console.log("form changed", e)
+        setFormData((prev: any) => ({
+            ...prev, ...e
+        }))
+    }
 
     return (
         <Form
             layout='vertical'
             className={styles.form_perusahaan}
+            onValuesChange={handleFormChange}
         >
             {contextHolder}
             <Field
                 type="char"
                 name="nama"
                 label='Nama'
-                value={perusahaan.nama}
-                onChange={(e) => handleUpdate({ name: 'nama', value: e.target.value })}
+                value={formData.nama}
             />
             <Field
                 type="textArea"
                 name="alamat"
                 label='Alamat'
                 value={perusahaan.alamat}
-                onChange={(e) => handleUpdate({ name: 'alamat', value: e.target.value })}
             />
 
-            <FieldKabupaten value={perusahaan.kabupaten?.id} handleUpdate={handleUpdate} />
+            <FieldKabupaten value={formData.kabupaten_id} />
 
-            <Field
-                type="char"
-                name="telepon"
-                label='Telepon'
-                value={perusahaan.telepon}
-                onChange={(e) => handleUpdate({ name: 'telepon', value: e.target.value })}
-            />
-            <FieldLogo data={perusahaan} handleUpdate={handleUpdate} />
-            <div className="group mt-5">
+            <FieldLogo data={perusahaan} handleUpdate={handleFormChange} />
+
+            <Space>
                 <Button
                     onClick={handleSave}
                     type='primary'
                     loading={loading}
                 >Save</Button>
                 <Button onClick={close} className='ml-2' >Cancel</Button>
-            </div>
+            </Space>
+
 
         </Form>
     )
@@ -93,9 +112,12 @@ const FieldLogo = (props: {
     const { data, handleUpdate } = props;
     const [file, setFile] = useState<FileType | null>(null)
 
-    const handleChange = (e: any) => {
-        console.log(e)
-        setFile(e.file)
+    const handleChange = async (e: any) => {
+        console.log('response', e)
+        // setFile(e.file)
+        handleUpdate({
+            logo: e
+        })
     }
 
 
@@ -109,7 +131,7 @@ const FieldLogo = (props: {
         }
     }, []);
     return (
-        <AntdFileUpload
+        <AntdAWSFileUpload
             label="logo"
             maxCount={1}
             callback={handleChange}

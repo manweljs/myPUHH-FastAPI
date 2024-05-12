@@ -42,7 +42,7 @@ nama_perusahaan = "PT. Mardhika Insan Mulia"
 router = APIRouter(prefix="/initapp")
 
 
-@router.post("/", tags=["default"], include_in_schema=True)
+@router.post("/", tags=["default"], include_in_schema=False)
 async def init_app(params: str):
 
     if params != "123":

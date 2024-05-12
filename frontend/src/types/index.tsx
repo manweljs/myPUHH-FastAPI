@@ -18,7 +18,7 @@ export type FileType = {
 
 }
 export type PerusahaanType = {
-    id: number;
+    id: string;
     nama: string;
     alamat?: string;
     logo?: string;
@@ -27,12 +27,12 @@ export type PerusahaanType = {
 }
 
 export type PerusahaanInType = {
-    id: number;
+    id?: string | null;
     nama: string;
-    alamat?: string;
-    logo?: string;
-    telepon?: string;
-    kabupaten_id: string;
+    alamat?: string | null;
+    logo?: string | null;
+    telepon?: string | null;
+    kabupaten_id?: string | null | undefined;
 }
 
 export interface TahunKegiatanType {

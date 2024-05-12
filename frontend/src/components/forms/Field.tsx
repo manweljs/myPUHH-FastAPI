@@ -19,7 +19,21 @@ export interface FieldsProps {
     className?: string
 }
 export function Field(props: FieldsProps) {
-    const { type, maxLength, value, name, label, tip, required = false, onChange, message, options, loading, className } = props
+    const {
+        type,
+        maxLength,
+        value,
+        name,
+        label,
+        tip,
+        required = false,
+        onChange,
+        message,
+        options,
+        loading,
+        className
+    } = props
+
     return (
         <div className={styles.field}>
 
@@ -33,6 +47,25 @@ export function Field(props: FieldsProps) {
 
                 >
                     <Input
+                        name={name}
+                        value={value}
+                        maxLength={maxLength}
+                        required={required}
+                        onChange={onChange}
+                    />
+                </Form.Item>
+            }
+
+            {type === "textArea" &&
+                <Form.Item
+                    label={label || name}
+                    name={name}
+                    rules={[{ required: required, message: message }]}
+                    className={styles.form_item}
+                    initialValue={value}
+
+                >
+                    <Input.TextArea
                         name={name}
                         value={value}
                         maxLength={maxLength}
@@ -90,10 +123,10 @@ export function Field(props: FieldsProps) {
                     name={name}
                     rules={[{ required: required, message: message }]}
                     className={styles.form_item}
+                    initialValue={value}
                 >
                     <Select
                         value={value}
-                        defaultValue={value}
                         onChange={onChange}
                         loading={loading}
                         className={className || "w-100"}

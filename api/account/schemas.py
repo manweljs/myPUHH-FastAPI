@@ -66,4 +66,4 @@ class PerusahaanInSchema(PydanticModel):
     nama: str
     alamat: Optional[str] = None
     logo: Optional[str] = None
-    kabupaten: Optional[UUID] = None
+    kabupaten_id: Optional[UUID] = None

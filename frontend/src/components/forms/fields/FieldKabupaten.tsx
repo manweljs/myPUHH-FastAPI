@@ -1,13 +1,12 @@
 import React, { useEffect } from 'react'
-import { Select } from 'antd'
 import { useState } from 'react';
 import { GetAllKabupaten } from '@/api';
 import { KabupatenType } from '@/types';
 import { Field } from '../Field';
 
 interface Props {
-    value?: string,
-    handleUpdate: (arg: any) => void
+    value?: string | null,
+    handleUpdate?: (arg: any) => void
 }
 
 export const FieldKabupaten = (props: Props) => {
@@ -16,6 +15,7 @@ export const FieldKabupaten = (props: Props) => {
     const [loading, setLoading] = useState(true)
 
     const handleGetAll = async () => {
+        setLoading(true)
         const response = await GetAllKabupaten()
         setObjects(response)
         setLoading(false)
@@ -24,16 +24,16 @@ export const FieldKabupaten = (props: Props) => {
     useEffect(() => {
         handleGetAll()
     }, [])
+
     return (
-        <div className="field ">
-            <Field
-                type="select"
-                name="kabupaten"
-                label='Kabupaten / Kota'
-                value={value}
-                options={objects.map((item: KabupatenType) => ({ value: item.id, label: item.nama }))}
-                onChange={(e: any) => handleUpdate({ name: 'kabupaten', value: e })}
-            />
-        </div>
+        <Field
+            type="select"
+            name="kabupaten_id"
+            label='Kabupaten / Kota'
+            value={value}
+            options={objects.map((item: KabupatenType) => ({ value: item.id, label: item.nama }))}
+            loading={loading}
+            required
+        />
     )
 }
