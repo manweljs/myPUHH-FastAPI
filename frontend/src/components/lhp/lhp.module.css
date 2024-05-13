@@ -1,1 +1,9 @@
-/*# sourceMappingURL=lhp.module.css.map */
+.main {
+  padding: 0.5rem 1rem;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}/*# sourceMappingURL=lhp.module.css.map */

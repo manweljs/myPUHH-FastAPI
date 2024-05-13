@@ -7,7 +7,7 @@ class BukuUkur(CustomModel):
     perusahaan = fields.ForeignKeyField("models.Perusahaan", on_delete=fields.CASCADE)
     nomor = fields.CharField(255)
     tanggal = fields.DateField()
-    obyek = fields.IntField(default=OBYEK.BLOK_PETAK.value)
+    tahun = fields.ForeignKeyField("models.TahunKegiatan", on_delete=fields.CASCADE)
 
     class Meta:
         table = "buku_ukur"

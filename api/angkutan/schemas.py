@@ -3,8 +3,25 @@ from typing import Optional, List
 from uuid import UUID
 from datetime import date
 
+from parameter.schemas import TPKSchema
+
 
 # membuat schema untuk model angkutan
+
+
+class DKBAngkutanBaseSchema(PydanticModel):
+    id: UUID
+    nomor_dkb: str
+    nomor_dokumen: str
+    tanggal: date
+    tpk_asal: TPKSchema
+    tpk_tujuan: TPKSchema
+    alat_angkut: int
+    nama_alat_angkut: Optional[str]
+    dokumen_url: Optional[str]
+
+    class Config:
+        from_attributes = True
 
 
 class DKBAngkutanInSchema(PydanticModel):
@@ -16,7 +33,6 @@ class DKBAngkutanInSchema(PydanticModel):
     alat_angkut: int
     nama_alat_angkut: Optional[str]
     dokumen_url: Optional[str]
-    barcodes: List[UUID]
 
     class Config:
         from_attributes = True
@@ -28,12 +44,11 @@ class DKBAngkutanSchema(PydanticModel):
     nomor_dkb: str
     nomor_dokumen: str
     tanggal: date
-    tpk_asal: UUID
-    tpk_tujuan: UUID
+    tpk_asal: TPKSchema
+    tpk_tujuan: TPKSchema
     alat_angkut: int
     nama_alat_angkut: Optional[str]
     dokumen_url: Optional[str]
-    barcodes: List[UUID]
 
     class Config:
         from_attributes = True

@@ -7,6 +7,7 @@ import { registerLicense } from '@syncfusion/ej2-base';
 import { PRIMARY_COLOR } from '@/consts';
 
 
+
 interface Props {
     children: React.ReactNode;
     syncfusionKey?: string;

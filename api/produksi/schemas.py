@@ -3,6 +3,7 @@ from tortoise.contrib.pydantic.base import PydanticModel
 from typing import Optional
 from uuid import UUID, uuid4
 from datetime import date
+from parameter.schemas import TahunKegiatanSchema
 from cruising.schemas import BaseBarcodeSchema
 from umum.schemas import JenisSchema
 
@@ -11,7 +12,7 @@ class BukuUkurSchema(PydanticModel):
     id: UUID
     nomor: str
     tanggal: date
-    obyek: int
+    tahun: TahunKegiatanSchema
 
     class Config:
         from_attributes = True
@@ -20,7 +21,7 @@ class BukuUkurSchema(PydanticModel):
 class BukuUkurInSchema(PydanticModel):
     nomor: str
     tanggal: date
-    obyek: int
+    tahun_id: UUID
 
     class Config:
         from_attributes = True
@@ -70,8 +71,7 @@ class DKInSchema(PydanticModel):
 
 class LHPSchema(PydanticModel):
     id: UUID
-    perusahaan: UUID
-    tahun: UUID
+    tahun: TahunKegiatanSchema
     nomor: str
     tanggal: date
     obyek: int
@@ -81,7 +81,7 @@ class LHPSchema(PydanticModel):
 
 
 class LHPInSchema(PydanticModel):
-    tahun: UUID
+    tahun_id: UUID
     nomor: str
     tanggal: date
     obyek: int

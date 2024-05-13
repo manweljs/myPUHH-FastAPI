@@ -12,4 +12,9 @@
 
 .form_perusahaan {
   width: clamp(300px, 100%, 500px);
+}
+
+.tpk_group {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
 }/*# sourceMappingURL=field.module.css.map */

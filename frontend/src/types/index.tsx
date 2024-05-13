@@ -44,17 +44,34 @@ export interface TahunKegiatanType {
 
 
 export interface LHPType {
+    id: string;
+    tahun: TahunKegiatanType;
+    nomor: string;
+    tanggal: string;
+    obyek: number;
+}
+
+export interface LHPInType {
     id?: string;
-    tahun: string;
+    tahun_id?: string;
     nomor: string;
     tanggal: string;
     obyek: number;
 }
 
 export interface RencanaTebangType {
+    id: string;
+    nomor: string;
+    tahun: TahunKegiatanType;
+    obyek: number;
+    tanggal: string;
+    faktor: number;
+}
+
+export interface RencanaTebangInType {
     id?: string;
     nomor: string;
-    tahun_id: string | null;
+    tahun_id?: string;
     obyek: number;
     tanggal: string;
     faktor: number;
@@ -86,7 +103,14 @@ export interface BukuUkurType {
     nomor: string;
     tanggal: string;
     obyek: number;
-    tahun_id: string;
+    tahun: TahunKegiatanType;
+}
+
+export interface BukuUkurInType {
+    id?: string;
+    nomor: string;
+    tanggal: string;
+    tahun_id?: string;
 }
 
 export interface PohonType {
@@ -183,4 +207,30 @@ export interface GanisInType {
     jabatan_id: string | null;
     berlaku_dari?: string | null;
     berlaku_sampai?: string | null;
+}
+
+export interface DKBAngkutanType {
+    id: string;
+    nomor_dkb: string;
+    tanggal: string;
+    alat_angkut: number;
+    nomor_dokumen?: string;
+    tpk_asal: TPKType;
+    tpk_tujuan: TPKType;
+    nama_alat_angkut?: string;
+    dokumen_url?: string;
+    barcodes?: string[];
+}
+
+
+export interface DKBAngkutanInType {
+    id?: string | null;
+    nomor_dkb: string;
+    tanggal: string;
+    alat_angkut: number;
+    nomor_dokumen?: string;
+    tpk_asal_id?: string;
+    tpk_tujuan_id?: string;
+    nama_alat_angkut?: string;
+    dokumen_url?: string;
 }

@@ -184,7 +184,10 @@ async def get_all_rencana_tebang(perusahaan: Perusahaan = Depends(get_perusahaan
 async def get_rencana_tebang(
     id: UUID, perusahaan: Perusahaan = Depends(get_perusahaan)
 ):
-    rencana_tebang = await RencanaTebang.get_or_none(id=id, perusahaan=perusahaan)
+    rencana_tebang = await RencanaTebang.get_or_none(
+        id=id, perusahaan=perusahaan
+    ).prefetch_related("tahun")
+
     if not rencana_tebang:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="Rencana Tebang not found"

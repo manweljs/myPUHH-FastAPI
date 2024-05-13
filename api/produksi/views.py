@@ -19,10 +19,12 @@ router = APIRouter(tags=["Produksi"], prefix="/api/Produksi")
 async def create_buku_ukur(
     buku_ukur: schemas.BukuUkurInSchema, perusahaan: str = Depends(get_perusahaan)
 ):
+    print(buku_ukur)
     data = buku_ukur.model_dump()
     data["perusahaan_id"] = perusahaan
     try:
         buku_ukur_created = await BukuUkur.create(**data)
+        await buku_ukur_created.fetch_related("tahun")
         return buku_ukur_created
     except Exception as e:
         return HTTPException(status_code=400, detail=str(e))
@@ -35,7 +37,9 @@ async def create_buku_ukur(
 )
 async def get_all_buku_ukur(perusahaan: str = Depends(get_perusahaan)):
     try:
-        buku_ukur = await BukuUkur.filter(perusahaan=perusahaan)
+        buku_ukur = await BukuUkur.filter(perusahaan=perusahaan).prefetch_related(
+            "tahun"
+        )
         return buku_ukur
     except Exception as e:
         return HTTPException(status_code=400, detail=str(e))
@@ -48,7 +52,9 @@ async def get_all_buku_ukur(perusahaan: str = Depends(get_perusahaan)):
 )
 async def get_buku_ukur(id: UUID, perusahaan: str = Depends(get_perusahaan)):
     try:
-        buku_ukur = await BukuUkur.get_or_none(id=id, perusahaan=perusahaan)
+        buku_ukur = await BukuUkur.get_or_none(
+            id=id, perusahaan=perusahaan
+        ).prefetch_related("tahun")
     except Exception as e:
         return HTTPException(status_code=400, detail=str(e))
     return buku_ukur
@@ -57,14 +63,14 @@ async def get_buku_ukur(id: UUID, perusahaan: str = Depends(get_perusahaan)):
 @router.put(
     "/BukuUkur/{id}",
     status_code=status.HTTP_200_OK,
-    response_model=schemas.BukuUkurSchema,
+    response_model=Response,
 )
 async def update_buku_ukur(id: str, buku_ukur: schemas.BukuUkurInSchema):
     updated_count = await BukuUkur.filter(id=id).update(
         **buku_ukur.model_dump(exclude_unset=True)
     )
     if updated_count == 0:
-        raise HTTPException(status_code=404, detail="Blok not found")
+        raise HTTPException(status_code=404, detail="Buku Ukur not found")
     return Response(message="Data berhasil diupdate")
 
 
@@ -159,6 +165,7 @@ async def create_lhp(
     data["perusahaan_id"] = perusahaan
     try:
         lhp_created = await LHP.create(**data)
+        await lhp_created.fetch_related("tahun")
         return lhp_created
     except Exception as e:
         return HTTPException(status_code=400, detail=str(e))
@@ -171,7 +178,7 @@ async def create_lhp(
 )
 async def get_all_lhp(perusahaan: str = Depends(get_perusahaan)):
     try:
-        lhp = await LHP.filter(perusahaan=perusahaan)
+        lhp = await LHP.filter(perusahaan=perusahaan).prefetch_related("tahun")
         return lhp
     except Exception as e:
         return HTTPException(status_code=400, detail=str(e))
@@ -185,15 +192,16 @@ async def get_all_lhp(perusahaan: str = Depends(get_perusahaan)):
 async def get_lhp(id: UUID, perusahaan: str = Depends(get_perusahaan)):
     try:
         lhp = await LHP.get_or_none(id=id, perusahaan=perusahaan)
+        await lhp.fetch_related("tahun")
+        return lhp
     except Exception as e:
         return HTTPException(status_code=400, detail=str(e))
-    return lhp
 
 
 @router.put(
     "/LHP/{id}",
     status_code=status.HTTP_200_OK,
-    response_model=schemas.LHPSchema,
+    response_model=Response,
 )
 async def update_lhp(id: str, lhp: schemas.LHPInSchema):
     updated_count = await LHP.filter(id=id).update(**lhp.model_dump(exclude_unset=True))

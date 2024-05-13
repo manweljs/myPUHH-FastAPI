@@ -11,6 +11,7 @@ import { useUserContext } from '@/hooks/UserContext';
 import Link from 'next/link';
 import { PAGE } from '@/consts';
 import { PageHeader } from '@/components/global/PageHeader';
+import FIcon from '../global/FIcon';
 const page = PAGE.BUKU_UKUR.TITLE
 
 export default function BukuUkur() {
@@ -25,7 +26,7 @@ export default function BukuUkur() {
         setLoading(true)
         const response = await GetAllBukuUkur()
         // console.log(response)
-        setObjects(response.data)
+        setObjects(response)
         setLoading(false)
     }
 
@@ -38,14 +39,9 @@ export default function BukuUkur() {
 
         },
         {
-            key: 'obyek',
-            title: 'obyek',
-            dataIndex: 'obyek_name',
-        },
-        {
             key: 'tahun',
-            title: 'Tahun RKT',
-            dataIndex: 'tahun',
+            title: 'Tahun Kegiatan',
+            render: (record: BukuUkurType) => <span>{record.tahun.tahun}</span>,
         },
 
 
@@ -82,17 +78,19 @@ export default function BukuUkur() {
         setDisplayForm(true)
     }
 
-    const handleEdit = async (/** @type {any} */ id: string) => {
+    const handleEdit = async (id: string) => {
         setObjectId(id)
         setDisplayForm(true)
     }
 
-    const handleDelete = async (/** @type {any} */ id: string) => {
+    const handleDelete = async (id: string) => {
         setLoading(true)
         const response = await DeleteBukuUkur(id)
         console.log(response)
-        if (response?.status) { handleGetAll() }
-        if (!response?.status) { message.error(response?.message) }
+        if (response.success) {
+            message.success(`${page} dihapus!`)
+            handleGetAll()
+        }
         setLoading(false)
     }
 
@@ -108,17 +106,19 @@ export default function BukuUkur() {
 
     return (
         <div className={style.buku_ukur}>
-            <FormBukuUkur
-                id={objectId}
-                open={displayForm}
-                close={handleCloseForm}
-                reload={handleGetAll}
-            />
+            {displayForm &&
+                <FormBukuUkur
+                    id={objectId}
+                    open={displayForm}
+                    close={handleCloseForm}
+                    reload={handleGetAll}
+                />
+            }
             <PageHeader page={page} />
             <div className={style.main}>
                 <div className={style.header + " mb-3"}>
                     <div className={style.search}>
-                        <SearchOutlined />
+                        <FIcon name='fi-rr-search' />
                     </div>
 
                     <Button
@@ -130,6 +130,7 @@ export default function BukuUkur() {
                     columns={columns}
                     dataSource={objects}
                     loading={loading}
+                    rowKey="id"
                 />
             </div>
         </div>

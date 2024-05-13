@@ -39,10 +39,16 @@ export enum FORMAT {
 
 export enum JENIS_TPK {
     TPK_HUTAN = 0,
-    TPK_ANTARA = 1
+    TPK_ANTARA
 }
 
 export enum OBYEK {
     BLOK_PETAK = 0,
-    TRASE_JALAN = 1
+    TRASE_JALAN
+}
+
+export enum ALAT_ANGKUT {
+    LOGGING_TRUCK = 0,
+    TONGKANG,
+    RAKIT
 }

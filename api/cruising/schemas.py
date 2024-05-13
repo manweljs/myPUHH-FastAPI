@@ -91,7 +91,7 @@ class UploadBarcodeInSchema(PydanticModel):
 class RencanaTebangSchema(PydanticModel):
     id: UUID
     nomor: str
-    tahun_id: UUID
+    tahun: TahunKegiatanSchema
     obyek: int
     tanggal: date
     faktor: float

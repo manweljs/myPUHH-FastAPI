@@ -1,6 +1,6 @@
 import { API_URL } from "@/consts"
 import { sendRequest } from "./Main"
-import { BukuUkurType } from "@/types"
+import { BukuUkurInType } from "@/types"
 
 export const GetAllBukuUkur = async () => {
     const endpoint = `${API_URL}/api/Produksi/BukuUkur/GetAll`
@@ -16,14 +16,14 @@ export const GetBukuUkur = async (id: string) => {
 
 }
 
-export const CreateBukuUkur = async (data: BukuUkurType) => {
+export const CreateBukuUkur = async (data: BukuUkurInType) => {
     const endpoint = `${API_URL}/api/Produksi/BukuUkur`
     const method = "POST"
     return await sendRequest(endpoint, method, data)
 
 }
 
-export const UpdateBukuUkur = async (data: BukuUkurType, id: string) => {
+export const UpdateBukuUkur = async (data: BukuUkurInType, id: string) => {
     const endpoint = `${API_URL}/api/Produksi/BukuUkur/${id}`
     const method = "PUT"
     return await sendRequest(endpoint, method, data)

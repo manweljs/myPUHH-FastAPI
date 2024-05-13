@@ -1,6 +1,6 @@
 import { API_URL } from "@/consts"
 import { sendRequest } from "./Main"
-import { RencanaTebangType, UploadBarcodeType } from "@/types"
+import { RencanaTebangInType, RencanaTebangType, UploadBarcodeType } from "@/types"
 
 
 export const GetAllRencanaTebang = async () => {
@@ -16,7 +16,7 @@ export const GetRencanaTebang = async (id: string) => {
     return await sendRequest(endpoint, method)
 }
 
-export const CreateRencanaTebang = async (data: RencanaTebangType) => {
+export const CreateRencanaTebang = async (data: RencanaTebangInType) => {
     const endpoint = `${API_URL}/api/Cruising/RencanaTebang`
     const method = "POST"
     return await sendRequest(endpoint, method, data)
@@ -30,7 +30,7 @@ export const UploadBarcodeRencanaTebang = async (data: UploadBarcodeType) => {
 
 }
 
-export const UpdateRencanaTebang = async (data: RencanaTebangType, id: string) => {
+export const UpdateRencanaTebang = async (data: RencanaTebangInType, id: string) => {
     const endpoint = `${API_URL}/api/Cruising/RencanaTebang/${id}`
     const method = "PUT"
     return await sendRequest(endpoint, method, data)

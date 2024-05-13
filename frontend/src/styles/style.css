@@ -20,7 +20,8 @@ body h1, body h2, body h3, body h4, body h5, body h6, body p {
   grid-template-columns: 180px 1fr;
   height: 100vh;
 }
-#root a {
+
+a {
   color: var(--primary);
 }
 
@@ -136,6 +137,10 @@ body.min #root .navbar .menu {
   justify-content: flex-end;
   width: 100%;
   gap: 10px;
+}
+
+.ant-form-item .ant-form-item-label {
+  padding-bottom: 5px;
 }
 
 .ant-tabs .ant-tabs-tabpane {

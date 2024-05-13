@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Button, Form, message, Modal, } from 'antd'
-import { LHCInType } from '@/types'
-import { CreateLHC, GetLHC, UpdateLHC } from '@/api';
+import { RencanaTebangInType } from '@/types'
+import { CreateRencanaTebang, GetRencanaTebang, UpdateRencanaTebang } from '@/api';
 import { Field } from './Field';
 import dayjs from 'dayjs'
 import { OBYEK } from '@/consts';
@@ -9,12 +9,13 @@ import { FieldTahunKegiatan } from './fields/FieldTahunKegiatan';
 
 const defaultDate = dayjs().format("YYYY-MM-DD")
 
-const initial: LHCInType = {
-    id: null,
+const initial: RencanaTebangInType = {
+    id: undefined,
     nomor: "",
-    tahun_id: null,
+    tahun_id: undefined,
     tanggal: dayjs().toString(),
     obyek: OBYEK.BLOK_PETAK,
+    faktor: 0.7
 
 }
 
@@ -26,19 +27,18 @@ interface Props {
 }
 
 
-export const FormLHC = (props: Props) => {
+export const FormRencanaTebang = (props: Props) => {
 
     const { id, close, reload, open } = props
     const [loading, setLoading] = useState(true)
-    const [lhc, setLHC] = useState<LHCInType | null>(null)
+    const [rencanaTebang, setRencanaTebang] = useState<RencanaTebangInType | null>(null)
 
     const handleGet = async () => {
         if (!id) return
-        const response = await GetLHC(id)
+        const response = await GetRencanaTebang(id)
         console.log(response)
         if (response.id || response.success) {
-
-            setLHC({
+            setRencanaTebang({
                 ...response,
                 tahun_id: response.tahun.id
             })
@@ -48,25 +48,25 @@ export const FormLHC = (props: Props) => {
     }
 
     const handleUpdate = (e: any) => {
-        setLHC((prev: any) => ({
+        setRencanaTebang((prev: any) => ({
             ...prev, ...e
         }))
     }
 
     const handleSave = async () => {
-        if (!lhc) return
+        if (!rencanaTebang) return
         setLoading(true)
-        console.log('LHC untuk save', lhc)
-        const { tanggal } = lhc
+        console.log('rencanaTebang untuk save', rencanaTebang)
+        const { tanggal } = rencanaTebang
         const data = {
-            ...lhc,
+            ...rencanaTebang,
             tanggal: tanggal ? dayjs(tanggal).format("YYYY-MM-DD") : defaultDate,
         }
 
-        const response = id ? await UpdateLHC(data, id) : await CreateLHC(data)
+        const response = id ? await UpdateRencanaTebang(data, id) : await CreateRencanaTebang(data)
         console.log(response)
         if (response.success || response.id) {
-            message.success(`LHC Disimpan!`)
+            message.success(`Rencana Tebang Disimpan!`)
             reload()
             close()
         }
@@ -79,7 +79,7 @@ export const FormLHC = (props: Props) => {
             handleGet()
             return
         } else {
-            setLHC(initial)
+            setRencanaTebang(initial)
             setLoading(false)
         }
     }, [id]);
@@ -88,11 +88,11 @@ export const FormLHC = (props: Props) => {
         <Modal
             width={400}
             open={open}
-            title="LHC"
+            title="Rencana Tebang"
             onCancel={close}
             footer={null}
         >
-            {lhc &&
+            {rencanaTebang &&
                 <Form
                     onValuesChange={handleUpdate}
                     layout='vertical'
@@ -101,12 +101,12 @@ export const FormLHC = (props: Props) => {
                         type='char'
                         name='nomor'
                         label='Nomor'
-                        value={lhc.nomor}
+                        value={rencanaTebang.nomor}
                         required
                     />
 
                     <FieldTahunKegiatan
-                        value={lhc.tahun_id}
+                        value={rencanaTebang.tahun_id}
                         required
                     />
 
@@ -115,18 +115,26 @@ export const FormLHC = (props: Props) => {
                         type='date'
                         name='tanggal'
                         label='Tanggal'
-                        value={lhc.tanggal}
+                        value={rencanaTebang.tanggal}
                     />
 
                     <Field
                         type="radioSelect"
                         name='obyek'
                         label='Obyek'
-                        value={lhc.obyek}
+                        value={rencanaTebang.obyek}
                         options={[
                             { label: 'Blok/Petak', value: OBYEK.BLOK_PETAK },
                             { label: 'Jalan', value: OBYEK.TRASE_JALAN }
                         ]}
+                    />
+
+                    <Field
+                        type='number'
+                        name='faktor'
+                        label='Faktor Exploitasi'
+                        value={rencanaTebang.faktor}
+                        required
                     />
 
 
