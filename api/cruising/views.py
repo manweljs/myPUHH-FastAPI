@@ -1,11 +1,10 @@
-from tracemalloc import start
-from unittest import result
+from attr import has
 from .models import LHC, Barcode, RencanaTebang, Pohon
 from fastapi import APIRouter, status, Depends, HTTPException
-from typing import List
+from typing import List, Union
 from utils.tokens import get_perusahaan
 from . import schemas
-from umum.schemas import ResponseSchema as Response
+from umum.schemas import ErrorResponse, ResponseSchema as Response
 from account.schemas import PerusahaanSchema as Perusahaan
 from uuid import UUID
 from .functions import get_upload_barcodes_from_file, get_upload_pohon_from_file
@@ -17,6 +16,7 @@ from fastapi_pagination import Page, Params
 from fastapi_pagination.ext.tortoise import paginate
 import asyncio
 from utils.pagination import CustomPage
+
 
 router = APIRouter(tags=["Cruising"], prefix="/api/Cruising")
 
@@ -93,7 +93,7 @@ async def delete_lhc(id: UUID, perusahaan: Perusahaan = Depends(get_perusahaan))
 
 
 @router.get(
-    "/LHC/GetBarcode/{lhc_id}/All",
+    "/LHC/{lhc_id}/GetBarcode/All",
     response_model=List[
         schemas.BarcodeSchema
     ],  # Mengembalikan halaman yang berisi string barcode
@@ -108,7 +108,7 @@ async def get_all_barcode_list_by_lhc_id(
 
 
 @router.get(
-    "/LHC/GetBarcode/{lhc_id}",
+    "/LHC/{lhc_id}/GetBarcode",
     response_model=CustomPage[str],  # Mengembalikan halaman yang berisi string barcode
     description="Get barcode list by LHC ID",
 )
@@ -311,3 +311,100 @@ async def delete_pohon(id: UUID, perusahaan: Perusahaan = Depends(get_perusahaan
         )
     await pohon.delete()
     return Response(message="Pohon deleted")
+
+
+@router.put(
+    "/LHC/{lhc_id}/SaveBarcode",
+    response_model=Union[Response, ErrorResponse],
+)
+async def save_lhc_barcode(
+    lhc_id: UUID,
+    data: schemas.SaveLHCBarcodeSchema,
+    perusahaan: Perusahaan = Depends(get_perusahaan),
+):
+    try:
+        lhc = await LHC.get_or_none(id=lhc_id, perusahaan=perusahaan)
+        errors = await save_lhc_barcode_to_db(data.barcodes, perusahaan, lhc_id)
+        if errors:
+            return ErrorResponse(errors=errors)
+        return Response(message="Barcode berhasil disimpan")
+    except Exception as e:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
+
+
+BATCH_SIZE = 1000  # Sesuaikan ukuran batch sesuai kebutuhan
+
+
+@timing_decorator
+async def save_lhc_barcode_to_db(
+    data: List[schemas.SaveLHCBarcodeItemSchema], perusahaan: UUID, lhc_id: UUID
+):
+    async with in_transaction() as connection:
+        errors = []
+        to_update = []
+        to_create = []
+
+        # Ambil semua barcode yang sudah ada di database dalam satu query dengan filter perusahaan
+        barcodes_set = set(item.barcode for item in data)
+        ids_set = set(item.id for item in data if item.id)
+
+        # Gunakan asyncio.gather untuk menjalankan query secara paralel
+        existing_barcodes, existing_ids = await asyncio.gather(
+            Barcode.filter(barcode__in=barcodes_set, perusahaan_id=perusahaan)
+            .using_db(connection)
+            .all(),
+            Barcode.filter(id__in=ids_set, perusahaan_id=perusahaan)
+            .using_db(connection)
+            .all(),
+        )
+
+        existing_barcodes_dict = {
+            barcode.barcode: barcode for barcode in existing_barcodes
+        }
+        existing_ids_dict = {str(barcode.id): barcode for barcode in existing_ids}
+
+        for item in data:
+            if item.id and str(item.id) in existing_ids_dict:
+                # Update jika item memiliki id dan sudah ada di database
+                existing_item = existing_ids_dict[str(item.id)]
+                existing_item.barcode = item.barcode
+                to_update.append(existing_item)
+            elif item.barcode not in existing_barcodes_dict:
+                # Create jika barcode tidak ditemukan di database
+                new_barcode = Barcode(
+                    barcode=item.barcode, lhc_id=lhc_id, perusahaan_id=perusahaan
+                )
+                to_create.append(new_barcode)
+            else:
+                errors.append(
+                    {
+                        "status": "error",
+                        "message": f"{item.barcode} sudah ada di database",
+                    }
+                )
+
+        # Fungsi untuk melakukan batch processing
+        async def process_batches(batch: List):
+            if batch:
+                await asyncio.gather(
+                    Barcode.bulk_update(batch, ["barcode"], using_db=connection)
+                )
+
+        # Batch processing untuk to_update
+        tasks = []
+        for i in range(0, len(to_update), BATCH_SIZE):
+            batch = to_update[i : i + BATCH_SIZE]
+            tasks.append(process_batches(batch))
+
+        # Batch processing untuk to_create
+        if to_create:
+            tasks.append(Barcode.bulk_create(to_create, using_db=connection))
+
+        # Tunggu semua operasi batch selesai
+        if tasks:
+            await asyncio.gather(*tasks)
+
+        if not errors:
+            return False  # Return False to indicate success with no errors
+        else:
+            return errors  # Return list of errors if any

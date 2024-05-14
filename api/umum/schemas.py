@@ -1,11 +1,22 @@
+from pydantic import BaseModel
 from tortoise.contrib.pydantic.base import PydanticModel
-from typing import Optional
+from typing import List, Optional
 from uuid import UUID
 
 
-class ResponseSchema(PydanticModel):
+class ResponseSchema(BaseModel):
     success: bool = True
     message: Optional[str] = None
+
+
+class ErrorItem(BaseModel):
+    status: str
+    message: str
+
+
+class ErrorResponse(BaseModel):
+    success: bool = False
+    errors: List[ErrorItem]
 
 
 class PropinsiSchema(PydanticModel):

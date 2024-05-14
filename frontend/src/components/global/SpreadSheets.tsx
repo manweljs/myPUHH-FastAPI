@@ -44,7 +44,7 @@ export function SpreadSheets(props: Props) {
                 const jsonData = await spreadsheetRef.current.saveAsJson() as any;
                 const finalData = await handleExtractData(jsonData.jsonObject.Workbook);
                 console.log('final Data --> ', finalData)
-                // return jsonData;
+                onSaveAsJson && onSaveAsJson(finalData.data);
             }
 
         } catch (error) {

@@ -1,5 +1,5 @@
 from tortoise.contrib.pydantic.base import PydanticModel
-from typing import Optional, List
+from typing import Optional, List, Union
 from uuid import UUID
 from datetime import date
 from parameter.schemas import TahunKegiatanSchema
@@ -140,6 +140,20 @@ class PohonInSchema(PydanticModel):
     sortimen: Optional[int]
     koordinat_x: Optional[float]
     koordinat_y: Optional[float]
+
+    class Config:
+        from_attributes = True
+
+
+class SaveLHCBarcodeItemSchema(PydanticModel):
+    no: Optional[Union[int, str]]
+    id: Optional[str]
+    barcode: str
+
+
+class SaveLHCBarcodeSchema(PydanticModel):
+    lhc_id: UUID
+    barcodes: List[SaveLHCBarcodeItemSchema]
 
     class Config:
         from_attributes = True

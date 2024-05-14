@@ -1,6 +1,6 @@
 import { API_URL } from "@/consts"
 import { sendRequest } from "./Main"
-import { LHCInType, LHCType, UploadBarcodeLHCType } from "@/types"
+import { LHCInType, LHCType, SaveLHCBarcodeType, UploadBarcodeLHCType } from "@/types"
 
 
 export const GetAllLHC = async () => {
@@ -10,8 +10,8 @@ export const GetAllLHC = async () => {
 
 }
 
-export const GetLHC = async (id: string) => {
-    const endpoint = `${API_URL}/api/Cruising/LHC/${id}`
+export const GetLHC = async (lhc_id: string) => {
+    const endpoint = `${API_URL}/api/Cruising/LHC/${lhc_id}`
     const method = "GET"
     return await sendRequest(endpoint, method)
 
@@ -24,29 +24,29 @@ export const CreateLHC = async (data: LHCInType) => {
 
 }
 
-export const UpdateLHC = async (data: LHCInType, id: string) => {
-    const endpoint = `${API_URL}/api/Cruising/LHC/${id}`
+export const UpdateLHC = async (data: LHCInType, lhc_id: string) => {
+    const endpoint = `${API_URL}/api/Cruising/LHC/${lhc_id}`
     const method = "PUT"
     return await sendRequest(endpoint, method, data)
 
 }
 
-export const DeleteLHC = async (id: string) => {
-    const endpoint = `${API_URL}/api/Cruising/LHC/${id}`
+export const DeleteLHC = async (lhc_id: string) => {
+    const endpoint = `${API_URL}/api/Cruising/LHC/${lhc_id}`
     const method = "DELETE"
     return await sendRequest(endpoint, method)
 
 }
 
-export const GetLHCDetails = async (id: string, page: number) => {
-    const endpoint = `${API_URL}/api/Cruising/LHC/GetDetails/${id}?page=${page}`
+export const GetLHCDetails = async (lhc_id: string, page: number) => {
+    const endpoint = `${API_URL}/api/Cruising/LHC/GetDetails/${lhc_id}?page=${page}`
     const method = "GET"
     return await sendRequest(endpoint, method)
 
 }
 
-export const ImportPohonLHC = async (data: any, id: string) => {
-    const endpoint = `${API_URL}/api/Cruising/ImportPohonLHC/${id}`
+export const ImportPohonLHC = async (data: any, lhc_id: string) => {
+    const endpoint = `${API_URL}/api/Cruising/ImportPohonLHC/${lhc_id}`
     const method = "POST"
     return await sendRequest(endpoint, method, data)
 }
@@ -58,8 +58,8 @@ export const GetAllBarcode = async () => {
     return await sendRequest(endpoint, method)
 }
 
-export const GetBarcodesByLHC = async (id: string) => {
-    const endpoint = `${API_URL}/api/Cruising/LHC/GetBarcode/${id}/All`
+export const GetBarcodesByLHC = async (lhc_id: string) => {
+    const endpoint = `${API_URL}/api/Cruising/LHC/${lhc_id}/GetBarcode/All`
     const method = "GET"
     return await sendRequest(endpoint, method)
 }
@@ -67,5 +67,11 @@ export const GetBarcodesByLHC = async (id: string) => {
 export const UploadBarcodeLHC = async (data: UploadBarcodeLHCType) => {
     const endpoint = `${API_URL}/api/Cruising/UploadBarcode`
     const method = "POST"
+    return await sendRequest(endpoint, method, data)
+}
+
+export const SaveLHCBarcode = async (lhc_id: string, data: SaveLHCBarcodeType) => {
+    const endpoint = `${API_URL}/api/Cruising/LHC/${lhc_id}/SaveBarcode`
+    const method = "PUT"
     return await sendRequest(endpoint, method, data)
 }

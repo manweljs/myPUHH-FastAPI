@@ -240,3 +240,15 @@ export interface UploadBarcodeLHCType {
     lhc_id: string;
     file_url: string;
 }
+
+
+export interface SaveLHCBarcodeType {
+    lhc_id: string;
+    barcodes: [
+        {
+            barcode: string;
+            id?: string;
+            no?: string;
+        }
+    ];
+}
