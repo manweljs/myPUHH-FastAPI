@@ -1,8 +1,9 @@
-import { LHCBarcodes } from '@/components/cruising/LHCBarcodes'
+import LHCDetail from '@/components/lhc/LHCDetail'
 import React from 'react'
 
-export default function page() {
+export default function page(props: { params: { id: string } }) {
+    const { params } = props
     return (
-        <LHCBarcodes />
+        <LHCDetail id={params.id} />
     )
 }

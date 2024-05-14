@@ -6,8 +6,6 @@ import React, { useEffect } from 'react'
 import { registerLicense } from '@syncfusion/ej2-base';
 import { PRIMARY_COLOR } from '@/consts';
 
-
-
 interface Props {
     children: React.ReactNode;
     syncfusionKey?: string;
@@ -40,6 +38,15 @@ const Wrapper = ({ children, accessToken, syncfusionKey }: Props) => {
 
     let className = minimizeSidebar ? "min" : ""
     accessToken ? (className += " has-navbar") : (className += " public")
+
+    useEffect(() => {
+        // Menentukan path berdasarkan tema
+        const themeStyle = userTheme === 'dark' ? 'material3-dark' : 'material3';
+
+        // Dynamic imports berdasarkan tema
+        import(`@/styles/${themeStyle}/individual-scss/spreadsheet/spreadsheet.css`);
+
+    }, [userTheme]);
 
     return (
         <ConfigProvider

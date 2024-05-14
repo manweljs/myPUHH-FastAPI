@@ -6,19 +6,12 @@ body {
   color: var(--primary-text);
   background: var(--base-1);
   border-color: var(--border-color);
-  transition: 0.5s;
 }
 body .navbar {
   background-color: var(--base-2);
 }
 body h1, body h2, body h3, body h4, body h5, body h6, body p {
   color: var(--primary-text);
-}
-
-#root {
-  display: grid;
-  grid-template-columns: 180px 1fr;
-  height: 100vh;
 }
 
 a {
@@ -145,6 +138,17 @@ body.min #root .navbar .menu {
 
 .ant-tabs .ant-tabs-tabpane {
   padding: 0 !important;
+}
+
+.e-spreadsheet .e-ribbon {
+  border: none !important;
+}
+.e-spreadsheet .e-sheet-tab-panel {
+  border: none !important;
+}
+.e-spreadsheet .e-sheet {
+  border-left: none !important;
+  border-right: none !important;
 }
 
 ::-webkit-scrollbar {

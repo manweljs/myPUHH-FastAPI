@@ -234,3 +234,9 @@ export interface DKBAngkutanInType {
     nama_alat_angkut?: string;
     dokumen_url?: string;
 }
+
+
+export interface UploadBarcodeLHCType {
+    lhc_id: string;
+    file_url: string;
+}

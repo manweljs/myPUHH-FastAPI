@@ -16,4 +16,17 @@
 .spreadsheet {
   height: 100%;
   width: 100%;
+}
+
+.custom_pagination {
+  display: flex;
+  justify-content: flex-end;
+  padding-top: 8px !important;
+}
+
+.save_button {
+  position: absolute;
+  z-index: 2;
+  top: 0.25rem;
+  right: 2.5rem;
 }/*# sourceMappingURL=global.module.css.map */

@@ -93,6 +93,21 @@ async def delete_lhc(id: UUID, perusahaan: Perusahaan = Depends(get_perusahaan))
 
 
 @router.get(
+    "/LHC/GetBarcode/{lhc_id}/All",
+    response_model=List[
+        schemas.BarcodeSchema
+    ],  # Mengembalikan halaman yang berisi string barcode
+    description="Get all barcode list by LHC ID",
+)
+@timing_decorator
+async def get_all_barcode_list_by_lhc_id(
+    lhc_id: UUID, perusahaan: Perusahaan = Depends(get_perusahaan)
+):
+    barcodes = await Barcode.filter(lhc_id=lhc_id, perusahaan=perusahaan)
+    return barcodes
+
+
+@router.get(
     "/LHC/GetBarcode/{lhc_id}",
     response_model=CustomPage[str],  # Mengembalikan halaman yang berisi string barcode
     description="Get barcode list by LHC ID",

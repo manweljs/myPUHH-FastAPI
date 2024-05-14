@@ -4,16 +4,16 @@ import "@/styles/variables.css"
 import "@/styles/global.css";
 import "@/styles/style.css";
 import "@flaticon/flaticon-uicons/css/all/all.css"
-import '@syncfusion/ej2-base/styles/material.css';
-import '@syncfusion/ej2-inputs/styles/material.css';
-import '@syncfusion/ej2-buttons/styles/material.css';
-import '@syncfusion/ej2-splitbuttons/styles/material.css';
-import '@syncfusion/ej2-lists/styles/material.css';
-import '@syncfusion/ej2-navigations/styles/material.css';
-import '@syncfusion/ej2-popups/styles/material.css';
-import '@syncfusion/ej2-dropdowns/styles/material.css';
-import '@syncfusion/ej2-grids/styles/material.css';
-import '@syncfusion/ej2-react-spreadsheet/styles/material.css';
+// import '@syncfusion/ej2-base/styles/material.css';
+// import '@syncfusion/ej2-inputs/styles/material.css';
+// import '@syncfusion/ej2-buttons/styles/material.css';
+// import '@syncfusion/ej2-splitbuttons/styles/material.css';
+// import '@syncfusion/ej2-lists/styles/material.css';
+// import '@syncfusion/ej2-navigations/styles/material.css';
+// import '@syncfusion/ej2-popups/styles/material.css';
+// import '@syncfusion/ej2-dropdowns/styles/material.css';
+// import '@syncfusion/ej2-grids/styles/material.css';
+// import '@syncfusion/ej2-react-spreadsheet/styles/material.css';
 import { cookies } from "next/headers";
 import { ACCESS_TOKEN_KEY } from "@/consts";
 

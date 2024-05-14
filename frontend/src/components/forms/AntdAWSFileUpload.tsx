@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Upload, UploadFile as UploadFileType } from 'antd';
-import { UploadOutlined, DownloadOutlined } from '@ant-design/icons';
+import { UploadOutlined, DownloadOutlined, InboxOutlined } from '@ant-design/icons';
 import { UploadFile, UploadFileToAWS } from '@/api/UmumAPI';
 import { FileType } from '@/types';
 import styles from "./field.module.sass"
@@ -9,28 +9,27 @@ import FormItem from 'antd/es/form/FormItem';
 
 
 interface Props {
-    maxCount: number
-    filekey: string
+    maxCount?: number
     callback: (response: any) => void
-    file: FileType | null
+    file?: UploadFileType | null
     placeholder?: string
     listType?: string
     tip?: string | string[]
     label?: string
+    dropFile?: boolean
 }
 
 export default function AntdAWSFileUpload(props: Props) {
-    const { maxCount, filekey, callback, file, placeholder, listType, tip, label } = props
-    const [fileList, setFileList] = useState<FileType[]>([]);
+    const { maxCount = 1, callback, file, placeholder, listType, tip, label, dropFile = false } = props
+    const [fileList, setFileList] = useState<UploadFileType[]>([]);
 
     // console.log(file)
     useEffect(() => {
         file && setFileList([file])
     }, [file]);
 
-    const handleChange = async (info: { file: FileType, fileList: FileType[] }) => {
+    const handleChange = async (info: { file: UploadFileType, fileList: UploadFileType[] }) => {
         let file = info.file
-        let response
         if (info.file.status === "removed") {
             setFileList([])
             return
@@ -45,7 +44,6 @@ export default function AntdAWSFileUpload(props: Props) {
             callback(url.split('?')[0])
         }
 
-        // setFileList([info.file])
     };
 
     const handleUpload = async (file: FileType) => {
@@ -65,24 +63,42 @@ export default function AntdAWSFileUpload(props: Props) {
         <FormItem
             label={label}
         >
-            <Upload
-                listType="picture-card"
-                maxCount={maxCount}
-                fileList={fileList as UploadFileType<any>[]}
-                beforeUpload={() => { return false }}
-                onChange={handleChange}
-                onDownload={handleDownload}
-                showUploadList={{
-                    showDownloadIcon: false,
-                    showPreviewIcon: false,
-                    downloadIcon: <DownloadOutlined />,
-                }}
-            >
-                {
-                    maxCount && fileList.length < maxCount &&
-                    <span><UploadOutlined /> Upload</span>
-                }
-            </Upload>
+            {!dropFile &&
+                <Upload
+                    listType="picture-card"
+                    maxCount={maxCount}
+                    fileList={fileList as UploadFileType<any>[]}
+                    beforeUpload={() => { return false }}
+                    onChange={handleChange}
+                    onDownload={handleDownload}
+                    showUploadList={{
+                        showDownloadIcon: false,
+                        showPreviewIcon: false,
+                        downloadIcon: <DownloadOutlined />,
+                    }}
+                >
+                    {
+                        maxCount && fileList.length < maxCount &&
+                        <span><UploadOutlined /> Upload</span>
+                    }
+                </Upload>
+            }
+
+            {dropFile &&
+                <Upload.Dragger accept='.csv'
+                    beforeUpload={() => { return false }}
+                    onChange={handleChange}
+                    fileList={fileList}
+                    maxCount={maxCount}
+
+                >
+                    <p className="ant-upload-drag-icon">
+                        <InboxOutlined />
+                    </p>
+                    <p className="ant-upload-hint">Click or drag file to this area to upload</p>
+                </Upload.Dragger>
+            }
+
             {(tip && Array.isArray(tip)) ?
                 tip.map((item, index) => (
                     <div key={index} className={styles.tip}>{item}</div>
