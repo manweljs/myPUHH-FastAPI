@@ -151,6 +151,11 @@ body.min #root .navbar .menu {
   border-right: none !important;
 }
 
+.ant-btn {
+  display: flex;
+  align-items: center;
+}
+
 ::-webkit-scrollbar {
   width: 12px;
 }

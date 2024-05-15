@@ -7,7 +7,12 @@ from . import schemas
 from umum.schemas import ErrorResponse, ResponseSchema as Response
 from account.schemas import PerusahaanSchema as Perusahaan
 from uuid import UUID
-from .functions import get_upload_barcodes_from_file, get_upload_pohon_from_file
+from .functions import (
+    BATCH_SIZE,
+    get_upload_barcodes_from_file,
+    get_upload_pohon_from_file,
+    save_lhc_barcode_to_db,
+)
 import time
 from tortoise.transactions import in_transaction
 from utils.decorators import timing_decorator
@@ -16,6 +21,7 @@ from fastapi_pagination import Page, Params
 from fastapi_pagination.ext.tortoise import paginate
 import asyncio
 from utils.pagination import CustomPage
+from tortoise.expressions import Q
 
 
 router = APIRouter(tags=["Cruising"], prefix="/api/Cruising")
@@ -103,7 +109,9 @@ async def delete_lhc(id: UUID, perusahaan: Perusahaan = Depends(get_perusahaan))
 async def get_all_barcode_list_by_lhc_id(
     lhc_id: UUID, perusahaan: Perusahaan = Depends(get_perusahaan)
 ):
-    barcodes = await Barcode.filter(lhc_id=lhc_id, perusahaan=perusahaan)
+    barcodes = await Barcode.filter(lhc_id=lhc_id, perusahaan=perusahaan).order_by(
+        "barcode"
+    )
     return barcodes
 
 
@@ -268,13 +276,6 @@ async def upload_pohon(
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
 
 
-# get all pohon
-@router.get("/Pohon/GetAll", response_model=List[schemas.PohonSchema])
-async def get_all_pohon(perusahaan: Perusahaan = Depends(get_perusahaan)):
-    pohon = await Pohon.filter(perusahaan=perusahaan)
-    return pohon
-
-
 # get pohon by id
 @router.get("/Pohon/{id}", response_model=schemas.PohonSchema)
 async def get_pohon(id: UUID, perusahaan: Perusahaan = Depends(get_perusahaan)):
@@ -332,79 +333,60 @@ async def save_lhc_barcode(
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
 
 
-BATCH_SIZE = 1000  # Sesuaikan ukuran batch sesuai kebutuhan
+# get all pohon by LHC ID
+@router.get(
+    "/LHC/{lhc_id}/Pohon/GetAll",
+    response_model=List[schemas.PohonSchema],
+    description="## Get all pohon by LHC ID",
+)
+async def get_all_pohon(lhc_id: UUID, perusahaan: Perusahaan = Depends(get_perusahaan)):
+    pohon = (
+        await Pohon.filter(
+            Q(barcode_pohon__barcode__lhc_id=lhc_id) & Q(perusahaan=perusahaan)
+        )
+        .order_by("nomor")
+        .distinct()
+    )
+    return pohon
 
 
-@timing_decorator
-async def save_lhc_barcode_to_db(
-    data: List[schemas.SaveLHCBarcodeItemSchema], perusahaan: UUID, lhc_id: UUID
+@router.put(
+    "/LHC/{lhc_id}/Pohon/Save",
+    response_model=Union[Response, ErrorResponse],
+)
+async def save_pohon(
+    lhc_id: UUID,
+    data: List[schemas.PohonInSchema],
+    perusahaan: Perusahaan = Depends(get_perusahaan),
 ):
+    try:
+        lhc = await LHC.get_or_none(id=lhc_id, perusahaan=perusahaan)
+        if not lhc:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND, detail="LHC not found"
+            )
+
+        errors = await save_lhc_pohon_to_db(data, lhc_id, perusahaan)
+        if errors:
+            return ErrorResponse(errors=errors)
+        return Response(message="Pohon berhasil disimpan")
+    except Exception as e:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
+
+
+BATCH_SIZE = 1000
+
+
+async def save_lhc_pohon_to_db(data, lhc_id, perusahaan):
     async with in_transaction() as connection:
         errors = []
-        to_update = []
-        to_create = []
 
-        # Ambil semua barcode yang sudah ada di database dalam satu query dengan filter perusahaan
-        barcodes_set = set(item.barcode for item in data)
-        ids_set = set(item.id for item in data if item.id)
+        # Ambil semua pohon yang sudah ada di database dalam satu query dengan filter perusahaan dan lhc_id
+        all_pohon = await Pohon.filter(
+            perusahaan=perusahaan,
+            barcode_pohon__barcode__lhc_id=lhc_id,
+            with_db=connection,
+        ).all()
+        print(all_pohon)
 
-        # Gunakan asyncio.gather untuk menjalankan query secara paralel
-        existing_barcodes, existing_ids = await asyncio.gather(
-            Barcode.filter(barcode__in=barcodes_set, perusahaan_id=perusahaan)
-            .using_db(connection)
-            .all(),
-            Barcode.filter(id__in=ids_set, perusahaan_id=perusahaan)
-            .using_db(connection)
-            .all(),
-        )
-
-        existing_barcodes_dict = {
-            barcode.barcode: barcode for barcode in existing_barcodes
-        }
-        existing_ids_dict = {str(barcode.id): barcode for barcode in existing_ids}
-
-        for item in data:
-            if item.id and str(item.id) in existing_ids_dict:
-                # Update jika item memiliki id dan sudah ada di database
-                existing_item = existing_ids_dict[str(item.id)]
-                existing_item.barcode = item.barcode
-                to_update.append(existing_item)
-            elif item.barcode not in existing_barcodes_dict:
-                # Create jika barcode tidak ditemukan di database
-                new_barcode = Barcode(
-                    barcode=item.barcode, lhc_id=lhc_id, perusahaan_id=perusahaan
-                )
-                to_create.append(new_barcode)
-            else:
-                errors.append(
-                    {
-                        "status": "error",
-                        "message": f"{item.barcode} sudah ada di database",
-                    }
-                )
-
-        # Fungsi untuk melakukan batch processing
-        async def process_batches(batch: List):
-            if batch:
-                await asyncio.gather(
-                    Barcode.bulk_update(batch, ["barcode"], using_db=connection)
-                )
-
-        # Batch processing untuk to_update
-        tasks = []
-        for i in range(0, len(to_update), BATCH_SIZE):
-            batch = to_update[i : i + BATCH_SIZE]
-            tasks.append(process_batches(batch))
-
-        # Batch processing untuk to_create
-        if to_create:
-            tasks.append(Barcode.bulk_create(to_create, using_db=connection))
-
-        # Tunggu semua operasi batch selesai
-        if tasks:
-            await asyncio.gather(*tasks)
-
-        if not errors:
-            return False  # Return False to indicate success with no errors
-        else:
-            return errors  # Return list of errors if any
+        return True

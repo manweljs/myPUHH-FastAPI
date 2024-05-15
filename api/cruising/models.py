@@ -91,8 +91,12 @@ class Pohon(CustomModel):
 
 
 class BarcodePohon(CustomModel):
-    barcode = fields.ForeignKeyField("models.Barcode", on_delete=fields.CASCADE)
-    pohon = fields.ForeignKeyField("models.Pohon", on_delete=fields.CASCADE)
+    barcode = fields.ForeignKeyField(
+        "models.Barcode", on_delete=fields.CASCADE, related_name="barcode_pohon"
+    )
+    pohon = fields.ForeignKeyField(
+        "models.Pohon", on_delete=fields.CASCADE, related_name="barcode_pohon"
+    )
 
     class Meta:
         table = "barcode_pohon"

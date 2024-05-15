@@ -2,14 +2,14 @@
 :root {
   --color-sf-black: 0, 0, 0;
   --color-sf-white: 255, 255, 255;
-  --color-sf-primary: 103, 80, 164;
-  --color-sf-primary-container: 234, 221, 255;
+  --color-sf-primary: 3, 133, 1;
+  --color-sf-primary-container: 165, 230, 165;
   --color-sf-secondary: 98, 91, 113;
   --color-sf-secondary-container: 232, 222, 248;
   --color-sf-tertiary: 125, 82, 96;
   --color-sf-tertiary-container: 255, 216, 228;
   --color-sf-surface: 255, 255, 255;
-  --color-sf-surface-variant: 231, 224, 236;
+  --color-sf-surface-variant: 200, 220, 200;
   --color-sf-background: var(--color-sf-surface);
   --color-sf-on-primary: 255, 255, 255;
   --color-sf-on-primary-container: 33, 0, 94;
@@ -45,7 +45,8 @@
   --color-sf-on-warning: 255, 255, 255;
   --color-sf-on-warning-container: 47, 21, 0;
   --color-sf-spreadsheet-gridline: var(--color-sf-surface-variant);
-  --color-sf-shadow-focus-ring1: 0 0 0 1px rgb(255, 255, 255), 0 0 0 3px rgb(0, 0, 0);
+  --color-sf-shadow-focus-ring1: 0 0 0 1px rgb(255, 255, 255),
+    0 0 0 3px rgb(0, 0, 0);
   --color-sf-diagram-palette-background: --color-sf-white;
   --color-sf-success-text: 255, 255, 255;
   --color-sf-warning-text: 255, 255, 255;
@@ -2181,14 +2182,14 @@
 :root {
   --color-sf-black: 0, 0, 0;
   --color-sf-white: 255, 255, 255;
-  --color-sf-primary: 103, 80, 164;
-  --color-sf-primary-container: 234, 221, 255;
+  --color-sf-primary: 3, 133, 1;
+  --color-sf-primary-container: 165, 230, 165;
   --color-sf-secondary: 98, 91, 113;
   --color-sf-secondary-container: 232, 222, 248;
   --color-sf-tertiary: 125, 82, 96;
   --color-sf-tertiary-container: 255, 216, 228;
   --color-sf-surface: 255, 255, 255;
-  --color-sf-surface-variant: 231, 224, 236;
+  --color-sf-surface-variant: 200, 220, 200;
   --color-sf-background: var(--color-sf-surface);
   --color-sf-on-primary: 255, 255, 255;
   --color-sf-on-primary-container: 33, 0, 94;
@@ -2224,7 +2225,8 @@
   --color-sf-on-warning: 255, 255, 255;
   --color-sf-on-warning-container: 47, 21, 0;
   --color-sf-spreadsheet-gridline: var(--color-sf-surface-variant);
-  --color-sf-shadow-focus-ring1: 0 0 0 1px rgb(255, 255, 255), 0 0 0 3px rgb(0, 0, 0);
+  --color-sf-shadow-focus-ring1: 0 0 0 1px rgb(255, 255, 255),
+    0 0 0 3px rgb(0, 0, 0);
   --color-sf-diagram-palette-background: --color-sf-white;
   --color-sf-success-text: 255, 255, 255;
   --color-sf-warning-text: 255, 255, 255;
@@ -14707,14 +14709,14 @@ textarea.e-filled.e-disabled.e-input::-webkit-input-placeholder {
 :root {
   --color-sf-black: 0, 0, 0;
   --color-sf-white: 255, 255, 255;
-  --color-sf-primary: 103, 80, 164;
-  --color-sf-primary-container: 234, 221, 255;
+  --color-sf-primary: 3, 133, 1;
+  --color-sf-primary-container: 165, 230, 165;
   --color-sf-secondary: 98, 91, 113;
   --color-sf-secondary-container: 232, 222, 248;
   --color-sf-tertiary: 125, 82, 96;
   --color-sf-tertiary-container: 255, 216, 228;
   --color-sf-surface: 255, 255, 255;
-  --color-sf-surface-variant: 231, 224, 236;
+  --color-sf-surface-variant: 200, 220, 200;
   --color-sf-background: var(--color-sf-surface);
   --color-sf-on-primary: 255, 255, 255;
   --color-sf-on-primary-container: 33, 0, 94;
@@ -14750,7 +14752,8 @@ textarea.e-filled.e-disabled.e-input::-webkit-input-placeholder {
   --color-sf-on-warning: 255, 255, 255;
   --color-sf-on-warning-container: 47, 21, 0;
   --color-sf-spreadsheet-gridline: var(--color-sf-surface-variant);
-  --color-sf-shadow-focus-ring1: 0 0 0 1px rgb(255, 255, 255), 0 0 0 3px rgb(0, 0, 0);
+  --color-sf-shadow-focus-ring1: 0 0 0 1px rgb(255, 255, 255),
+    0 0 0 3px rgb(0, 0, 0);
   --color-sf-diagram-palette-background: --color-sf-white;
   --color-sf-success-text: 255, 255, 255;
   --color-sf-warning-text: 255, 255, 255;
@@ -16460,14 +16463,14 @@ textarea.e-filled.e-disabled.e-input::-webkit-input-placeholder {
 :root {
   --color-sf-black: 0, 0, 0;
   --color-sf-white: 255, 255, 255;
-  --color-sf-primary: 103, 80, 164;
-  --color-sf-primary-container: 234, 221, 255;
+  --color-sf-primary: 3, 133, 1;
+  --color-sf-primary-container: 165, 230, 165;
   --color-sf-secondary: 98, 91, 113;
   --color-sf-secondary-container: 232, 222, 248;
   --color-sf-tertiary: 125, 82, 96;
   --color-sf-tertiary-container: 255, 216, 228;
   --color-sf-surface: 255, 255, 255;
-  --color-sf-surface-variant: 231, 224, 236;
+  --color-sf-surface-variant: 200, 220, 200;
   --color-sf-background: var(--color-sf-surface);
   --color-sf-on-primary: 255, 255, 255;
   --color-sf-on-primary-container: 33, 0, 94;
@@ -16503,7 +16506,8 @@ textarea.e-filled.e-disabled.e-input::-webkit-input-placeholder {
   --color-sf-on-warning: 255, 255, 255;
   --color-sf-on-warning-container: 47, 21, 0;
   --color-sf-spreadsheet-gridline: var(--color-sf-surface-variant);
-  --color-sf-shadow-focus-ring1: 0 0 0 1px rgb(255, 255, 255), 0 0 0 3px rgb(0, 0, 0);
+  --color-sf-shadow-focus-ring1: 0 0 0 1px rgb(255, 255, 255),
+    0 0 0 3px rgb(0, 0, 0);
   --color-sf-diagram-palette-background: --color-sf-white;
   --color-sf-success-text: 255, 255, 255;
   --color-sf-warning-text: 255, 255, 255;
@@ -16572,14 +16576,14 @@ textarea.e-filled.e-disabled.e-input::-webkit-input-placeholder {
 :root {
   --color-sf-black: 0, 0, 0;
   --color-sf-white: 255, 255, 255;
-  --color-sf-primary: 103, 80, 164;
-  --color-sf-primary-container: 234, 221, 255;
+  --color-sf-primary: 3, 133, 1;
+  --color-sf-primary-container: 165, 230, 165;
   --color-sf-secondary: 98, 91, 113;
   --color-sf-secondary-container: 232, 222, 248;
   --color-sf-tertiary: 125, 82, 96;
   --color-sf-tertiary-container: 255, 216, 228;
   --color-sf-surface: 255, 255, 255;
-  --color-sf-surface-variant: 231, 224, 236;
+  --color-sf-surface-variant: 200, 220, 200;
   --color-sf-background: var(--color-sf-surface);
   --color-sf-on-primary: 255, 255, 255;
   --color-sf-on-primary-container: 33, 0, 94;
@@ -16615,7 +16619,8 @@ textarea.e-filled.e-disabled.e-input::-webkit-input-placeholder {
   --color-sf-on-warning: 255, 255, 255;
   --color-sf-on-warning-container: 47, 21, 0;
   --color-sf-spreadsheet-gridline: var(--color-sf-surface-variant);
-  --color-sf-shadow-focus-ring1: 0 0 0 1px rgb(255, 255, 255), 0 0 0 3px rgb(0, 0, 0);
+  --color-sf-shadow-focus-ring1: 0 0 0 1px rgb(255, 255, 255),
+    0 0 0 3px rgb(0, 0, 0);
   --color-sf-diagram-palette-background: --color-sf-white;
   --color-sf-success-text: 255, 255, 255;
   --color-sf-warning-text: 255, 255, 255;
@@ -16919,14 +16924,14 @@ textarea.e-filled.e-disabled.e-input::-webkit-input-placeholder {
 :root {
   --color-sf-black: 0, 0, 0;
   --color-sf-white: 255, 255, 255;
-  --color-sf-primary: 103, 80, 164;
-  --color-sf-primary-container: 234, 221, 255;
+  --color-sf-primary: 3, 133, 1;
+  --color-sf-primary-container: 165, 230, 165;
   --color-sf-secondary: 98, 91, 113;
   --color-sf-secondary-container: 232, 222, 248;
   --color-sf-tertiary: 125, 82, 96;
   --color-sf-tertiary-container: 255, 216, 228;
   --color-sf-surface: 255, 255, 255;
-  --color-sf-surface-variant: 231, 224, 236;
+  --color-sf-surface-variant: 200, 220, 200;
   --color-sf-background: var(--color-sf-surface);
   --color-sf-on-primary: 255, 255, 255;
   --color-sf-on-primary-container: 33, 0, 94;
@@ -16962,7 +16967,8 @@ textarea.e-filled.e-disabled.e-input::-webkit-input-placeholder {
   --color-sf-on-warning: 255, 255, 255;
   --color-sf-on-warning-container: 47, 21, 0;
   --color-sf-spreadsheet-gridline: var(--color-sf-surface-variant);
-  --color-sf-shadow-focus-ring1: 0 0 0 1px rgb(255, 255, 255), 0 0 0 3px rgb(0, 0, 0);
+  --color-sf-shadow-focus-ring1: 0 0 0 1px rgb(255, 255, 255),
+    0 0 0 3px rgb(0, 0, 0);
   --color-sf-diagram-palette-background: --color-sf-white;
   --color-sf-success-text: 255, 255, 255;
   --color-sf-warning-text: 255, 255, 255;
@@ -17031,14 +17037,14 @@ textarea.e-filled.e-disabled.e-input::-webkit-input-placeholder {
 :root {
   --color-sf-black: 0, 0, 0;
   --color-sf-white: 255, 255, 255;
-  --color-sf-primary: 103, 80, 164;
-  --color-sf-primary-container: 234, 221, 255;
+  --color-sf-primary: 3, 133, 1;
+  --color-sf-primary-container: 165, 230, 165;
   --color-sf-secondary: 98, 91, 113;
   --color-sf-secondary-container: 232, 222, 248;
   --color-sf-tertiary: 125, 82, 96;
   --color-sf-tertiary-container: 255, 216, 228;
   --color-sf-surface: 255, 255, 255;
-  --color-sf-surface-variant: 231, 224, 236;
+  --color-sf-surface-variant: 200, 220, 200;
   --color-sf-background: var(--color-sf-surface);
   --color-sf-on-primary: 255, 255, 255;
   --color-sf-on-primary-container: 33, 0, 94;
@@ -17074,7 +17080,8 @@ textarea.e-filled.e-disabled.e-input::-webkit-input-placeholder {
   --color-sf-on-warning: 255, 255, 255;
   --color-sf-on-warning-container: 47, 21, 0;
   --color-sf-spreadsheet-gridline: var(--color-sf-surface-variant);
-  --color-sf-shadow-focus-ring1: 0 0 0 1px rgb(255, 255, 255), 0 0 0 3px rgb(0, 0, 0);
+  --color-sf-shadow-focus-ring1: 0 0 0 1px rgb(255, 255, 255),
+    0 0 0 3px rgb(0, 0, 0);
   --color-sf-diagram-palette-background: --color-sf-white;
   --color-sf-success-text: 255, 255, 255;
   --color-sf-warning-text: 255, 255, 255;
@@ -17142,14 +17149,14 @@ textarea.e-filled.e-disabled.e-input::-webkit-input-placeholder {
 :root {
   --color-sf-black: 0, 0, 0;
   --color-sf-white: 255, 255, 255;
-  --color-sf-primary: 103, 80, 164;
-  --color-sf-primary-container: 234, 221, 255;
+  --color-sf-primary: 3, 133, 1;
+  --color-sf-primary-container: 165, 230, 165;
   --color-sf-secondary: 98, 91, 113;
   --color-sf-secondary-container: 232, 222, 248;
   --color-sf-tertiary: 125, 82, 96;
   --color-sf-tertiary-container: 255, 216, 228;
   --color-sf-surface: 255, 255, 255;
-  --color-sf-surface-variant: 231, 224, 236;
+  --color-sf-surface-variant: 200, 220, 200;
   --color-sf-background: var(--color-sf-surface);
   --color-sf-on-primary: 255, 255, 255;
   --color-sf-on-primary-container: 33, 0, 94;
@@ -17185,7 +17192,8 @@ textarea.e-filled.e-disabled.e-input::-webkit-input-placeholder {
   --color-sf-on-warning: 255, 255, 255;
   --color-sf-on-warning-container: 47, 21, 0;
   --color-sf-spreadsheet-gridline: var(--color-sf-surface-variant);
-  --color-sf-shadow-focus-ring1: 0 0 0 1px rgb(255, 255, 255), 0 0 0 3px rgb(0, 0, 0);
+  --color-sf-shadow-focus-ring1: 0 0 0 1px rgb(255, 255, 255),
+    0 0 0 3px rgb(0, 0, 0);
   --color-sf-diagram-palette-background: --color-sf-white;
   --color-sf-success-text: 255, 255, 255;
   --color-sf-warning-text: 255, 255, 255;
@@ -17254,14 +17262,14 @@ textarea.e-filled.e-disabled.e-input::-webkit-input-placeholder {
 :root {
   --color-sf-black: 0, 0, 0;
   --color-sf-white: 255, 255, 255;
-  --color-sf-primary: 103, 80, 164;
-  --color-sf-primary-container: 234, 221, 255;
+  --color-sf-primary: 3, 133, 1;
+  --color-sf-primary-container: 165, 230, 165;
   --color-sf-secondary: 98, 91, 113;
   --color-sf-secondary-container: 232, 222, 248;
   --color-sf-tertiary: 125, 82, 96;
   --color-sf-tertiary-container: 255, 216, 228;
   --color-sf-surface: 255, 255, 255;
-  --color-sf-surface-variant: 231, 224, 236;
+  --color-sf-surface-variant: 200, 220, 200;
   --color-sf-background: var(--color-sf-surface);
   --color-sf-on-primary: 255, 255, 255;
   --color-sf-on-primary-container: 33, 0, 94;
@@ -17297,7 +17305,8 @@ textarea.e-filled.e-disabled.e-input::-webkit-input-placeholder {
   --color-sf-on-warning: 255, 255, 255;
   --color-sf-on-warning-container: 47, 21, 0;
   --color-sf-spreadsheet-gridline: var(--color-sf-surface-variant);
-  --color-sf-shadow-focus-ring1: 0 0 0 1px rgb(255, 255, 255), 0 0 0 3px rgb(0, 0, 0);
+  --color-sf-shadow-focus-ring1: 0 0 0 1px rgb(255, 255, 255),
+    0 0 0 3px rgb(0, 0, 0);
   --color-sf-diagram-palette-background: --color-sf-white;
   --color-sf-success-text: 255, 255, 255;
   --color-sf-warning-text: 255, 255, 255;
@@ -17719,14 +17728,14 @@ textarea.e-filled.e-disabled.e-input::-webkit-input-placeholder {
 :root {
   --color-sf-black: 0, 0, 0;
   --color-sf-white: 255, 255, 255;
-  --color-sf-primary: 103, 80, 164;
-  --color-sf-primary-container: 234, 221, 255;
+  --color-sf-primary: 3, 133, 1;
+  --color-sf-primary-container: 165, 230, 165;
   --color-sf-secondary: 98, 91, 113;
   --color-sf-secondary-container: 232, 222, 248;
   --color-sf-tertiary: 125, 82, 96;
   --color-sf-tertiary-container: 255, 216, 228;
   --color-sf-surface: 255, 255, 255;
-  --color-sf-surface-variant: 231, 224, 236;
+  --color-sf-surface-variant: 200, 220, 200;
   --color-sf-background: var(--color-sf-surface);
   --color-sf-on-primary: 255, 255, 255;
   --color-sf-on-primary-container: 33, 0, 94;
@@ -17762,7 +17771,8 @@ textarea.e-filled.e-disabled.e-input::-webkit-input-placeholder {
   --color-sf-on-warning: 255, 255, 255;
   --color-sf-on-warning-container: 47, 21, 0;
   --color-sf-spreadsheet-gridline: var(--color-sf-surface-variant);
-  --color-sf-shadow-focus-ring1: 0 0 0 1px rgb(255, 255, 255), 0 0 0 3px rgb(0, 0, 0);
+  --color-sf-shadow-focus-ring1: 0 0 0 1px rgb(255, 255, 255),
+    0 0 0 3px rgb(0, 0, 0);
   --color-sf-diagram-palette-background: --color-sf-white;
   --color-sf-success-text: 255, 255, 255;
   --color-sf-warning-text: 255, 255, 255;
@@ -17830,14 +17840,14 @@ textarea.e-filled.e-disabled.e-input::-webkit-input-placeholder {
 :root {
   --color-sf-black: 0, 0, 0;
   --color-sf-white: 255, 255, 255;
-  --color-sf-primary: 103, 80, 164;
-  --color-sf-primary-container: 234, 221, 255;
+  --color-sf-primary: 3, 133, 1;
+  --color-sf-primary-container: 165, 230, 165;
   --color-sf-secondary: 98, 91, 113;
   --color-sf-secondary-container: 232, 222, 248;
   --color-sf-tertiary: 125, 82, 96;
   --color-sf-tertiary-container: 255, 216, 228;
   --color-sf-surface: 255, 255, 255;
-  --color-sf-surface-variant: 231, 224, 236;
+  --color-sf-surface-variant: 200, 220, 200;
   --color-sf-background: var(--color-sf-surface);
   --color-sf-on-primary: 255, 255, 255;
   --color-sf-on-primary-container: 33, 0, 94;
@@ -17873,7 +17883,8 @@ textarea.e-filled.e-disabled.e-input::-webkit-input-placeholder {
   --color-sf-on-warning: 255, 255, 255;
   --color-sf-on-warning-container: 47, 21, 0;
   --color-sf-spreadsheet-gridline: var(--color-sf-surface-variant);
-  --color-sf-shadow-focus-ring1: 0 0 0 1px rgb(255, 255, 255), 0 0 0 3px rgb(0, 0, 0);
+  --color-sf-shadow-focus-ring1: 0 0 0 1px rgb(255, 255, 255),
+    0 0 0 3px rgb(0, 0, 0);
   --color-sf-diagram-palette-background: --color-sf-white;
   --color-sf-success-text: 255, 255, 255;
   --color-sf-warning-text: 255, 255, 255;
@@ -18005,14 +18016,14 @@ textarea.e-filled.e-disabled.e-input::-webkit-input-placeholder {
 :root {
   --color-sf-black: 0, 0, 0;
   --color-sf-white: 255, 255, 255;
-  --color-sf-primary: 103, 80, 164;
-  --color-sf-primary-container: 234, 221, 255;
+  --color-sf-primary: 3, 133, 1;
+  --color-sf-primary-container: 165, 230, 165;
   --color-sf-secondary: 98, 91, 113;
   --color-sf-secondary-container: 232, 222, 248;
   --color-sf-tertiary: 125, 82, 96;
   --color-sf-tertiary-container: 255, 216, 228;
   --color-sf-surface: 255, 255, 255;
-  --color-sf-surface-variant: 231, 224, 236;
+  --color-sf-surface-variant: 200, 220, 200;
   --color-sf-background: var(--color-sf-surface);
   --color-sf-on-primary: 255, 255, 255;
   --color-sf-on-primary-container: 33, 0, 94;
@@ -18048,7 +18059,8 @@ textarea.e-filled.e-disabled.e-input::-webkit-input-placeholder {
   --color-sf-on-warning: 255, 255, 255;
   --color-sf-on-warning-container: 47, 21, 0;
   --color-sf-spreadsheet-gridline: var(--color-sf-surface-variant);
-  --color-sf-shadow-focus-ring1: 0 0 0 1px rgb(255, 255, 255), 0 0 0 3px rgb(0, 0, 0);
+  --color-sf-shadow-focus-ring1: 0 0 0 1px rgb(255, 255, 255),
+    0 0 0 3px rgb(0, 0, 0);
   --color-sf-diagram-palette-background: --color-sf-white;
   --color-sf-success-text: 255, 255, 255;
   --color-sf-warning-text: 255, 255, 255;

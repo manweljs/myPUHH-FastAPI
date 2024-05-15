@@ -2,6 +2,8 @@ import React, { useEffect, useRef, useState } from 'react'
 import { SheetsDirective, SheetDirective, RangesDirective, RangeDirective, SpreadsheetComponent, BeforeSaveEventArgs, ColumnsDirective, ColumnDirective, Inject, Filter, ColumnModel } from '@syncfusion/ej2-react-spreadsheet';
 import s from "./global.module.sass"
 import { Button } from 'antd';
+import FIcon from './FIcon';
+import { DraftSpreadsheetType } from '@/types';
 
 interface Props {
     data?: object[]
@@ -9,6 +11,9 @@ interface Props {
     columns?: ColumnModel[]
     onSaveAsJson?: (data: any) => void
     className?: string
+    onCellChanges?: (ref: SpreadsheetComponent | null, args: any) => void
+    onSaveAsDraft?: (data: any) => void
+    drafts?: DraftSpreadsheetType[]
 }
 
 const defaultData: object[] = [
@@ -18,39 +23,26 @@ const defaultData: object[] = [
 ];
 
 export function SpreadSheets(props: Props) {
-    const { data, colCount, columns, onSaveAsJson, className = "" } = props
+    const {
+        data,
+        colCount,
+        columns,
+        onSaveAsJson,
+        className = "",
+        onCellChanges,
+        onSaveAsDraft,
+        drafts,
+    } = props
     const beforeOpen = (): void => { };
 
     const spreadsheetRef = useRef<SpreadsheetComponent>(null);
     const [isInitialized, setIsInitialized] = useState(false);
+    const [draftWorkbooks, setDraftWorkbooks] = useState<DraftSpreadsheetType[]>(drafts || []);
     const [loading, setLoading] = useState(false);
 
     const beforeSave = async (args: BeforeSaveEventArgs) => {
         if (!spreadsheetRef.current) return;
-        // Mencegah Spreadsheet menyimpan file secara default
-
-        // console.log('first', spreadsheetRef.current)
         console.log('args', args)
-    };
-
-    const handleChange = (e: any) => {
-        console.log('e', e)
-    }
-
-    const handleSaveAsJson = async () => {
-        setLoading(true);
-        try {
-            if (spreadsheetRef.current) {
-                const jsonData = await spreadsheetRef.current.saveAsJson() as any;
-                const finalData = await handleExtractData(jsonData.jsonObject.Workbook);
-                console.log('final Data --> ', finalData)
-                onSaveAsJson && onSaveAsJson(finalData.data);
-            }
-
-        } catch (error) {
-            console.error('Error while saving as JSON:', error);
-        }
-        setLoading(false);
     };
 
 
@@ -72,22 +64,67 @@ export function SpreadSheets(props: Props) {
         }
     }, [data, spreadsheetRef.current, isInitialized]);
 
-    const scrollSettings = {
+    const scrollSettings = {};
 
+    const loadDraftWorkbook = async (draftWorkbook: object) => {
+        if (spreadsheetRef.current) {
+            console.log('draftWorkbook triggered', draftWorkbook)
+            spreadsheetRef.current.openFromJson({ file: draftWorkbook });
+        }
+    }
+
+    const handleSaveAsJson = async () => {
+        setLoading(true);
+        try {
+            if (spreadsheetRef.current) {
+                const jsonData = await spreadsheetRef.current.saveAsJson() as any;
+                const finalData = await handleExtractData(jsonData.jsonObject.Workbook);
+                console.log('final Data --> ', finalData)
+                onSaveAsJson && onSaveAsJson(finalData.data);
+            }
+
+        } catch (error) {
+            console.error('Error while saving as JSON:', error);
+        }
+        setLoading(false);
     };
+
+    const handleSaveAsDraft = async () => {
+        setLoading(true);
+        try {
+            if (spreadsheetRef.current) {
+                const jsonData = await spreadsheetRef.current.saveAsJson() as any;
+                console.log('jsonData', jsonData.jsonObject)
+                onSaveAsDraft && onSaveAsDraft(jsonData);
+            }
+
+        } catch (error) {
+            console.error('Error while saving as JSON:', error);
+        }
+        setLoading(false);
+    }
 
 
     return (
         <div className={className}>
-            <Button
-                onClick={handleSaveAsJson}
-                className={s.save_button}
-                type='primary'
-                loading={loading}
-            >Save to Database</Button>
+
+            <div className={s.extra_button_spreadsheet}>
+                <Button
+                    onClick={handleSaveAsDraft}
+                    loading={loading}
+                    icon={<FIcon name='fi-rr-disk' size={14} />}
+                >
+                    Save as Draft
+                </Button>
+
+                <Button
+                    onClick={handleSaveAsJson}
+                    type='primary'
+                    loading={loading}
+                >Save to Database</Button>
+            </div>
 
             <SpreadsheetComponent
-                onChange={handleChange}
                 ref={spreadsheetRef}
                 className={s.spreadsheet}
                 allowOpen={true}
@@ -97,6 +134,7 @@ export function SpreadSheets(props: Props) {
                 saveUrl='https://services.syncfusion.com/react/production/api/spreadsheet/save'
                 beforeSave={beforeSave}
                 scrollSettings={scrollSettings}
+                cellSave={(args: any) => { onCellChanges && onCellChanges(spreadsheetRef?.current, args) }}
 
             >
 
@@ -113,6 +151,7 @@ export function SpreadSheets(props: Props) {
         </div>
     )
 }
+
 const handleExtractData = async (workbookJson: any) => {
     console.log('workbookJson', workbookJson);
 

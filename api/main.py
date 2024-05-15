@@ -6,6 +6,7 @@ from umum.views import router as umum_routes
 from cruising.views import router as cruising_routes
 from angkutan.views import router as angkutan_routes
 from produksi.views import router as produksi_routes
+from spreadsheet.views import router as spreadsheet_routes
 from utils.initialize import router as init_app
 from fastapi_pagination import add_pagination
 from fastapi.middleware.cors import CORSMiddleware
@@ -42,6 +43,7 @@ app.include_router(umum_routes)
 app.include_router(cruising_routes)
 app.include_router(angkutan_routes)
 app.include_router(produksi_routes)
+app.include_router(spreadsheet_routes)
 app.include_router(init_app)
 
 

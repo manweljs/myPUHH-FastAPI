@@ -127,26 +127,26 @@ class PohonSchema(PydanticModel):
 
 
 class PohonInSchema(PydanticModel):
-    nomor: str
-    barcode_id: UUID
-    petak_id: UUID
+    id: Optional[UUID]
+    nomor: int
+    barcode: str
+    petak: str
     jalur: Optional[str]
-    araj_jalur: Optional[str]
+    arah_jalur: Optional[str]
     panjang_jalur: Optional[int]
-    jenis_id: UUID
-    tinggi: Optional[float]
-    diameter: Optional[float]
-    volume: Optional[float]
-    sortimen: Optional[int]
-    koordinat_x: Optional[float]
-    koordinat_y: Optional[float]
+    jenis: str
+    tinggi: float
+    diameter: float
+    volume: float
+    sortimen: int
+    koordinat_x: Optional[Union[float, str]]
+    koordinat_y: Optional[Union[float, str]]
 
     class Config:
         from_attributes = True
 
 
 class SaveLHCBarcodeItemSchema(PydanticModel):
-    no: Optional[Union[int, str]]
     id: Optional[str]
     barcode: str
 

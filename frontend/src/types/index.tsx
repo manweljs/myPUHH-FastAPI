@@ -114,10 +114,38 @@ export interface BukuUkurInType {
 }
 
 export interface PohonType {
-    id: string,
-    nomor: string
+    id: string;
+    nomor: number;
+    barcode: string;
+    petak: string;
+    jalur?: string;
+    arah_jalur?: string;
+    panjang_jalur?: number;
+    jenis: string;
+    tinggi: number;
+    diameter: number;
+    volume: number;
+    sortimen: number;
+    koordinat_x?: number | string;
+    koordinat_y?: number | string;
 }
 
+export interface PohonInType {
+    id?: string | null;
+    nomor: number;
+    barcode: string;
+    petak: string;
+    jalur?: string;
+    arah_jalur?: string;
+    panjang_jalur?: number;
+    jenis: string;
+    tinggi: number;
+    diameter: number;
+    volume: number;
+    sortimen: string;
+    koordinat_x?: number | string;
+    koordinat_y?: number | string;
+}
 
 export interface LHCBarcodeType {
     id: string;
@@ -251,4 +279,15 @@ export interface SaveLHCBarcodeType {
             no?: string;
         }
     ];
+}
+
+
+
+export interface DraftSpreadsheetType {
+    id?: string | null;
+    title: string;
+    object: string;
+    object_id: string;
+    file_url: string;
+    version: number;
 }

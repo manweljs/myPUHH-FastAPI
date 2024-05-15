@@ -24,9 +24,11 @@
   padding-top: 8px !important;
 }
 
-.save_button {
+.extra_button_spreadsheet {
   position: fixed;
   z-index: 2;
   top: 0.5rem;
   right: 1.5rem;
+  display: flex;
+  gap: 10px;
 }/*# sourceMappingURL=global.module.css.map */

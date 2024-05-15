@@ -1,12 +1,12 @@
 "use client";
 import React, { useEffect, useState } from 'react'
 import { SpreadSheets } from '@/components/global/SpreadSheets'
-import s from "./lhc.module.sass"
-import { PageHeader } from '../global';
-import { GetAllBarcode, GetBarcodesByLHC, SaveLHCBarcode } from '@/api';
+import { GetBarcodesByLHC, SaveLHCBarcode } from '@/api';
 import { LHCBarcodeType } from '@/types';
-import { Button, Modal, Space, Spin, Table } from 'antd';
+import { message, Modal, Space, Spin } from 'antd';
 import { ColumnModel } from '@syncfusion/ej2-react-spreadsheet';
+import s from "./lhc.module.sass"
+import { LoadingModal } from '../global';
 
 const initialData: object = {
     no: "",
@@ -44,27 +44,31 @@ export function LHCDetailBarcodes(props: { id: string }) {
     const handleSaveAsJson = async (data: any) => {
         const finalData = {
             lhc_id: id,
-            barcodes: data[0].rows
+            barcodes: data[0].rows.map((item: { barcode: string, id: string }) => {
+                return {
+                    id: item.id || null,
+                    barcode: item.barcode
+                }
+            })
         }
 
         console.log('final data untuk database --->', finalData)
         setLoading(true)
         const response = await SaveLHCBarcode(id, finalData)
         console.log('response', response)
+        if (response.success) {
+            message.success('Data berhasil disimpan')
+            handleGetBarcodes()
+        } else {
+            message.error(response.errors.map((item: any) => item.message).join(', '))
+
+        }
         setLoading(false)
     }
 
     return (
         <div className={s.lhc_barcodes}>
-            {loading &&
-                <Modal open footer={null}>
-                    <Space>
-                        <Spin />
-                        <div>Loading...</div>
-                    </Space>
-
-                </Modal>
-            }
+            <LoadingModal open={loading} />
             <SpreadSheets
                 data={data}
                 colCount={3}

@@ -10,6 +10,10 @@ export function toTitleCase(str: string): string {
     return str.toLowerCase().replace(/_/g, ' ').replace(/\b(\w)/g, s => s.toUpperCase());
 }
 
+export const sanitizeFilename = (filename: string): string => {
+    return filename.replace(/[^a-zA-Z0-9]/g, '_');
+};
+
 export function createOptionsFromEnum(enumObject: any): { value: number, label: string }[] {
     return Object.entries(enumObject)
         .filter(([key, value]) => typeof value === 'number') // Filter untuk mendapatkan hanya key yang memiliki value berupa angka

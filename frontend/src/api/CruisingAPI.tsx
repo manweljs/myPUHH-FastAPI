@@ -45,6 +45,13 @@ export const GetLHCDetails = async (lhc_id: string, page: number) => {
 
 }
 
+export const GetAllPohonByLHC = async (lhc_id: string) => {
+    const endpoint = `${API_URL}/api/Cruising/LHC/${lhc_id}/Pohon/GetAll`
+    const method = "GET"
+    return await sendRequest(endpoint, method)
+
+}
+
 export const ImportPohonLHC = async (data: any, lhc_id: string) => {
     const endpoint = `${API_URL}/api/Cruising/ImportPohonLHC/${lhc_id}`
     const method = "POST"
