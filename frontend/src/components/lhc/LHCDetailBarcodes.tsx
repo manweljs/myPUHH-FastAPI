@@ -9,7 +9,6 @@ import s from "./lhc.module.sass"
 import { LoadingModal } from '../global';
 
 const initialData: object = {
-    no: "",
     id: "",
     barcode: ""
 }
@@ -23,7 +22,6 @@ export function LHCDetailBarcodes(props: { id: string }) {
         console.log(response)
         const data = response.map((item: LHCBarcodeType, index: number) => {
             return {
-                no: index + 1,
                 id: item.id,
                 barcode: item.barcode,
             }
@@ -37,8 +35,7 @@ export function LHCDetailBarcodes(props: { id: string }) {
 
     const columns: ColumnModel[] = [
         { width: 60, index: 0, isLocked: true, },
-        { width: 100, index: 1, isLocked: true, },
-        { width: 220, index: 2, },
+        { width: 220, index: 1, },
     ];
 
     const handleSaveAsJson = async (data: any) => {

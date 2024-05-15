@@ -7,7 +7,9 @@ import { LHCType } from "@/types";
 import { PageHeader } from "../global";
 import { LHCDetailBarcodes } from "./LHCDetailBarcodes";
 import LHCDetailPohon from "./LHCDetailPohon";
-import LHCDetailRekap from "./LHCDetailRekap";
+import LHCDetailSummary from "./LHCDetailSummary";
+import { getEnumLabel } from "@/functions";
+import { OBYEK } from "@/consts";
 
 export default function LHCDetail(props: {
     id: string
@@ -29,14 +31,15 @@ export default function LHCDetail(props: {
     }, []);
 
     useEffect(() => {
-        setPageTitle(`LHC/${lhc?.nomor}`);
+        if (!lhc) return;
+        setPageTitle(`LHC - ${lhc?.nomor} - ${getEnumLabel(OBYEK, lhc.obyek)}`);
     }, [lhc]);
 
     const items: TabsProps['items'] = [
         {
             key: '0',
             label: 'Summary',
-            children: <LHCDetailRekap data={lhc} />,
+            children: <LHCDetailSummary data={lhc} />,
         },
         {
             key: '1',

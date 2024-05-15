@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Button, Form, message, Modal, } from 'antd'
+import { Button, Form, message, Modal, Space, } from 'antd'
 import { LHCInType } from '@/types'
 import { CreateLHC, GetLHC, UpdateLHC } from '@/api';
 import { Field } from './Field';
@@ -130,14 +130,21 @@ export const FormLHC = (props: Props) => {
                     />
 
 
-                    <div className="group mt-5">
+                    <Space className='mt-4' >
                         <Button
                             onClick={handleSave}
                             type='primary'
                             loading={loading}
-                        >Save</Button>
-                        <Button onClick={close} className='ml-2' >Cancel</Button>
-                    </div>
+                        >
+                            Save
+                        </Button>
+                        <Button
+                            onClick={close}
+                        >
+                            Cancel
+                        </Button>
+
+                    </Space>
                 </Form>
             }
         </Modal>

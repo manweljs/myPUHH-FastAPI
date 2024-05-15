@@ -12,7 +12,7 @@ interface Props {
     onSaveAsJson?: (data: any) => void
     className?: string
     onCellChanges?: (ref: SpreadsheetComponent | null, args: any) => void
-    onSaveAsDraft?: (data: any, draft?:DraftSpreadsheetType | null) => void
+    onSaveAsDraft?: (data: any, draft?: DraftSpreadsheetType | null) => void
     drafts?: DraftSpreadsheetType[]
 }
 
@@ -91,7 +91,7 @@ export function SpreadSheets(props: Props) {
             console.error('Network response was not ok.');
         }
     }
-    
+
 
     const handleSaveAsJson = async () => {
         setLoading(true);
@@ -139,44 +139,47 @@ export function SpreadSheets(props: Props) {
 
             <div className={s.extra_button_spreadsheet}>
                 {
-                    draftWorkbooks && draftWorkbooks.length > 0 && 
-                <Space.Compact>
-                    <Select
-                        placeholder="Select Draft"
-                        style={{ minWidth: 120 }}
-                        onChange={loadDraftWorkbook}
-                    >
-                        {draftWorkbooks.map((draft, index) => (
-                            <Select.Option key={index} > 
-                                {draft.title}
-                            </Select.Option>
-                        ))}
-                    </Select>
-                    <Button
-                        onClick={handleLoadDraft}
-                        loading={loading}
-                        icon={<FIcon name='fi-rr-display-arrow-down' size={14} />}
-                        type='primary'
-                    >
-                        Load
-                    </Button>
-                </Space.Compact>
+                    draftWorkbooks && draftWorkbooks.length > 0 &&
+                    <Space.Compact>
+                        <Select
+                            placeholder="Select Draft"
+                            style={{ minWidth: 120 }}
+                            onChange={loadDraftWorkbook}
+                        >
+                            {draftWorkbooks.map((draft, index) => (
+                                <Select.Option key={index} >
+                                    {draft.title}
+                                </Select.Option>
+                            ))}
+                        </Select>
+                        <Button
+                            onClick={handleLoadDraft}
+                            loading={loading}
+                            icon={<FIcon name='fi-rr-display-arrow-down' size={14} />}
+                            type='primary'
+                        >
+                            Load
+                        </Button>
+                    </Space.Compact>
                 }
-                <Button
-                    onClick={handleSaveAsDraft}
-                    loading={loading}
-                    icon={<FIcon name='fi-rr-disk' size={14} />}
-                >
-                    Save Draft
-                </Button>
 
-                {onSaveAsJson && 
-                <Button
-                    onClick={handleSaveAsJson}
-                    type='primary'
-                    loading={loading}
-                    icon={<FIcon name='fi-rr-database' size={14} />}
-                >Save</Button>
+                {onSaveAsDraft &&
+                    <Button
+                        onClick={handleSaveAsDraft}
+                        loading={loading}
+                        icon={<FIcon name='fi-rr-disk' size={14} />}
+                    >
+                        Save Draft
+                    </Button>
+                }
+
+                {onSaveAsJson &&
+                    <Button
+                        onClick={handleSaveAsJson}
+                        type='primary'
+                        loading={loading}
+                        icon={<FIcon name='fi-rr-database' size={14} />}
+                    >Save</Button>
                 }
             </div>
 
