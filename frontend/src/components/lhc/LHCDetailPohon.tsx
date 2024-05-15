@@ -114,47 +114,53 @@ export default function LHCDetailPohon(props: {
 
     const handleSaveAsDraft = async (data: any, draft?:DraftSpreadsheetType | null) => {
         if (!lhc) return;
+        setLoading(true);
         console.log('data to save as draft', data.jsonObject);
         let version = 1;
-
-        if(!draft){
-            version = draftWorkbooks.length + 1;
-        }else{
-            version = draft.version;
-        }
-
-        const workbook = JSON.stringify(data.jsonObject)
-        const sanitizedNomor = sanitizeFilename(lhc?.nomor);
-        const filename = `spreadsheets/draft-${sanitizedNomor}.json`;
-        const {presigned} = await GetPresignedUrl(filename, 'application/json');
-        
-        if(presigned){
-            console.log('presigned--->', presigned)
-            const response = await fetch(presigned, {
-                method: 'PUT',
-                body: workbook,
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            });
+        try {
+            if(!draft){
+                version = draftWorkbooks.length + 1;
+            }else{
+                version = draft.version;
+            }
     
-            console.log('response', response);
-            if (response.ok) {
-                //save draft object to database
-                const draftData:DraftSpreadsheetType = {
-                    id: draft ? draft.id : null,
-                    object : 'lhc',
-                    object_id: lhc.id,
-                    title: `draft-${sanitizedNomor}-v${version}`,
-                    file_url: presigned.split('?')[0],
-                    version: version
-                }
-    
-                const response = await SaveDraftSpreadsheet(draftData);
-                console.log('response save draft', response);
+            const workbook = JSON.stringify(data.jsonObject)
+            const sanitizedNomor = sanitizeFilename(lhc?.nomor);
+            const filename = `spreadsheets/draft-${sanitizedNomor}.json`;
+            const {presigned} = await GetPresignedUrl(filename, 'application/json');
+            
+            if(presigned){
+                console.log('presigned--->', presigned)
+                const response = await fetch(presigned, {
+                    method: 'PUT',
+                    body: workbook,
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
         
-            }     
+                console.log('response', response);
+                if (response.ok) {
+                    //save draft object to database
+                    const draftData:DraftSpreadsheetType = {
+                        id: draft ? draft.id : null,
+                        object : 'lhc',
+                        object_id: lhc.id,
+                        title: `draft-${sanitizedNomor}-v${version}`,
+                        file_url: presigned.split('?')[0],
+                        version: version
+                    }
+        
+                    const response = await SaveDraftSpreadsheet(draftData);
+                    console.log('response save draft', response);
+            
+                }     
+            }
+        } catch (error) {
+            console.log('error', error)
         }
+        
+        setLoading(false);
 
     };
 

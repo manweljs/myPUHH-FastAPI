@@ -127,6 +127,13 @@ export function SpreadSheets(props: Props) {
     const handleLoadDraft = async () => {
 
     }
+
+    const handleCellChanges = (args: any) => {
+        console.log('args', args)
+
+        onCellChanges && onCellChanges(spreadsheetRef.current, args);
+
+    }
     return (
         <div className={className}>
 
@@ -183,8 +190,7 @@ export function SpreadSheets(props: Props) {
                 saveUrl='https://services.syncfusion.com/react/production/api/spreadsheet/save'
                 beforeSave={beforeSave}
                 scrollSettings={scrollSettings}
-                cellSave={(args: any) => { onCellChanges && onCellChanges(spreadsheetRef?.current, args) }}
-
+                cellSave={handleCellChanges}
             >
 
                 <SheetsDirective  >

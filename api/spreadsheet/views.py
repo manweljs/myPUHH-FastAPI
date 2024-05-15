@@ -1,4 +1,4 @@
-from uuid import UUID
+from uuid import UUID, uuid4
 from account.models import Perusahaan
 from utils.storage import get_presigned_url
 from utils.tokens import get_perusahaan
@@ -21,18 +21,26 @@ async def save_draft_spreadsheet(
     draft: schemas.SpreadsheetDrafInSchema,
     perusahaan: Perusahaan = Depends(get_perusahaan),
 ):
-    print("draft--->", draft)
+    print(draft)
     data = draft.model_dump(exclude_unset=True)
+    data["perusahaan_id"] = perusahaan
+    pk = data.pop("id")
+    if pk:
+        # Update existing entry
+        print("masuk sini")
+        try:
+            draft_instance = await SpreadsheetDraft.get(id=pk)
+            for key, value in data.items():
+                setattr(draft_instance, key, value)
+            await draft_instance.save()
+            return draft_instance
+        except Exception as e:
+            raise HTTPException(status_code=404, detail=str(e))
+    else:
+        # Create new entry
 
-    # Pisahkan 'id' dari data lain jika ada
-    draft_id = data.pop("id", None)
-
-    # Gunakan 'id' secara eksplisit sebagai parameter pencarian dan sisa data sebagai defaults
-    draft_instance, created = await SpreadsheetDraft.update_or_create(
-        id=draft_id,  # id digunakan untuk mencari instance yang ada
-        defaults=data,  # sisa data yang akan di-set jika membuat baru atau update yang ada
-    )
-    return draft_instance
+        draft_instance = await SpreadsheetDraft.create(**data)
+        return draft_instance
 
 
 @router.get(
@@ -44,11 +52,8 @@ async def save_draft_spreadsheet(
 async def get_draft_spreadsheets(
     type: str,
     id: str,
-    version: int = 1,
 ):
-    drafts = await SpreadsheetDraft.filter(
-        object=type, object_id=id, version=version
-    ).all()
+    drafts = await SpreadsheetDraft.filter(object=type, object_id=id).all()
 
     if drafts:
         for draft in drafts:
