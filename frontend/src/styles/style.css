@@ -17,6 +17,9 @@ body h1, body h2, body h3, body h4, body h5, body h6, body p {
 a {
   color: var(--primary);
 }
+a:hover {
+  color: var(--primary-100);
+}
 
 body.public #root {
   display: block;
@@ -66,7 +69,7 @@ body.min #root .navbar .menu {
   color: var(--primary-text);
 }
 
-.field-group {
+.field-group, .group {
   display: flex;
   gap: 10px;
 }
@@ -154,6 +157,14 @@ body.min #root .navbar .menu {
 .ant-btn {
   display: flex;
   align-items: center;
+}
+
+.e-custom-button button span {
+  font-size: 0.9em !important;
+}
+.e-custom-button button:focus {
+  outline: none !important;
+  box-shadow: none !important;
 }
 
 ::-webkit-scrollbar {

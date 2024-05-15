@@ -6,24 +6,24 @@ import { DraftSpreadsheetType, LHCType, PohonInType } from "@/types";
 import { LoadingModal, SpreadSheets } from "../global";
 import { SpreadsheetComponent } from "@syncfusion/ej2-react-spreadsheet";
 import { sanitizeFilename } from "@/functions";
-import {  GetDraftSpreadsheets, SaveDraftSpreadsheet } from "@/api/SpreadsheetAPI";
+import { GetDraftSpreadsheets, SaveDraftSpreadsheet } from "@/api/SpreadsheetAPI";
 
 const FAKTOR_BENTUK = 0.6;
 const initialData: PohonInType = {
     id: null,
     nomor: 1,
-    barcode: "",
     petak: "",
     jalur: "",
     arah_jalur: "",
     panjang_jalur: 0,
     jenis: "",
-    tinggi: 0,
     diameter: 0,
+    tinggi: 0,
     volume: 0,
     sortimen: "",
     koordinat_x: "",
     koordinat_y: "",
+    barcode: null,
 }
 
 export default function LHCDetailPohon(props: {
@@ -60,9 +60,9 @@ export default function LHCDetailPohon(props: {
         setLHC(response);
     };
 
-    const handleGetDraftWorkbooks = async (version=1) => {
+    const handleGetDraftWorkbooks = async () => {
         if (!lhc) return;
-        const response = await GetDraftSpreadsheets('lhc', lhc.id, version)
+        const response = await GetDraftSpreadsheets('lhc', lhc.id)
         console.log('response all workbooks draft', response)
         setDraftWorkbooks(response);
     }
@@ -75,17 +75,17 @@ export default function LHCDetailPohon(props: {
     }, []);
 
     useEffect(() => {
-        if (lhc){
+        if (lhc) {
             handleGetDraftWorkbooks();
         }
     }, [lhc]);
 
     const onCellChanges = async (ref: SpreadsheetComponent | null, args: any) => {
         if (!ref || !args) return;
-        console.log('args --> ', args);
+        // console.log('args --> ', args);
 
         const address = args.address;
-        console.log('address: ', address);
+        // console.log('address: ', address);
 
         const match = address.match(/([A-Z]+)(\d+)/);
         if (match) {
@@ -93,12 +93,12 @@ export default function LHCDetailPohon(props: {
             const rowIndex = parseInt(match[2]) - 1;
             const colIndex = colLetter.charCodeAt(0) - 65;
 
-            console.log('rowIndex: ', rowIndex, 'colIndex: ', colIndex);
+            // console.log('rowIndex: ', rowIndex, 'colIndex: ', colIndex);
 
             if (colIndex === 8 || colIndex === 9) { // 8 untuk tinggi, 9 untuk diameter
                 const volumeCellAddress = `K${rowIndex + 1}`; // K adalah kolom untuk volume
-                const tinggiCellAddress = `I${rowIndex + 1}`; // I adalah kolom untuk tinggi
-                const diameterCellAddress = `J${rowIndex + 1}`; // J adalah kolom untuk diameter
+                const diameterCellAddress = `I${rowIndex + 1}`; // I adalah kolom untuk diameter
+                const tinggiCellAddress = `J${rowIndex + 1}`; // J adalah kolom untuk tinggi
                 const formula = `=ROUND((0.7854*${FAKTOR_BENTUK})*${diameterCellAddress}^2*${tinggiCellAddress}/10000,2)`; // Formula perhitungan volume
                 ref.updateCell({ formula: formula }, volumeCellAddress); // Update volume dengan formula
                 ref.updateCell({ format: '0.00' }, volumeCellAddress); // Format volume menjadi 2 desimal
@@ -112,24 +112,24 @@ export default function LHCDetailPohon(props: {
 
     }
 
-    const handleSaveAsDraft = async (data: any, draft?:DraftSpreadsheetType | null) => {
+    const handleSaveAsDraft = async (data: any, draft?: DraftSpreadsheetType | null) => {
         if (!lhc) return;
         setLoading(true);
         console.log('data to save as draft', data.jsonObject);
         let version = 1;
         try {
-            if(!draft){
+            if (!draft) {
                 version = draftWorkbooks.length + 1;
-            }else{
+            } else {
                 version = draft.version;
             }
-    
+
             const workbook = JSON.stringify(data.jsonObject)
             const sanitizedNomor = sanitizeFilename(lhc?.nomor);
             const filename = `spreadsheets/draft-${sanitizedNomor}.json`;
-            const {presigned} = await GetPresignedUrl(filename, 'application/json');
-            
-            if(presigned){
+            const { presigned } = await GetPresignedUrl(filename, 'application/json');
+
+            if (presigned) {
                 console.log('presigned--->', presigned)
                 const response = await fetch(presigned, {
                     method: 'PUT',
@@ -138,28 +138,31 @@ export default function LHCDetailPohon(props: {
                         'Content-Type': 'application/json'
                     }
                 });
-        
+
                 console.log('response', response);
                 if (response.ok) {
                     //save draft object to database
-                    const draftData:DraftSpreadsheetType = {
+                    const draftData: DraftSpreadsheetType = {
                         id: draft ? draft.id : null,
-                        object : 'lhc',
+                        object: 'lhc',
                         object_id: lhc.id,
                         title: `draft-${sanitizedNomor}-v${version}`,
                         file_url: presigned.split('?')[0],
                         version: version
                     }
-        
+
                     const response = await SaveDraftSpreadsheet(draftData);
                     console.log('response save draft', response);
-            
-                }     
+                    if (response.id) {
+                        handleGetDraftWorkbooks();
+                    }
+
+                }
             }
         } catch (error) {
             console.log('error', error)
         }
-        
+
         setLoading(false);
 
     };
@@ -168,6 +171,7 @@ export default function LHCDetailPohon(props: {
         <div className={s.lhc_pohons}>
             <LoadingModal open={loading} />
             <SpreadSheets
+
                 data={listPohon}
                 className={s.spreadsheet_container}
                 onCellChanges={onCellChanges}

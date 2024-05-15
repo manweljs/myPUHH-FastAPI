@@ -9,8 +9,8 @@ export const SaveDraftSpreadsheet = async (data: DraftSpreadsheetType) => {
 }
 
 
-export const GetDraftSpreadsheets = async (type: string, id:string, version:number = 1) => {
-    const params = `?type=${type}&id=${id}&version=${version}`
+export const GetDraftSpreadsheets = async (type: string, id: string) => {
+    const params = `?type=${type}&id=${id}`
     const endpoint = `${API_URL}/api/Spreadsheet/Draft/${params}`
     const method = "GET"
     return await sendRequest(endpoint, method)

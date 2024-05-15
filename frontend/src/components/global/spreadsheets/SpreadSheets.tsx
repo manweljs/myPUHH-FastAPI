@@ -1,9 +1,12 @@
+"use client";
 import React, { useEffect, useRef, useState } from 'react'
-import { SheetsDirective, SheetDirective, RangesDirective, RangeDirective, SpreadsheetComponent, BeforeSaveEventArgs, ColumnsDirective, ColumnDirective, Inject, Filter, ColumnModel } from '@syncfusion/ej2-react-spreadsheet';
-import s from "./global.module.sass"
+import { SheetsDirective, SheetDirective, RangesDirective, RangeDirective, SpreadsheetComponent, BeforeSaveEventArgs, ColumnDirective, Inject, Filter, ColumnModel } from '@syncfusion/ej2-react-spreadsheet';
+import s from "../global.module.sass"
 import { Button, Select, Space } from 'antd';
-import FIcon from './FIcon';
+import FIcon from '../FIcon';
 import { DraftSpreadsheetType } from '@/types';
+import { customizeFormat, customizeRibbon } from './CustomConfig';
+import SpreadsheetService from './SpreadsheetService';
 
 interface Props {
     data?: object[]
@@ -23,6 +26,13 @@ const defaultData: object[] = [
 ];
 
 export function SpreadSheets(props: Props) {
+    const handleOnCreated = (instance: SpreadsheetComponent) => {
+        spreadsheetService.spreadsheet = instance;
+    };
+
+    const spreadsheetService = SpreadsheetService.getInstance();
+    const { spreadsheet } = spreadsheetService;
+
     const {
         data,
         colCount,
@@ -35,39 +45,59 @@ export function SpreadSheets(props: Props) {
     } = props
     const beforeOpen = (): void => { };
 
-    const spreadsheetRef = useRef<SpreadsheetComponent>(null);
     const [isInitialized, setIsInitialized] = useState(false);
     const [draftWorkbooks, setDraftWorkbooks] = useState<DraftSpreadsheetType[]>([]);
     const [selectedDraft, setSelectedDraft] = useState<DraftSpreadsheetType | null>(null);
     const [loading, setLoading] = useState(false);
+    const isRibbonInitialized = useRef(false);
+
+
+    const initialize = () => {
+        if (!spreadsheet || isRibbonInitialized.current) return;
+        customizeRibbon();
+        customizeFormat();
+        isRibbonInitialized.current = true; // Set ini menjadi true setelah inisialisasi
+    }
+
+    useEffect(() => {
+        if (spreadsheet && !isRibbonInitialized.current) {
+            initialize();
+        }
+    }, []);
+
 
     useEffect(() => {
         setDraftWorkbooks(drafts || [])
     }, [drafts])
 
     const beforeSave = async (args: BeforeSaveEventArgs) => {
-        if (!spreadsheetRef.current) return;
+        if (spreadsheet) return;
         console.log('args', args)
     };
+
+
 
 
     useEffect(() => {
         // Fungsi untuk menerapkan filter dan autofit
         const applyFilterAndAutofit = async () => {
+            if (!spreadsheet) return;
             const condition = { field: 'A', operator: 'contains', value: '' };
-            spreadsheetRef.current?.applyFilter([condition], 'A1:C1');
+            spreadsheet.applyFilter([condition], 'A1:C1');
             // spreadsheetRef.current?.autoFit('A:C');
         };
 
-        if (data && spreadsheetRef.current && !isInitialized) {
-            const sheet = spreadsheetRef.current.getActiveSheet();
+        if (data && spreadsheet && !isInitialized) {
+            const sheet = spreadsheet.getActiveSheet();
             const cellValue = sheet?.rows?.[1]?.cells?.[0]?.value ?? '';
             if (cellValue !== '') {
                 applyFilterAndAutofit();
                 setIsInitialized(true);
             }
         }
-    }, [data, spreadsheetRef.current, isInitialized]);
+
+    }, [data, spreadsheet, isInitialized]);
+
 
     const scrollSettings = {};
 
@@ -80,9 +110,9 @@ export function SpreadSheets(props: Props) {
             try {
                 const json = await response.json(); // Langsung mengambil dan parse JSON
                 console.log('JSON object:', json); // Log objek JSON
-                if (spreadsheetRef.current) {
+                if (spreadsheet) {
                     console.log('draftWorkbook triggered', json);
-                    spreadsheetRef.current.openFromJson({ file: json });
+                    spreadsheet.openFromJson({ file: json });
                 }
             } catch (error) {
                 console.error('Error parsing JSON:', error); // Handle kesalahan parsing
@@ -96,8 +126,8 @@ export function SpreadSheets(props: Props) {
     const handleSaveAsJson = async () => {
         setLoading(true);
         try {
-            if (spreadsheetRef.current) {
-                const jsonData = await spreadsheetRef.current.saveAsJson() as any;
+            if (spreadsheet) {
+                const jsonData = await spreadsheet.saveAsJson() as any;
                 const finalData = await handleExtractData(jsonData.jsonObject.Workbook);
                 console.log('final Data --> ', finalData)
                 onSaveAsJson && onSaveAsJson(finalData.data);
@@ -112,8 +142,8 @@ export function SpreadSheets(props: Props) {
     const handleSaveAsDraft = async () => {
         setLoading(true);
         try {
-            if (spreadsheetRef.current) {
-                const jsonData = await spreadsheetRef.current.saveAsJson() as any;
+            if (spreadsheet) {
+                const jsonData = await spreadsheet.saveAsJson() as any;
                 console.log('jsonData', jsonData.jsonObject)
                 onSaveAsDraft && onSaveAsDraft(jsonData, selectedDraft);
             }
@@ -129,11 +159,14 @@ export function SpreadSheets(props: Props) {
     }
 
     const handleCellChanges = (args: any) => {
-        console.log('args', args)
+        // console.log('args', args)
 
-        onCellChanges && onCellChanges(spreadsheetRef.current, args);
+        onCellChanges && onCellChanges(spreadsheet, args);
 
     }
+
+
+
     return (
         <div className={className}>
 
@@ -184,7 +217,7 @@ export function SpreadSheets(props: Props) {
             </div>
 
             <SpreadsheetComponent
-                ref={spreadsheetRef}
+                ref={handleOnCreated}
                 className={s.spreadsheet}
                 allowOpen={true}
                 beforeOpen={beforeOpen}
@@ -252,3 +285,4 @@ const handleExtractData = async (workbookJson: any) => {
     console.log("Formatted Data Ready to Send:", formattedData);
     return formattedData; // Data siap dikirim atau digunakan lebih lanjut
 };
+

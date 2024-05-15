@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useState } from 'react'
-import { SpreadSheets } from '@/components/global/SpreadSheets'
+import { SpreadSheets } from '@/components/global'
 import { GetBarcodesByLHC, SaveLHCBarcode } from '@/api';
 import { LHCBarcodeType } from '@/types';
 import { message, Modal, Space, Spin } from 'antd';
@@ -67,6 +67,7 @@ export function LHCDetailBarcodes(props: { id: string }) {
         <div className={s.lhc_barcodes}>
             <LoadingModal open={loading} />
             <SpreadSheets
+
                 data={data}
                 colCount={3}
                 columns={columns}

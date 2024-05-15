@@ -133,7 +133,7 @@ export interface PohonType {
 export interface PohonInType {
     id?: string | null;
     nomor: number;
-    barcode: string;
+    barcode: string | null;
     petak: string;
     jalur?: string;
     arah_jalur?: string;
@@ -282,7 +282,7 @@ export interface SaveLHCBarcodeType {
 }
 
 export interface DraftSpreadsheetType {
-    id?:string | null;
+    id?: string | null;
     title: string;
     object: string;
     object_id: string;

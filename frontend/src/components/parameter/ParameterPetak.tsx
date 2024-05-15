@@ -109,11 +109,6 @@ export function ParameterPetak() {
                 <h3>{page}</h3>
                 <div className="group">
                     <Button
-                        onClick={() => setDisplayFormUpload(true)}
-                        icon={<UploadOutlined />}
-                        className='mr-2'
-                    >Upload</Button>
-                    <Button
                         type='primary'
                         onClick={handleAdd}
                     >+ Add</Button>

@@ -14,6 +14,9 @@ body
 a
     color: var(--primary)
 
+    &:hover
+        color: var(--primary-100)
+
 body.public
     #root
         display: block
@@ -54,7 +57,7 @@ body.min #root
         font-weight: 400
         color: var(--primary-text)
 
-.field-group
+.field-group, .group
     display: flex
     gap: 10px
 
@@ -135,6 +138,14 @@ body.min #root
 .ant-btn
     display: flex
     align-items: center
+
+.e-custom-button
+    button
+        span
+            font-size: .9em!important
+    button:focus
+        outline: none!important
+        box-shadow: none!important
 
 // scrollbar 
 

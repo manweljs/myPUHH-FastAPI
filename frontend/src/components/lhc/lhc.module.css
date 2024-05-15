@@ -24,4 +24,8 @@
 
 .lhc_detail_tabs {
   height: calc(100svh - var(--page-header-height));
+}
+
+.summary {
+  padding: 1rem;
 }/*# sourceMappingURL=lhc.module.css.map */
