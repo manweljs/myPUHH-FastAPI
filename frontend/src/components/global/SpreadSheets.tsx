@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { SheetsDirective, SheetDirective, RangesDirective, RangeDirective, SpreadsheetComponent, BeforeSaveEventArgs, ColumnsDirective, ColumnDirective, Inject, Filter, ColumnModel } from '@syncfusion/ej2-react-spreadsheet';
 import s from "./global.module.sass"
-import { Button } from 'antd';
+import { Button, Select, Space } from 'antd';
 import FIcon from './FIcon';
 import { DraftSpreadsheetType } from '@/types';
 
@@ -12,7 +12,7 @@ interface Props {
     onSaveAsJson?: (data: any) => void
     className?: string
     onCellChanges?: (ref: SpreadsheetComponent | null, args: any) => void
-    onSaveAsDraft?: (data: any) => void
+    onSaveAsDraft?: (data: any, draft?:DraftSpreadsheetType | null) => void
     drafts?: DraftSpreadsheetType[]
 }
 
@@ -37,8 +37,13 @@ export function SpreadSheets(props: Props) {
 
     const spreadsheetRef = useRef<SpreadsheetComponent>(null);
     const [isInitialized, setIsInitialized] = useState(false);
-    const [draftWorkbooks, setDraftWorkbooks] = useState<DraftSpreadsheetType[]>(drafts || []);
+    const [draftWorkbooks, setDraftWorkbooks] = useState<DraftSpreadsheetType[]>([]);
+    const [selectedDraft, setSelectedDraft] = useState<DraftSpreadsheetType | null>(null);
     const [loading, setLoading] = useState(false);
+
+    useEffect(() => {
+        setDraftWorkbooks(drafts || [])
+    }, [drafts])
 
     const beforeSave = async (args: BeforeSaveEventArgs) => {
         if (!spreadsheetRef.current) return;
@@ -66,12 +71,27 @@ export function SpreadSheets(props: Props) {
 
     const scrollSettings = {};
 
-    const loadDraftWorkbook = async (draftWorkbook: object) => {
-        if (spreadsheetRef.current) {
-            console.log('draftWorkbook triggered', draftWorkbook)
-            spreadsheetRef.current.openFromJson({ file: draftWorkbook });
+    const loadDraftWorkbook = async (index: number) => {
+        const draftSelected = draftWorkbooks[index];
+        setSelectedDraft(draftSelected);
+        const response = await fetch(draftSelected.file_url);
+        console.log('response', response);
+        if (response.ok) {
+            try {
+                const json = await response.json(); // Langsung mengambil dan parse JSON
+                console.log('JSON object:', json); // Log objek JSON
+                if (spreadsheetRef.current) {
+                    console.log('draftWorkbook triggered', json);
+                    spreadsheetRef.current.openFromJson({ file: json });
+                }
+            } catch (error) {
+                console.error('Error parsing JSON:', error); // Handle kesalahan parsing
+            }
+        } else {
+            console.error('Network response was not ok.');
         }
     }
+    
 
     const handleSaveAsJson = async () => {
         setLoading(true);
@@ -95,7 +115,7 @@ export function SpreadSheets(props: Props) {
             if (spreadsheetRef.current) {
                 const jsonData = await spreadsheetRef.current.saveAsJson() as any;
                 console.log('jsonData', jsonData.jsonObject)
-                onSaveAsDraft && onSaveAsDraft(jsonData);
+                onSaveAsDraft && onSaveAsDraft(jsonData, selectedDraft);
             }
 
         } catch (error) {
@@ -104,24 +124,53 @@ export function SpreadSheets(props: Props) {
         setLoading(false);
     }
 
+    const handleLoadDraft = async () => {
 
+    }
     return (
         <div className={className}>
 
             <div className={s.extra_button_spreadsheet}>
+                {
+                    draftWorkbooks && draftWorkbooks.length > 0 && 
+                <Space.Compact>
+                    <Select
+                        placeholder="Select Draft"
+                        style={{ minWidth: 120 }}
+                        onChange={loadDraftWorkbook}
+                    >
+                        {draftWorkbooks.map((draft, index) => (
+                            <Select.Option key={index} > 
+                                {draft.title}
+                            </Select.Option>
+                        ))}
+                    </Select>
+                    <Button
+                        onClick={handleLoadDraft}
+                        loading={loading}
+                        icon={<FIcon name='fi-rr-display-arrow-down' size={14} />}
+                        type='primary'
+                    >
+                        Load
+                    </Button>
+                </Space.Compact>
+                }
                 <Button
                     onClick={handleSaveAsDraft}
                     loading={loading}
                     icon={<FIcon name='fi-rr-disk' size={14} />}
                 >
-                    Save as Draft
+                    Save Draft
                 </Button>
 
+                {onSaveAsJson && 
                 <Button
                     onClick={handleSaveAsJson}
                     type='primary'
                     loading={loading}
-                >Save to Database</Button>
+                    icon={<FIcon name='fi-rr-database' size={14} />}
+                >Save</Button>
+                }
             </div>
 
             <SpreadsheetComponent

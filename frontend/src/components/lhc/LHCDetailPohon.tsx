@@ -6,6 +6,7 @@ import { DraftSpreadsheetType, LHCType, PohonInType } from "@/types";
 import { LoadingModal, SpreadSheets } from "../global";
 import { SpreadsheetComponent } from "@syncfusion/ej2-react-spreadsheet";
 import { sanitizeFilename } from "@/functions";
+import {  GetDraftSpreadsheets, SaveDraftSpreadsheet } from "@/api/SpreadsheetAPI";
 
 const FAKTOR_BENTUK = 0.6;
 const initialData: PohonInType = {
@@ -59,10 +60,25 @@ export default function LHCDetailPohon(props: {
         setLHC(response);
     };
 
+    const handleGetDraftWorkbooks = async (version=1) => {
+        if (!lhc) return;
+        const response = await GetDraftSpreadsheets('lhc', lhc.id, version)
+        console.log('response all workbooks draft', response)
+        setDraftWorkbooks(response);
+    }
+
+    console.log('draftWorkbooks', draftWorkbooks)
+
     useEffect(() => {
         handleGetLHC();
         handleGetAllPohon();
     }, []);
+
+    useEffect(() => {
+        if (lhc){
+            handleGetDraftWorkbooks();
+        }
+    }, [lhc]);
 
     const onCellChanges = async (ref: SpreadsheetComponent | null, args: any) => {
         if (!ref || !args) return;
@@ -96,22 +112,50 @@ export default function LHCDetailPohon(props: {
 
     }
 
-    const handleSaveAsDraft = async (data: any) => {
+    const handleSaveAsDraft = async (data: any, draft?:DraftSpreadsheetType | null) => {
         if (!lhc) return;
         console.log('data to save as draft', data.jsonObject);
-        const workbook = data.jsonObject;
+        let version = 1;
+
+        if(!draft){
+            version = draftWorkbooks.length + 1;
+        }else{
+            version = draft.version;
+        }
+
+        const workbook = JSON.stringify(data.jsonObject)
         const sanitizedNomor = sanitizeFilename(lhc?.nomor);
         const filename = `spreadsheets/draft-${sanitizedNomor}.json`;
-        const { presigned } = await GetPresignedUrl(filename, 'application/json');
-        const response = await fetch(presigned, {
-            method: 'PUT',
-            body: workbook,
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        });
+        const {presigned} = await GetPresignedUrl(filename, 'application/json');
+        
+        if(presigned){
+            console.log('presigned--->', presigned)
+            const response = await fetch(presigned, {
+                method: 'PUT',
+                body: workbook,
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+    
+            console.log('response', response);
+            if (response.ok) {
+                //save draft object to database
+                const draftData:DraftSpreadsheetType = {
+                    id: draft ? draft.id : null,
+                    object : 'lhc',
+                    object_id: lhc.id,
+                    title: `draft-${sanitizedNomor}-v${version}`,
+                    file_url: presigned.split('?')[0],
+                    version: version
+                }
+    
+                const response = await SaveDraftSpreadsheet(draftData);
+                console.log('response save draft', response);
+        
+            }     
+        }
 
-        console.log('response', response);
     };
 
     return (
@@ -128,5 +172,6 @@ export default function LHCDetailPohon(props: {
         </div>
     );
 }
+
 
 

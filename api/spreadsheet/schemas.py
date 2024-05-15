@@ -7,7 +7,7 @@ from .models import SpreadsheetDraft
 
 
 class SpreadsheetDrafInSchema(PydanticModel):
-    id: Optional[UUID]
+    id: Optional[UUID] = None
     title: str
     object: str
     object_id: UUID
@@ -25,15 +25,6 @@ class SpreadsheetDraftSchema(PydanticModel):
     object_id: UUID
     file_url: str
     version: int
-
-    class Config:
-        from_attributes = True
-
-
-class SpreadsheetParamsSchema(PydanticModel):
-    object: str
-    object_id: UUID
-    version: Optional[int]
 
     class Config:
         from_attributes = True

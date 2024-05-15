@@ -83,7 +83,7 @@ export interface UploadBarcodeType {
 }
 
 export interface LHCType {
-    id?: string;
+    id: string;
     nomor: string;
     tahun: TahunKegiatanType;
     tanggal: string;
@@ -281,13 +281,13 @@ export interface SaveLHCBarcodeType {
     ];
 }
 
-
-
 export interface DraftSpreadsheetType {
-    id?: string | null;
+    id?:string | null;
     title: string;
     object: string;
     object_id: string;
     file_url: string;
     version: number;
 }
+
+

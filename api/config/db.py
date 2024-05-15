@@ -24,6 +24,7 @@ model_list = [
     "cruising.models",
     "produksi.models",
     "angkutan.models",
+    "spreadsheet.models",
 ]
 
 

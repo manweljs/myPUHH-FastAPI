@@ -52,14 +52,14 @@ async def create_presigned_url(object_name, content_type, expiration=2000):
     return response
 
 
-async def get_presigned_url(url: str, expiration=2500):
+async def get_presigned_url(url: str, subfolder="", expiration=2500):
     client = await get_s3_client()
     try:
         response = await client.generate_presigned_url(
             ClientMethod="get_object",
             Params={
                 "Bucket": AWS_STORAGE_BUCKET_NAME,
-                "Key": "test/" + url.split("/")[-1],
+                "Key": "test/" + subfolder + url.split("/")[-1],
             },
             ExpiresIn=expiration,
         )

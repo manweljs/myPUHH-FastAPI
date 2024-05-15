@@ -35,7 +35,7 @@ export default function LHCDetail(props: {
     const items: TabsProps['items'] = [
         {
             key: '0',
-            label: 'Rekapitulasi',
+            label: 'Summary',
             children: <LHCDetailRekap data={lhc} />,
         },
         {
