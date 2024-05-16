@@ -1,12 +1,13 @@
 "use client"
 import React, { useEffect, useState } from "react";
-import { GetAllPohonByLHC, GetLHC, GetPresignedUrl } from "@/api";
+import { GetAllPohonByLHC, GetLHC, GetPresignedUrl, SaveLHCPohon } from "@/api";
 import s from "./lhc.module.sass";
-import { DraftSpreadsheetType, LHCType, PohonInType } from "@/types";
+import { DraftSpreadsheetType, LHCPohonInType, LHCType, PohonInType } from "@/types";
 import { LoadingModal, SpreadSheets } from "../global";
 import { SpreadsheetComponent } from "@syncfusion/ej2-react-spreadsheet";
 import { sanitizeFilename } from "@/functions";
 import { GetDraftSpreadsheets, SaveDraftSpreadsheet } from "@/api/SpreadsheetAPI";
+import { message } from "antd";
 
 const FAKTOR_BENTUK = 0.6;
 const initialData: PohonInType = {
@@ -96,31 +97,81 @@ export default function LHCDetailPohon(props: {
             // console.log('rowIndex: ', rowIndex, 'colIndex: ', colIndex);
 
             if (colIndex === 8 || colIndex === 9) { // 8 untuk tinggi, 9 untuk diameter
-                const volumeCellAddress = `K${rowIndex + 1}`; // K adalah kolom untuk volume
-                const diameterCellAddress = `I${rowIndex + 1}`; // I adalah kolom untuk diameter
-                const tinggiCellAddress = `J${rowIndex + 1}`; // J adalah kolom untuk tinggi
+                const diameterCellAddress = `H${rowIndex + 1}`; // H adalah kolom untuk diameter
+                const tinggiCellAddress = `I${rowIndex + 1}`; // I adalah kolom untuk tinggi
+                const volumeCellAddress = `J${rowIndex + 1}`; // J adalah kolom untuk volume
+                const sortimenCellAddress = `K${rowIndex + 1}`; // K adalah kolom untuk sortimen
                 const formula = `=ROUND((0.7854*${FAKTOR_BENTUK})*${diameterCellAddress}^2*${tinggiCellAddress}/10000,2)`; // Formula perhitungan volume
+                //IF(H2<30,"KBK",IF(H2<50,"KBS","KB"))
+                const formulaSortimen = `=IF(${diameterCellAddress}<30,"KBK",IF(${diameterCellAddress}<50,"KBS","KB"))`
                 ref.updateCell({ formula: formula }, volumeCellAddress); // Update volume dengan formula
+                ref.updateCell({ formula: formulaSortimen }, sortimenCellAddress); // Update sortimen dengan formula
                 ref.updateCell({ format: '0.00' }, volumeCellAddress); // Format volume menjadi 2 desimal
             }
         }
 
     }
 
-    const handleSaveToDatabase = async (data: any) => {
-        console.log('data to save', data)
-
+    const isValidBarcodeOrNone = (barcode: string) => {
+        if (!barcode) return null;
+        if (barcode.trim().length === 27) {
+            return barcode;
+        } else {
+            return null;
+        }
     }
 
-    const handleSaveAsDraft = async (data: any, draft?: DraftSpreadsheetType | null) => {
+    const handleSaveToDatabase = async (data: any) => {
+        // clean up sebelum dikirim ke database
+        setLoading(true);
+        try {
+            console.log('data to clean', data)
+
+            const cleanedData: LHCPohonInType = data[0].rows.map((row: any) => {
+                // Buat objek baru tanpa properti id jika id kosong atau null
+                const cleanedRow: any = {
+                    ...row,
+                    volume: parseFloat(row.volume),
+                    diameter: parseInt(row.diameter),
+                    tinggi: parseInt(row.tinggi),
+                    barcode: isValidBarcodeOrNone(row.barcode),
+                };
+
+                // Hanya tambahkan properti id jika tidak kosong atau null
+                if (row.id) {
+                    cleanedRow.id = row.id;
+                } else {
+                    delete cleanedRow.id;
+                }
+
+                return cleanedRow;
+            });
+
+            // mengirim data ke server 
+            try {
+                const response = await SaveLHCPohon(id, cleanedData)
+                console.log('response', response)
+
+            } catch (error) {
+                console.log('error', error)
+            }
+        } catch (error) {
+
+            console.log('error', error)
+            message.error((error as any).toString())
+        }
+        setLoading(false);
+    }
+
+    const handleSaveAsDraft = async (data: any, draft?: DraftSpreadsheetType | null, isNewVersion: boolean = false) => {
         if (!lhc) return;
         setLoading(true);
         console.log('data to save as draft', data.jsonObject);
         let version = 1;
         try {
-            if (!draft) {
+            if (isNewVersion) {
                 version = draftWorkbooks.length + 1;
-            } else {
+            } else if (draft && draft.version) {
                 version = draft.version;
             }
 
@@ -143,7 +194,7 @@ export default function LHCDetailPohon(props: {
                 if (response.ok) {
                     //save draft object to database
                     const draftData: DraftSpreadsheetType = {
-                        id: draft ? draft.id : null,
+                        id: isNewVersion ? null : draft ? draft.id : null,
                         object: 'lhc',
                         object_id: lhc.id,
                         title: `draft-${sanitizedNomor}-v${version}`,
@@ -158,6 +209,10 @@ export default function LHCDetailPohon(props: {
                     }
 
                 }
+            }
+
+            if (isNewVersion) {
+                handleGetDraftWorkbooks()
             }
         } catch (error) {
             console.log('error', error)

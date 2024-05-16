@@ -291,3 +291,19 @@ export interface DraftSpreadsheetType {
 }
 
 
+export interface LHCPohonInType {
+    id?: string | null;
+    nomor: number;
+    barcode: string | null;
+    petak: string;
+    jalur: string;
+    arah_jalur: string;
+    panjang_jalur: number;
+    jenis: string;
+    tinggi: number;
+    diameter: number;
+    volume: number;
+    sortimen: number;
+    koordinat_x: number;
+    koordinat_y: number;
+}

@@ -5,8 +5,7 @@ import s from "../global.module.sass"
 import { Button, Select, Space } from 'antd';
 import FIcon from '../FIcon';
 import { DraftSpreadsheetType } from '@/types';
-import { customizeFormat, customizeRibbon } from './CustomConfig';
-import SpreadsheetService from './SpreadsheetService';
+import { customizeRibbon } from './CustomConfig';
 
 interface Props {
     data?: object[]
@@ -15,7 +14,7 @@ interface Props {
     onSaveAsJson?: (data: any) => void
     className?: string
     onCellChanges?: (ref: SpreadsheetComponent | null, args: any) => void
-    onSaveAsDraft?: (data: any, draft?: DraftSpreadsheetType | null) => void
+    onSaveAsDraft?: (data: any, draft?: DraftSpreadsheetType | null, isNewVersion?: boolean) => void
     drafts?: DraftSpreadsheetType[]
 }
 
@@ -26,12 +25,15 @@ const defaultData: object[] = [
 ];
 
 export function SpreadSheets(props: Props) {
-    const handleOnCreated = (instance: SpreadsheetComponent) => {
-        spreadsheetService.spreadsheet = instance;
-    };
 
-    const spreadsheetService = SpreadsheetService.getInstance();
-    const { spreadsheet } = spreadsheetService;
+    const [spreadsheet, setSpreadsheet] = useState<SpreadsheetComponent | null>(null);
+    const spreadsheetRef = useRef<SpreadsheetComponent | null>(null);
+
+    useEffect(() => {
+        if (spreadsheetRef.current) {
+            setSpreadsheet(spreadsheetRef.current);
+        }
+    }, [spreadsheetRef.current]);
 
     const {
         data,
@@ -54,8 +56,8 @@ export function SpreadSheets(props: Props) {
 
     const initialize = () => {
         if (!spreadsheet || isRibbonInitialized.current) return;
-        customizeRibbon();
-        customizeFormat();
+        console.log('init ribbon',)
+        customizeRibbon(spreadsheet);
         isRibbonInitialized.current = true; // Set ini menjadi true setelah inisialisasi
     }
 
@@ -63,7 +65,7 @@ export function SpreadSheets(props: Props) {
         if (spreadsheet && !isRibbonInitialized.current) {
             initialize();
         }
-    }, []);
+    }, [spreadsheet, isRibbonInitialized.current]);
 
 
     useEffect(() => {
@@ -74,8 +76,6 @@ export function SpreadSheets(props: Props) {
         if (spreadsheet) return;
         console.log('args', args)
     };
-
-
 
 
     useEffect(() => {
@@ -139,13 +139,16 @@ export function SpreadSheets(props: Props) {
         setLoading(false);
     };
 
-    const handleSaveAsDraft = async () => {
+    const handleSaveAsDraft = async (newDraft: boolean = false) => {
         setLoading(true);
         try {
             if (spreadsheet) {
                 const jsonData = await spreadsheet.saveAsJson() as any;
                 console.log('jsonData', jsonData.jsonObject)
-                onSaveAsDraft && onSaveAsDraft(jsonData, selectedDraft);
+                onSaveAsDraft && onSaveAsDraft(jsonData, selectedDraft, newDraft);
+
+
+
             }
 
         } catch (error) {
@@ -186,23 +189,25 @@ export function SpreadSheets(props: Props) {
                             ))}
                         </Select>
                         <Button
-                            onClick={handleLoadDraft}
+                            onClick={() => handleSaveAsDraft()}
                             loading={loading}
                             icon={<FIcon name='fi-rr-display-arrow-down' size={14} />}
                             type='primary'
+                            title='Save and overwrite current draft'
                         >
-                            Load
+                            Save Draft
                         </Button>
                     </Space.Compact>
                 }
 
                 {onSaveAsDraft &&
                     <Button
-                        onClick={handleSaveAsDraft}
+                        onClick={() => handleSaveAsDraft(true)}
                         loading={loading}
                         icon={<FIcon name='fi-rr-disk' size={14} />}
+                        title='Save as new draft version'
                     >
-                        Save Draft
+                        Save New Draft
                     </Button>
                 }
 
@@ -217,7 +222,7 @@ export function SpreadSheets(props: Props) {
             </div>
 
             <SpreadsheetComponent
-                ref={handleOnCreated}
+                ref={spreadsheetRef}
                 className={s.spreadsheet}
                 allowOpen={true}
                 beforeOpen={beforeOpen}

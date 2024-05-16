@@ -126,21 +126,21 @@ class PohonSchema(PydanticModel):
         from_attributes = True
 
 
-class PohonInSchema(PydanticModel):
-    id: Optional[UUID]
+class PohonInSchema(BaseModel):
+    id: Optional[UUID] = None
     nomor: int
-    barcode: str
+    barcode: Optional[str] = None
     petak: str
-    jalur: Optional[str]
-    arah_jalur: Optional[str]
-    panjang_jalur: Optional[int]
+    jalur: Optional[str] = None
+    arah_jalur: Optional[str] = None
+    panjang_jalur: Optional[int] = None
     jenis: str
     tinggi: float
     diameter: float
     volume: float
     sortimen: int
-    koordinat_x: Optional[Union[float, str]]
-    koordinat_y: Optional[Union[float, str]]
+    koordinat_x: Optional[Union[float, str]] = None
+    koordinat_y: Optional[Union[float, str]] = None
 
     class Config:
         from_attributes = True

@@ -8,14 +8,20 @@ export const sendRequest = async (url: string, method: string, data?: any) => {
     // Ciptakan objek konfigurasi dengan 'method' dan 'headers'
     const options: RequestInit = { method, headers };
 
+    console.log('data to save -------->', data)
     // Tambahkan 'body' hanya jika 'data' ada dan metode bukan 'GET' atau 'HEAD'
     if (data && !(method === 'GET' || method === 'HEAD')) {
         options.body = JSON.stringify(data);
     }
 
-    const response = await fetch(url, options);
-    const result = await response.json();
-    return result;
+    try {
+        const response = await fetch(url, options);
+        const result = await response.json();
+        return result;
+
+    } catch (error) {
+        console.log('error', error)
+    }
 };
 
 
@@ -29,7 +35,13 @@ export const sendPublicRequest = async (url: string, method: string, body?: any)
     const headers = {
         'Content-Type': 'application/json'
     }
-    const response = await fetch(url, { method, headers, body: JSON.stringify(body) });
-    const result = await response.json();
-    return result;
+
+    try {
+        const response = await fetch(url, { method, headers, body: JSON.stringify(body) });
+        const result = await response.json();
+        return result;
+
+    } catch (error) {
+        console.log('error', error)
+    }
 }

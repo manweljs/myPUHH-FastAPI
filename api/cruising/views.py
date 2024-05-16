@@ -354,11 +354,13 @@ async def get_all_pohon(lhc_id: UUID, perusahaan: Perusahaan = Depends(get_perus
     "/LHC/{lhc_id}/Pohon/Save",
     response_model=Union[Response, ErrorResponse],
 )
+@timing_decorator
 async def save_pohon(
     lhc_id: UUID,
     data: List[schemas.PohonInSchema],
     perusahaan: Perusahaan = Depends(get_perusahaan),
 ):
+    print("masuk", data)
     try:
         lhc = await LHC.get_or_none(id=lhc_id, perusahaan=perusahaan)
         if not lhc:
@@ -377,6 +379,7 @@ async def save_pohon(
 BATCH_SIZE = 1000
 
 
+@timing_decorator
 async def save_lhc_pohon_to_db(data, lhc_id, perusahaan):
     async with in_transaction() as connection:
         errors = []
