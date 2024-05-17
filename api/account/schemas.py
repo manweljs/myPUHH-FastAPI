@@ -44,7 +44,7 @@ class LoginResponseSchema(PydanticModel):
 
 
 class KabupatenBaseSchema(PydanticModel):
-    id: UUID
+    id: int
     nama: str
 
     class Config:
@@ -66,4 +66,4 @@ class PerusahaanInSchema(PydanticModel):
     nama: str
     alamat: Optional[str] = None
     logo: Optional[str] = None
-    kabupaten_id: Optional[UUID] = None
+    kabupaten_id: Optional[int] = None

@@ -1,6 +1,6 @@
 import { FileType, PerusahaanInType, PerusahaanType } from "@/types"
 import React, { Dispatch, SetStateAction, useEffect, useMemo, useState } from "react"
-import { Button, Form, notification, Space } from "antd"
+import { Button, Form, notification, Space, UploadFile } from "antd"
 import { Field } from "../global"
 import { FieldKabupaten } from "./fields/FieldKabupaten"
 import { GetAllKabupaten, GetPresignedUrl, UpdatePerusahaan } from "@/api"
@@ -117,7 +117,7 @@ const FieldLogo = (props: {
 }) => {
 
     const { data, handleUpdate } = props;
-    const [file, setFile] = useState<FileType | null>(null)
+    const [file, setFile] = useState<UploadFile | null>(null)
 
     const handleChange = async (e: any) => {
         console.log('response', e)
@@ -142,7 +142,6 @@ const FieldLogo = (props: {
             label="logo"
             maxCount={1}
             callback={handleChange}
-            filekey="file"
             file={file}
             tip={[
                 "Upload logo perusahaan, logo akan ditampilkan pada laporan-laporan.",

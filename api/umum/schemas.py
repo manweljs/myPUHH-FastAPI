@@ -20,7 +20,7 @@ class ErrorResponse(BaseModel):
 
 
 class PropinsiSchema(PydanticModel):
-    id: UUID
+    id: int
     nama: str
 
     class Config:
@@ -28,7 +28,7 @@ class PropinsiSchema(PydanticModel):
 
 
 class KabupatenSchema(PydanticModel):
-    id: UUID
+    id: int
     nama: str
     propinsi: PropinsiSchema
 
@@ -37,7 +37,7 @@ class KabupatenSchema(PydanticModel):
 
 
 class RencanaTebangTypeSchema(PydanticModel):
-    id: UUID
+    id: int
     nama: str
 
     class Config:
@@ -45,7 +45,7 @@ class RencanaTebangTypeSchema(PydanticModel):
 
 
 class KualifikasiGanisSchema(PydanticModel):
-    id: UUID
+    id: int
     nama: str
 
     class Config:
@@ -53,7 +53,7 @@ class KualifikasiGanisSchema(PydanticModel):
 
 
 class JabatanGanisSchema(PydanticModel):
-    id: UUID
+    id: int
     nama: str
     kualifikasi: KualifikasiGanisSchema
 
@@ -62,7 +62,7 @@ class JabatanGanisSchema(PydanticModel):
 
 
 class KelompokJenisSchema(PydanticModel):
-    id: UUID
+    id: int
     nama: str
 
     class Config:
@@ -70,7 +70,7 @@ class KelompokJenisSchema(PydanticModel):
 
 
 class JenisSchema(PydanticModel):
-    id: UUID
+    id: int
     nama: str
     kelompok_jenis: KelompokJenisSchema
 
@@ -79,7 +79,7 @@ class JenisSchema(PydanticModel):
 
 
 class SortimenSchema(PydanticModel):
-    id: UUID
+    id: int
     nama: str
 
     class Config:
@@ -87,7 +87,7 @@ class SortimenSchema(PydanticModel):
 
 
 class TarifSchema(PydanticModel):
-    id: UUID
+    id: int
     nama: str
     type: int
     kelompok_jenis: KelompokJenisSchema
@@ -99,7 +99,7 @@ class TarifSchema(PydanticModel):
 
 
 class KelasDiameterSchema(PydanticModel):
-    id: UUID
+    id: int
     nama: str
 
     class Config:

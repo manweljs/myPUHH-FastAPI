@@ -32,9 +32,9 @@ class OBYEK(Enum):
 
 
 class SORTIMEN(Enum):
-    KB = "KB"
-    KBS = "KBS"
-    KBK = "KBK"
+    KBK = 0
+    KBS = 1
+    KB = 2
 
     def __str__(self):
         return self.value

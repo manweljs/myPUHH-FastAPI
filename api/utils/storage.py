@@ -54,6 +54,9 @@ async def create_presigned_url(object_name, content_type, expiration=2000):
 
 async def get_presigned_url(url: str, subfolder="", expiration=2500):
     client = await get_s3_client()
+    if url is None:
+        return None
+
     try:
         response = await client.generate_presigned_url(
             ClientMethod="get_object",

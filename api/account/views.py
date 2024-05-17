@@ -126,12 +126,18 @@ async def update_perusahaan(
 ):
 
     data = new_data.model_dump(exclude_unset=True)
-    data["logo"] = decode_url(data["logo"].split("?")[0])
-    print(data)
+
+    if "logo" in data and data["logo"] is not None:
+        try:
+            data["logo"] = decode_url(data["logo"].split("?")[0])
+        except Exception as e:
+            raise HTTPException(status_code=400, detail=f"Error processing logo: {e}")
+
     for key, value in data.items():
         setattr(perusahaan, key, value)
 
     await perusahaan.save()
+
     return ResponseSchema(message="Data berhasil diupdate")
 
 

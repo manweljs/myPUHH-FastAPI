@@ -31,3 +31,4 @@ export function getEnumLabel(enumObject: any, value: number): string {
     }
     return 'Unknown'; // Nilai default jika tidak ditemukan
 }
+

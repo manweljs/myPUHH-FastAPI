@@ -53,6 +53,7 @@ export enum ALAT_ANGKUT {
     RAKIT
 }
 
+
 export enum SPREADSHEET_TOOLBAR_ITEMS {
     UNDO = 0,
     REDO,

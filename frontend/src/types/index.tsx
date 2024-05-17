@@ -32,7 +32,7 @@ export type PerusahaanInType = {
     alamat?: string | null;
     logo?: string | null;
     telepon?: string | null;
-    kabupaten_id?: string | null | undefined;
+    kabupaten_id?: number | null | undefined;
 }
 
 export interface TahunKegiatanType {
@@ -155,7 +155,7 @@ export interface LHCBarcodeType {
 
 
 export interface KabupatenType {
-    id: string;
+    id: number;
     nama: string;
     propinsi_id: string;
     propinsi?: string;

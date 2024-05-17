@@ -82,6 +82,12 @@ class Pohon(CustomModel):
     kelas_diameter = fields.ForeignKeyField(
         "models.KelasDiameter", on_delete=fields.SET_NULL, null=True
     )
+    sortimen = fields.ForeignKeyField(
+        "models.Sortimen", on_delete=fields.SET_NULL, null=True
+    )
+    status_pohon = fields.ForeignKeyField(
+        "models.StatusPohon", on_delete=fields.SET_NULL, null=True
+    )
     koordinat_x = fields.FloatField(null=True)
     koordinat_y = fields.FloatField(null=True)
     barcode = fields.ReverseRelation["BarcodePohon"]

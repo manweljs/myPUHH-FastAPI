@@ -21,43 +21,31 @@ CREATE TABLE IF NOT EXISTS "kelas_diameter" (
     "nama" VARCHAR(255) NOT NULL
 );
 CREATE TABLE IF NOT EXISTS "kelompok_jenis" (
-    "id" UUID NOT NULL  PRIMARY KEY,
-    "created" TIMESTAMPTZ NOT NULL  DEFAULT CURRENT_TIMESTAMP,
-    "modified" TIMESTAMPTZ NOT NULL  DEFAULT CURRENT_TIMESTAMP,
+    "id" SERIAL NOT NULL PRIMARY KEY,
     "nama" VARCHAR(255) NOT NULL
 );
 CREATE TABLE IF NOT EXISTS "jenis" (
-    "id" UUID NOT NULL  PRIMARY KEY,
-    "created" TIMESTAMPTZ NOT NULL  DEFAULT CURRENT_TIMESTAMP,
-    "modified" TIMESTAMPTZ NOT NULL  DEFAULT CURRENT_TIMESTAMP,
+    "id" SERIAL NOT NULL PRIMARY KEY,
     "nama" VARCHAR(255) NOT NULL,
-    "kelompok_jenis_id" UUID REFERENCES "kelompok_jenis" ("id") ON DELETE SET NULL
+    "kelompok_jenis_id" INT REFERENCES "kelompok_jenis" ("id") ON DELETE SET NULL
 );
 CREATE TABLE IF NOT EXISTS "kualifikasi_ganis" (
-    "id" UUID NOT NULL  PRIMARY KEY,
-    "created" TIMESTAMPTZ NOT NULL  DEFAULT CURRENT_TIMESTAMP,
-    "modified" TIMESTAMPTZ NOT NULL  DEFAULT CURRENT_TIMESTAMP,
+    "id" SERIAL NOT NULL PRIMARY KEY,
     "nama" VARCHAR(255) NOT NULL
 );
 CREATE TABLE IF NOT EXISTS "jabatan_ganis" (
-    "id" UUID NOT NULL  PRIMARY KEY,
-    "created" TIMESTAMPTZ NOT NULL  DEFAULT CURRENT_TIMESTAMP,
-    "modified" TIMESTAMPTZ NOT NULL  DEFAULT CURRENT_TIMESTAMP,
+    "id" SERIAL NOT NULL PRIMARY KEY,
     "nama" VARCHAR(255) NOT NULL,
-    "kualifikasi_id" UUID NOT NULL REFERENCES "kualifikasi_ganis" ("id") ON DELETE CASCADE
+    "kualifikasi_id" INT NOT NULL REFERENCES "kualifikasi_ganis" ("id") ON DELETE CASCADE
 );
 CREATE TABLE IF NOT EXISTS "propinsi" (
-    "id" UUID NOT NULL  PRIMARY KEY,
-    "created" TIMESTAMPTZ NOT NULL  DEFAULT CURRENT_TIMESTAMP,
-    "modified" TIMESTAMPTZ NOT NULL  DEFAULT CURRENT_TIMESTAMP,
+    "id" SERIAL NOT NULL PRIMARY KEY,
     "nama" VARCHAR(255) NOT NULL
 );
 CREATE TABLE IF NOT EXISTS "kabupaten" (
-    "id" UUID NOT NULL  PRIMARY KEY,
-    "created" TIMESTAMPTZ NOT NULL  DEFAULT CURRENT_TIMESTAMP,
-    "modified" TIMESTAMPTZ NOT NULL  DEFAULT CURRENT_TIMESTAMP,
+    "id" SERIAL NOT NULL PRIMARY KEY,
     "nama" VARCHAR(255) NOT NULL,
-    "propinsi_id" UUID NOT NULL REFERENCES "propinsi" ("id") ON DELETE CASCADE
+    "propinsi_id" INT NOT NULL REFERENCES "propinsi" ("id") ON DELETE CASCADE
 );
 CREATE TABLE IF NOT EXISTS "perusahaan" (
     "id" UUID NOT NULL  PRIMARY KEY,
@@ -66,7 +54,7 @@ CREATE TABLE IF NOT EXISTS "perusahaan" (
     "nama" VARCHAR(255) NOT NULL,
     "alamat" TEXT,
     "logo" TEXT,
-    "kabupaten_id" UUID REFERENCES "kabupaten" ("id") ON DELETE SET NULL
+    "kabupaten_id" INT REFERENCES "kabupaten" ("id") ON DELETE SET NULL
 );
 CREATE TABLE IF NOT EXISTS "user" (
     "id" UUID NOT NULL  PRIMARY KEY,
@@ -91,26 +79,24 @@ CREATE TABLE IF NOT EXISTS "operator" (
     "user_id" UUID NOT NULL REFERENCES "user" ("id") ON DELETE CASCADE
 );
 CREATE TABLE IF NOT EXISTS "rencana_tebang_type" (
-    "id" UUID NOT NULL  PRIMARY KEY,
-    "created" TIMESTAMPTZ NOT NULL  DEFAULT CURRENT_TIMESTAMP,
-    "modified" TIMESTAMPTZ NOT NULL  DEFAULT CURRENT_TIMESTAMP,
+    "id" SERIAL NOT NULL PRIMARY KEY,
     "nama" VARCHAR(255) NOT NULL
 );
 CREATE TABLE IF NOT EXISTS "sortimen" (
-    "id" UUID NOT NULL  PRIMARY KEY,
-    "created" TIMESTAMPTZ NOT NULL  DEFAULT CURRENT_TIMESTAMP,
-    "modified" TIMESTAMPTZ NOT NULL  DEFAULT CURRENT_TIMESTAMP,
+    "id" SERIAL NOT NULL PRIMARY KEY,
+    "nama" VARCHAR(255) NOT NULL
+);
+CREATE TABLE IF NOT EXISTS "status_pohon" (
+    "id" SERIAL NOT NULL PRIMARY KEY,
     "nama" VARCHAR(255) NOT NULL
 );
 CREATE TABLE IF NOT EXISTS "tarif" (
-    "id" UUID NOT NULL  PRIMARY KEY,
-    "created" TIMESTAMPTZ NOT NULL  DEFAULT CURRENT_TIMESTAMP,
-    "modified" TIMESTAMPTZ NOT NULL  DEFAULT CURRENT_TIMESTAMP,
+    "id" SERIAL NOT NULL PRIMARY KEY,
     "nama" VARCHAR(255) NOT NULL,
     "jenis_tarif" INT NOT NULL  DEFAULT 0,
     "harga" DOUBLE PRECISION NOT NULL  DEFAULT 0,
-    "kelompok_jenis_id" UUID REFERENCES "kelompok_jenis" ("id") ON DELETE SET NULL,
-    "sortimen_id" UUID REFERENCES "sortimen" ("id") ON DELETE SET NULL
+    "kelompok_jenis_id" INT REFERENCES "kelompok_jenis" ("id") ON DELETE SET NULL,
+    "sortimen_id" INT REFERENCES "sortimen" ("id") ON DELETE SET NULL
 );
 CREATE TABLE IF NOT EXISTS "ganis" (
     "id" UUID NOT NULL  PRIMARY KEY,
@@ -119,7 +105,7 @@ CREATE TABLE IF NOT EXISTS "ganis" (
     "nama" VARCHAR(255) NOT NULL,
     "berlaku_dari" DATE,
     "berlaku_sampai" DATE,
-    "jabatan_id" UUID NOT NULL REFERENCES "jabatan_ganis" ("id") ON DELETE CASCADE,
+    "jabatan_id" INT NOT NULL REFERENCES "jabatan_ganis" ("id") ON DELETE CASCADE,
     "perusahaan_id" UUID NOT NULL REFERENCES "perusahaan" ("id") ON DELETE CASCADE
 );
 CREATE TABLE IF NOT EXISTS "perusahaan_pembeli" (
@@ -128,7 +114,7 @@ CREATE TABLE IF NOT EXISTS "perusahaan_pembeli" (
     "modified" TIMESTAMPTZ NOT NULL  DEFAULT CURRENT_TIMESTAMP,
     "nama" VARCHAR(255) NOT NULL,
     "alamat" VARCHAR(255),
-    "kabupaten_id" UUID REFERENCES "kabupaten" ("id") ON DELETE SET NULL
+    "kabupaten_id" INT REFERENCES "kabupaten" ("id") ON DELETE SET NULL
 );
 CREATE TABLE IF NOT EXISTS "tpk" (
     "id" UUID NOT NULL  PRIMARY KEY,
@@ -137,13 +123,6 @@ CREATE TABLE IF NOT EXISTS "tpk" (
     "nama" VARCHAR(255) NOT NULL,
     "kategori" INT NOT NULL  DEFAULT 0,
     "alamat" VARCHAR(255),
-    "perusahaan_id" UUID NOT NULL REFERENCES "perusahaan" ("id") ON DELETE CASCADE
-);
-CREATE TABLE IF NOT EXISTS "tpn" (
-    "id" UUID NOT NULL  PRIMARY KEY,
-    "created" TIMESTAMPTZ NOT NULL  DEFAULT CURRENT_TIMESTAMP,
-    "modified" TIMESTAMPTZ NOT NULL  DEFAULT CURRENT_TIMESTAMP,
-    "nama" VARCHAR(255) NOT NULL,
     "perusahaan_id" UUID NOT NULL REFERENCES "perusahaan" ("id") ON DELETE CASCADE
 );
 CREATE TABLE IF NOT EXISTS "tahun_kegiatan" (
@@ -172,6 +151,14 @@ CREATE TABLE IF NOT EXISTS "petak" (
     "blok_id" UUID NOT NULL REFERENCES "blok" ("id") ON DELETE CASCADE,
     "perusahaan_id" UUID NOT NULL REFERENCES "perusahaan" ("id") ON DELETE CASCADE
 );
+CREATE TABLE IF NOT EXISTS "tpn" (
+    "id" UUID NOT NULL  PRIMARY KEY,
+    "created" TIMESTAMPTZ NOT NULL  DEFAULT CURRENT_TIMESTAMP,
+    "modified" TIMESTAMPTZ NOT NULL  DEFAULT CURRENT_TIMESTAMP,
+    "nama" VARCHAR(255) NOT NULL,
+    "blok_id" UUID REFERENCES "blok" ("id") ON DELETE SET NULL,
+    "perusahaan_id" UUID NOT NULL REFERENCES "perusahaan" ("id") ON DELETE CASCADE
+);
 CREATE TABLE IF NOT EXISTS "lhc" (
     "id" UUID NOT NULL  PRIMARY KEY,
     "created" TIMESTAMPTZ NOT NULL  DEFAULT CURRENT_TIMESTAMP,
@@ -195,10 +182,12 @@ CREATE TABLE IF NOT EXISTS "pohon" (
     "volume" DOUBLE PRECISION NOT NULL,
     "koordinat_x" DOUBLE PRECISION,
     "koordinat_y" DOUBLE PRECISION,
-    "jenis_id" UUID NOT NULL REFERENCES "jenis" ("id") ON DELETE CASCADE,
+    "jenis_id" INT NOT NULL REFERENCES "jenis" ("id") ON DELETE CASCADE,
     "kelas_diameter_id" INT REFERENCES "kelas_diameter" ("id") ON DELETE SET NULL,
     "perusahaan_id" UUID NOT NULL REFERENCES "perusahaan" ("id") ON DELETE CASCADE,
-    "petak_id" UUID NOT NULL REFERENCES "petak" ("id") ON DELETE CASCADE
+    "petak_id" UUID NOT NULL REFERENCES "petak" ("id") ON DELETE CASCADE,
+    "sortimen_id" INT REFERENCES "sortimen" ("id") ON DELETE SET NULL,
+    "status_pohon_id" INT REFERENCES "status_pohon" ("id") ON DELETE SET NULL
 );
 CREATE TABLE IF NOT EXISTS "rencana_tebang" (
     "id" UUID NOT NULL  PRIMARY KEY,
@@ -217,8 +206,8 @@ CREATE TABLE IF NOT EXISTS "buku_ukur" (
     "modified" TIMESTAMPTZ NOT NULL  DEFAULT CURRENT_TIMESTAMP,
     "nomor" VARCHAR(255) NOT NULL,
     "tanggal" DATE NOT NULL,
-    "obyek" INT NOT NULL  DEFAULT 0,
-    "perusahaan_id" UUID NOT NULL REFERENCES "perusahaan" ("id") ON DELETE CASCADE
+    "perusahaan_id" UUID NOT NULL REFERENCES "perusahaan" ("id") ON DELETE CASCADE,
+    "tahun_id" UUID NOT NULL REFERENCES "tahun_kegiatan" ("id") ON DELETE CASCADE
 );
 CREATE TABLE IF NOT EXISTS "lhp" (
     "id" UUID NOT NULL  PRIMARY KEY,
@@ -264,10 +253,10 @@ CREATE TABLE IF NOT EXISTS "DK" (
     "cacat_persen" DOUBLE PRECISION,
     "volume" DOUBLE PRECISION NOT NULL,
     "potongan" VARCHAR(2),
-    "sortimen" VARCHAR(3) NOT NULL  DEFAULT 'KB',
+    "sortimen" VARCHAR(3) NOT NULL  DEFAULT '2',
     "barcode_id" UUID REFERENCES "barcode" ("id") ON DELETE SET NULL,
     "buku_ukur_id" UUID NOT NULL REFERENCES "buku_ukur" ("id") ON DELETE CASCADE,
-    "jenis_id" UUID NOT NULL REFERENCES "jenis" ("id") ON DELETE CASCADE,
+    "jenis_id" INT NOT NULL REFERENCES "jenis" ("id") ON DELETE CASCADE,
     "lhp_id" UUID REFERENCES "lhp" ("id") ON DELETE SET NULL,
     "perusahaan_id" UUID NOT NULL REFERENCES "perusahaan" ("id") ON DELETE CASCADE,
     "petak_id" UUID REFERENCES "petak" ("id") ON DELETE SET NULL
@@ -292,6 +281,17 @@ CREATE TABLE IF NOT EXISTS "dkb_barcode" (
     "modified" TIMESTAMPTZ NOT NULL  DEFAULT CURRENT_TIMESTAMP,
     "barcode_id" UUID NOT NULL REFERENCES "barcode" ("id") ON DELETE CASCADE,
     "dkb_id" UUID NOT NULL REFERENCES "dkb_angkutan" ("id") ON DELETE CASCADE
+);
+CREATE TABLE IF NOT EXISTS "spreadsheet_draft" (
+    "id" UUID NOT NULL  PRIMARY KEY,
+    "created" TIMESTAMPTZ NOT NULL  DEFAULT CURRENT_TIMESTAMP,
+    "modified" TIMESTAMPTZ NOT NULL  DEFAULT CURRENT_TIMESTAMP,
+    "title" VARCHAR(255) NOT NULL,
+    "object" VARCHAR(255) NOT NULL,
+    "object_id" UUID NOT NULL,
+    "file_url" TEXT NOT NULL,
+    "version" INT NOT NULL  DEFAULT 1,
+    "perusahaan_id" UUID NOT NULL REFERENCES "perusahaan" ("id") ON DELETE CASCADE
 );
 CREATE TABLE IF NOT EXISTS "DKBBarcode" (
     "barcode_id" UUID NOT NULL REFERENCES "barcode" ("id") ON DELETE CASCADE,

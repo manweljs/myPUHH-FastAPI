@@ -138,7 +138,7 @@ class PohonInSchema(BaseModel):
     tinggi: float
     diameter: float
     volume: float
-    sortimen: int
+    sortimen: str
     koordinat_x: Optional[Union[float, str]] = None
     koordinat_y: Optional[Union[float, str]] = None
 

@@ -5,7 +5,7 @@ import { KabupatenType } from '@/types';
 import { Field } from '../Field';
 
 interface Props {
-    value?: string | null,
+    value?: string | number | null,
     handleUpdate?: (arg: any) => void
 }
 

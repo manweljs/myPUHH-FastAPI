@@ -1,7 +1,7 @@
 from uuid import uuid4
 from tortoise.models import Model
 from tortoise import fields
-from consts import TARIF_TYPE, SORTIMEN, KELOMPOK_JENIS
+from consts import TARIF_TYPE
 
 
 class CustomModel(Model):
@@ -13,30 +13,30 @@ class CustomModel(Model):
         abstract = True
 
 
-class Propinsi(CustomModel):
+class Propinsi(Model):
     nama = fields.CharField(255)
 
 
-class Kabupaten(CustomModel):
+class Kabupaten(Model):
     nama = fields.CharField(255)
     propinsi = fields.ForeignKeyField("models.Propinsi", on_delete=fields.CASCADE)
 
 
-class RencanaTebangType(CustomModel):
+class RencanaTebangType(Model):
     nama = fields.CharField(255)
 
     class Meta:
         table = "rencana_tebang_type"
 
 
-class KualifikasiGanis(CustomModel):
+class KualifikasiGanis(Model):
     nama = fields.CharField(255)
 
     class Meta:
         table = "kualifikasi_ganis"
 
 
-class JabatanGanis(CustomModel):
+class JabatanGanis(Model):
     nama = fields.CharField(255)
     kualifikasi = fields.ForeignKeyField(
         "models.KualifikasiGanis", on_delete=fields.CASCADE
@@ -46,14 +46,14 @@ class JabatanGanis(CustomModel):
         table = "jabatan_ganis"
 
 
-class KelompokJenis(CustomModel):
+class KelompokJenis(Model):
     nama = fields.CharField(255)
 
     class Meta:
         table = "kelompok_jenis"
 
 
-class Jenis(CustomModel):
+class Jenis(Model):
     nama = fields.CharField(255)
     kelompok_jenis = fields.ForeignKeyField(
         "models.KelompokJenis", on_delete=fields.SET_NULL, null=True
@@ -63,14 +63,15 @@ class Jenis(CustomModel):
         table = "jenis"
 
 
-class Sortimen(CustomModel):
+class Sortimen(Model):
+    id = fields.IntField(pk=True)
     nama = fields.CharField(255)
 
     class Meta:
         table = "sortimen"
 
 
-class Tarif(CustomModel):
+class Tarif(Model):
     nama = fields.CharField(255)
     jenis_tarif = fields.IntField(default=TARIF_TYPE.PSDH.value)
     kelompok_jenis = fields.ForeignKeyField(
@@ -90,3 +91,10 @@ class KelasDiameter(Model):
 
     class Meta:
         table = "kelas_diameter"
+
+
+class StatusPohon(Model):
+    nama = fields.CharField(255)
+
+    class Meta:
+        table = "status_pohon"

@@ -117,7 +117,7 @@ class TPnInSchema(PydanticModel):
 
 
 class BaseJabatanGanisSchema(PydanticModel):
-    id: UUID
+    id: int
     nama: str
 
     class Config:
@@ -137,7 +137,7 @@ class GanisSchema(PydanticModel):
 
 class GanisInSchema(PydanticModel):
     nama: str
-    jabatan_id: UUID
+    jabatan_id: int
     berlaku_dari: Optional[date] = None
     berlaku_sampai: Optional[date] = None
 

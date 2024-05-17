@@ -12,6 +12,7 @@ from fastapi_pagination import add_pagination
 from fastapi.middleware.cors import CORSMiddleware
 from consts import allowed_cors_origins
 import uvicorn
+import logging
 
 
 def create_application() -> FastAPI:
@@ -36,6 +37,17 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+
+@app.middleware("http")
+async def log_requests(request, call_next):
+    try:
+        response = await call_next(request)
+    except Exception as e:
+        logging.exception("Unhandled error: %s", e)
+        raise e
+    return response
+
 
 app.include_router(account_routes)
 app.include_router(parameter_routes)
