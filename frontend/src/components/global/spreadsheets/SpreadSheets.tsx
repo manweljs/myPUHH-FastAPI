@@ -5,7 +5,7 @@ import s from "../global.module.sass"
 import { Button, Select, Space } from 'antd';
 import FIcon from '../FIcon';
 import { DraftSpreadsheetType } from '@/types';
-import { customizeRibbon } from './CustomConfig';
+import { customizeRibbon, setDefaultFormulas } from './CustomConfig';
 
 interface Props {
     data?: object[]
@@ -16,6 +16,7 @@ interface Props {
     onCellChanges?: (ref: SpreadsheetComponent | null, args: any) => void
     onSaveAsDraft?: (data: any, draft?: DraftSpreadsheetType | null, isNewVersion?: boolean) => void
     drafts?: DraftSpreadsheetType[]
+    defaultFormulas?: any[]
 }
 
 const defaultData: object[] = [
@@ -44,6 +45,7 @@ export function SpreadSheets(props: Props) {
         onCellChanges,
         onSaveAsDraft,
         drafts,
+        defaultFormulas
     } = props
     const beforeOpen = (): void => { };
 
@@ -58,6 +60,7 @@ export function SpreadSheets(props: Props) {
         if (!spreadsheet || isRibbonInitialized.current) return;
         console.log('init ribbon',)
         customizeRibbon(spreadsheet);
+        setDefaultFormulas(spreadsheet, defaultFormulas || []);
         isRibbonInitialized.current = true; // Set ini menjadi true setelah inisialisasi
     }
 

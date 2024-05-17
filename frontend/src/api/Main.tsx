@@ -14,14 +14,10 @@ export const sendRequest = async (url: string, method: string, data?: any) => {
         options.body = JSON.stringify(data);
     }
 
-    try {
-        const response = await fetch(url, options);
-        const result = await response.json();
-        return result;
+    const response = await fetch(url, options);
+    const result = await response.json();
+    return result;
 
-    } catch (error) {
-        console.log('error', error)
-    }
 };
 
 

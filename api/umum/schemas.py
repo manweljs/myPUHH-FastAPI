@@ -106,6 +106,14 @@ class KelasDiameterSchema(PydanticModel):
         from_attributes = True
 
 
+class StatusPohonSchema(PydanticModel):
+    id: int
+    nama: str
+
+    class Config:
+        from_attributes = True
+
+
 class PresignedUrlSchema(PydanticModel):
     url: str
 

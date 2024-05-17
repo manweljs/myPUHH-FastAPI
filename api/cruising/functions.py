@@ -9,6 +9,8 @@ from utils.storage import get_s3_client
 import io, asyncio
 from tortoise.transactions import in_transaction
 
+BATCH_SIZE = 1000
+
 
 async def get_file_key(file_url: str) -> str:
     key = file_url.split("amazonaws.com/")[1]
@@ -52,9 +54,6 @@ async def get_upload_pohon_from_file(file_url: str) -> list:
             return pohon_list
         else:
             return None
-
-
-BATCH_SIZE = 1000
 
 
 @timing_decorator

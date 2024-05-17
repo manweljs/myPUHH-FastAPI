@@ -61,3 +61,11 @@ export const GetAllJabatanGanis = async () => {
 
     return await sendRequest(endpoint, method)
 }
+
+
+export const GetAllJenis = async () => {
+    const endpoint = `${API_URL}/api/Umum/Jenis`
+    const method = "GET"
+
+    return await sendRequest(endpoint, method)
+}

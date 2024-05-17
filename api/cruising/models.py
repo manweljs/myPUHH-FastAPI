@@ -70,6 +70,7 @@ class Barcode(CustomModel):
 
 class Pohon(CustomModel):
     perusahaan = fields.ForeignKeyField("models.Perusahaan", on_delete=fields.CASCADE)
+    lhc = fields.ForeignKeyField("models.LHC", on_delete=fields.CASCADE)
     nomor = fields.IntField()
     petak = fields.ForeignKeyField("models.Petak", on_delete=fields.CASCADE)
     jalur = fields.CharField(255, null=True)
@@ -90,22 +91,12 @@ class Pohon(CustomModel):
     )
     koordinat_x = fields.FloatField(null=True)
     koordinat_y = fields.FloatField(null=True)
-    barcode = fields.ReverseRelation["BarcodePohon"]
+    barcode = fields.ForeignKeyField(
+        "models.Barcode", on_delete=fields.SET_NULL, null=True
+    )
 
     class Meta:
         table = "pohon"
-
-
-class BarcodePohon(CustomModel):
-    barcode = fields.ForeignKeyField(
-        "models.Barcode", on_delete=fields.CASCADE, related_name="barcode_pohon"
-    )
-    pohon = fields.ForeignKeyField(
-        "models.Pohon", on_delete=fields.CASCADE, related_name="barcode_pohon"
-    )
-
-    class Meta:
-        table = "barcode_pohon"
 
 
 class RencanaTebang(CustomModel):
@@ -118,3 +109,25 @@ class RencanaTebang(CustomModel):
 
     class Meta:
         table = "rencana_tebang"
+
+
+# data = {
+#     "id": UUID("0acbdc26-5496-4cf1-9c2c-3b07c7660027"),
+#     "nomor": 20,
+#     "jalur": "2",
+#     "arah_jalur": "Selatan",
+#     "panjang_jalur": 1000,
+#     "tinggi": 13.0,
+#     "diameter": 20.0,
+#     "volume": 0.25,
+#     "koordinat_x": 117.01627,
+#     "koordinat_y": 1.706563,
+#     "barcode_id": None,
+#     "jenis_id": 85,
+#     "kelas_diameter_id": 1,
+#     "sortimen_id": 3,
+#     "status_pohon_id": None,
+#     "petak_id": UUID("89505736-8c1d-48fb-ac9b-efa3e1a372ba"),
+#     "lhc_id": UUID("a8daf43e-af96-455d-8a63-92beb688e1da"),
+#     "perusahaan_id": UUID("310363cd-701c-4db9-ab23-73558cd8f4df"),
+# }

@@ -82,6 +82,14 @@ class PetakSchema(PydanticModel):
         from_attributes = True
 
 
+class PetakBaseSchema(PydanticModel):
+    id: UUID
+    nama: str
+
+    class Config:
+        from_attributes = True
+
+
 class PetakInSchema(PydanticModel):
     nama: str
     blok_id: UUID

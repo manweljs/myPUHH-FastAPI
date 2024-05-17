@@ -1,8 +1,17 @@
+from re import S
+import uuid
+from numpy import number
 from tortoise.contrib.pydantic.base import PydanticModel
 from typing import Optional, List, Union
 from uuid import UUID
 from datetime import date
-from parameter.schemas import TahunKegiatanSchema
+from umum.schemas import (
+    JenisSchema,
+    KelasDiameterSchema,
+    SortimenSchema,
+    StatusPohonSchema,
+)
+from parameter.schemas import PetakBaseSchema, PetakSchema, TahunKegiatanSchema
 from tortoise import Tortoise
 from config.db import model_list
 from pydantic import BaseModel
@@ -120,7 +129,21 @@ class UploadPohonInSchema(PydanticModel):
 
 class PohonSchema(PydanticModel):
     id: UUID
-    nomor: str
+    nomor: int
+    petak: Optional[PetakBaseSchema] = None
+    jalur: str
+    arah_jalur: str
+    panjang_jalur: int
+    jenis: JenisSchema
+    tinggi: float
+    diameter: float
+    volume: float
+    sortimen: SortimenSchema
+    koordinat_x: Union[float, str]
+    koordinat_y: Union[float, str]
+    kelas_diameter: Optional[KelasDiameterSchema]
+    status_pohon: Optional[StatusPohonSchema] = None
+    barcode: Optional[BarcodeModelSchema] = None
 
     class Config:
         from_attributes = True
@@ -129,7 +152,6 @@ class PohonSchema(PydanticModel):
 class PohonInSchema(BaseModel):
     id: Optional[UUID] = None
     nomor: int
-    barcode: Optional[str] = None
     petak: str
     jalur: Optional[str] = None
     arah_jalur: Optional[str] = None
@@ -138,9 +160,12 @@ class PohonInSchema(BaseModel):
     tinggi: float
     diameter: float
     volume: float
+    kelas_diameter: Optional[str] = None
     sortimen: str
+    status_pohon: Optional[str] = None
     koordinat_x: Optional[Union[float, str]] = None
     koordinat_y: Optional[Union[float, str]] = None
+    barcode: Optional[str] = None
 
     class Config:
         from_attributes = True

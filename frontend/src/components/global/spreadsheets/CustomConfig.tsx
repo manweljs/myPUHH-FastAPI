@@ -45,6 +45,14 @@ export const customizeFormat = (spreadsheet: SpreadsheetComponent) => {
 
 }
 
+export const setDefaultFormulas = (spreadsheet: SpreadsheetComponent, defaultFormulas: { cell: string, formula: string, format?: string }[]) => {
+    if (!spreadsheet) return;
+    defaultFormulas.forEach(({ cell, formula, format }) => {
+        const [col, row] = cell.split(/(\d+)/).filter(Boolean);
+        spreadsheet.updateCell({ formula, format }, `${col}${row}`);
+    });
+}
+
 
 
 

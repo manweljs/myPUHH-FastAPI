@@ -116,20 +116,37 @@ export interface BukuUkurInType {
 export interface PohonType {
     id: string;
     nomor: number;
-    barcode: string;
-    petak: string;
-    jalur?: string;
-    arah_jalur?: string;
-    panjang_jalur?: number;
-    jenis: string;
+    petak: {
+        id: string;
+        nama: string;
+    };
+    jalur: string;
+    arah_jalur: string;
+    panjang_jalur: number;
+    jenis: {
+        id: number;
+        nama: string;
+        kelompok_jenis: {
+            id: number;
+            nama: string;
+        };
+    };
     tinggi: number;
     diameter: number;
     volume: number;
-    sortimen: number;
-    koordinat_x?: number | string;
-    koordinat_y?: number | string;
+    sortimen: {
+        id: number;
+        nama: string;
+    };
+    koordinat_x: number | string;
+    koordinat_y: number | string;
+    kelas_diameter: {
+        id: number;
+        nama: string;
+    } | null;
+    status_pohon: string | null;
+    barcode: string | null;
 }
-
 export interface PohonInType {
     id?: string | null;
     nomor: number;
@@ -143,8 +160,11 @@ export interface PohonInType {
     diameter: number;
     volume: number;
     sortimen: string;
+    kelas_diameter: string;
     koordinat_x?: number | string;
     koordinat_y?: number | string;
+    is_rencana_tebang?: boolean | null;
+    status_pohon?: string | null;
 }
 
 export interface LHCBarcodeType {
@@ -307,3 +327,14 @@ export interface LHCPohonInType {
     koordinat_x: number;
     koordinat_y: number;
 }
+
+
+export interface JenisPohonType {
+    id: number;
+    nama: string;
+    kelompok_jenis: {
+        id: 1,
+        nama: string
+    }
+}
+

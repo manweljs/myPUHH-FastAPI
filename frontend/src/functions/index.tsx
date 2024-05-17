@@ -1,4 +1,5 @@
 import { ACCESS_TOKEN_KEY } from "@/consts";
+import { JenisPohonType } from "@/types";
 import cookie from "react-cookies"
 
 export const getToken = (token_key = ACCESS_TOKEN_KEY) => {
@@ -32,3 +33,24 @@ export function getEnumLabel(enumObject: any, value: number): string {
     return 'Unknown'; // Nilai default jika tidak ditemukan
 }
 
+
+
+export function getKelasDiameterId(val: number): number {
+    if (val < 30) {
+        return 1;
+    } else if (val < 40) {
+        return 2;
+    } else if (val < 50) {
+        return 3;
+    } else if (val < 60) {
+        return 4;
+    } else {
+        return 5;
+    }
+}
+
+
+
+export function getJenisId(jenis: string, listJenis: JenisPohonType[]): number | null {
+    return listJenis.find(j => j.nama === jenis)?.id || null;
+}
