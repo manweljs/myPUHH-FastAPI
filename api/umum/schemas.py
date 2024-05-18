@@ -22,6 +22,7 @@ class ErrorResponse(BaseModel):
 class PropinsiSchema(PydanticModel):
     id: int
     nama: str
+    test: Optional[bool]
 
     class Config:
         from_attributes = True
@@ -30,7 +31,8 @@ class PropinsiSchema(PydanticModel):
 class KabupatenSchema(PydanticModel):
     id: int
     nama: str
-    propinsi: PropinsiSchema
+    propinsi: str
+    propinsi_id: int
 
     class Config:
         from_attributes = True
@@ -55,7 +57,7 @@ class KualifikasiGanisSchema(PydanticModel):
 class JabatanGanisSchema(PydanticModel):
     id: int
     nama: str
-    kualifikasi: KualifikasiGanisSchema
+    kualifikasi: str
 
     class Config:
         from_attributes = True
@@ -76,6 +78,16 @@ class JenisSchema(PydanticModel):
 
     class Config:
         from_attributes = True
+
+
+# class JenisSchema(PydanticModel):
+#     id: int
+#     nama: str
+#     kelompok_jenis: str
+#     kelompok_jenis_id: int
+
+#     class Config:
+#         from_attributes = True
 
 
 class SortimenSchema(PydanticModel):

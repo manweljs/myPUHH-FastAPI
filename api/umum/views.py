@@ -1,3 +1,4 @@
+from utils.decorators import timing_decorator
 from utils.storage import AWS_STORAGE_BUCKET_NAME, create_presigned_url, get_s3_client
 from .models import (
     KelasDiameter,
@@ -14,6 +15,12 @@ from .models import (
 from fastapi import APIRouter, UploadFile, status
 from typing import List
 from . import schemas
+from .serializers import (
+    JabatanGanisSerializer,
+    JenisSerializer,
+    KabupatenSerializer,
+    PropinsiSerializer,
+)
 
 
 router = APIRouter(tags=["Umum"], prefix="/api/Umum")
@@ -26,7 +33,8 @@ router = APIRouter(tags=["Umum"], prefix="/api/Umum")
 )
 async def get_all_propinsi():
     propinsi = await Propinsi.all()
-    return propinsi
+    serializer = PropinsiSerializer(propinsi, many=True)
+    return await serializer.serialize()
 
 
 @router.get(
@@ -36,7 +44,8 @@ async def get_all_propinsi():
 )
 async def get_all_kabupaten():
     kabupaten = await Kabupaten.all().prefetch_related("propinsi")
-    return kabupaten
+    serializer = KabupatenSerializer(kabupaten, many=True)
+    return await serializer.serialize()
 
 
 @router.get(
@@ -66,7 +75,8 @@ async def get_all_kualifikasi_ganis():
 )
 async def get_all_jabatan_ganis():
     jabatan_ganis = await JabatanGanis.all().prefetch_related("kualifikasi")
-    return jabatan_ganis
+    serializer = JabatanGanisSerializer(jabatan_ganis, many=True)
+    return await serializer.serialize()
 
 
 @router.get(
@@ -84,6 +94,7 @@ async def get_all_kelompok_jenis():
     status_code=status.HTTP_200_OK,
     response_model=List[schemas.JenisSchema],
 )
+@timing_decorator
 async def get_all_jenis():
     jenis = await Jenis.all().prefetch_related("kelompok_jenis")
     return jenis
