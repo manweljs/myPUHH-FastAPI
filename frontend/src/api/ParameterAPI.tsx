@@ -79,12 +79,14 @@ export const CreatePetak = async (data: PetakInType) => {
     return await sendRequest(endpoint, method, data);
 }
 
-export const GetAllPetak = async () => {
-    const endpoint = `${API_URL}/api/Parameter/Petak/GetAll`;
+export const GetAllPetak = async (tahun_kegiatan?: number) => {
+
+    const params = tahun_kegiatan ? `?tahun_kegiatan=${tahun_kegiatan}` : '';
+    const endpoint = `${API_URL}/api/Parameter/Petak/GetAll${params}`;
     const method = 'GET';
     return await sendRequest(endpoint, method);
-
 }
+
 
 export const GetPetak = async (id: string) => {
     const endpoint = `${API_URL}/api/Parameter/Petak/${id}`;

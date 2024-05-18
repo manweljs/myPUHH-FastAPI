@@ -1,6 +1,6 @@
 from .models import TPn, TahunKegiatan, TPK, Blok, Petak, Ganis
 from fastapi import APIRouter, status, Depends, HTTPException
-from typing import List
+from typing import List, Optional
 from utils.tokens import get_perusahaan
 from . import schemas
 from umum.schemas import ResponseSchema as Response
@@ -336,8 +336,15 @@ async def create_petak(
     response_model=List[schemas.PetakSchema],
     status_code=status.HTTP_200_OK,
 )
-async def get_all_petak(perusahaan: Perusahaan = Depends(get_perusahaan)):
-    data = await Petak.filter(perusahaan=perusahaan).prefetch_related("blok")
+async def get_all_petak(
+    tahun_kegiatan: Optional[int] = None,
+    perusahaan: Perusahaan = Depends(get_perusahaan),
+):
+    filter_kwargs = {"perusahaan": perusahaan}
+    if tahun_kegiatan:
+        filter_kwargs["blok__tahun__tahun"] = tahun_kegiatan
+
+    data = await Petak.filter(**filter_kwargs).prefetch_related("blok")
     return data
 
 

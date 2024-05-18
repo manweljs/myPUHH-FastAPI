@@ -1,6 +1,6 @@
 import { API_URL } from "@/consts"
 import { sendRequest } from "./Main"
-import { LHCInType, LHCPohonInType, LHCType, SaveLHCBarcodeType, UploadBarcodeLHCType } from "@/types"
+import { LHCInType, LHCPohonInType, LHCPohonSaveDatabaseType, LHCType, SaveLHCBarcodeType, UploadBarcodeLHCType } from "@/types"
 
 
 export const GetAllLHC = async () => {
@@ -83,7 +83,8 @@ export const SaveLHCBarcode = async (lhc_id: string, data: SaveLHCBarcodeType) =
     return await sendRequest(endpoint, method, data)
 }
 
-export const SaveLHCPohon = async (lhc_id: string, data: LHCPohonInType) => {
+
+export const SaveLHCPohon = async (lhc_id: string, data: LHCPohonSaveDatabaseType[]) => {
     const endpoint = `${API_URL}/api/Cruising/LHC/${lhc_id}/Pohon/Save`
     const method = "PUT"
     return await sendRequest(endpoint, method, data)

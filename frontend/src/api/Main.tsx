@@ -8,7 +8,7 @@ export const sendRequest = async (url: string, method: string, data?: any) => {
     // Ciptakan objek konfigurasi dengan 'method' dan 'headers'
     const options: RequestInit = { method, headers };
 
-    console.log('data to save -------->', data)
+    // console.log('data to save -------->', data)
     // Tambahkan 'body' hanya jika 'data' ada dan metode bukan 'GET' atau 'HEAD'
     if (data && !(method === 'GET' || method === 'HEAD')) {
         options.body = JSON.stringify(data);

@@ -1,5 +1,5 @@
 import { ACCESS_TOKEN_KEY } from "@/consts";
-import { JenisPohonType } from "@/types";
+import { JenisPohonType, PetakType, SortimenType } from "@/types";
 import cookie from "react-cookies"
 
 export const getToken = (token_key = ACCESS_TOKEN_KEY) => {
@@ -51,6 +51,44 @@ export function getKelasDiameterId(val: number): number {
 
 
 
-export function getJenisId(jenis: string, listJenis: JenisPohonType[]): number | null {
-    return listJenis.find(j => j.nama === jenis)?.id || null;
+export function getJenisId(jenis: string, listJenis: JenisPohonType[]): number {
+    return listJenis.find(j => j.nama === jenis)!.id;
+}
+
+
+export function getPetakId(petak: string, listPetak: PetakType[]): string {
+    return listPetak.find(p => p.nama === petak)!.id!;
+}
+
+export function getSortimenId(diameter: number) {
+    if (diameter < 30) {
+        return 3
+    } else if (diameter < 50) {
+        return 2
+    } else {
+        return 1
+    }
+}
+
+export function getStatusPohonId(diameter: number, jenis: string, listJenis: JenisPohonType[]) {
+    const kelompok_jenis = listJenis.find(j => j.nama === jenis)!.kelompok_jenis.id as number;
+    if (kelompok_jenis === 4) {
+        return 3
+    }
+    if (diameter < 40) {
+        return 1
+    } else if (diameter >= 40) {
+        return 2
+    }
+    return null
+}
+
+export function chunkArray(array: any, size: number) {
+    const chunked_arr = [];
+    let index = 0;
+    while (index < array.length) {
+        chunked_arr.push(array.slice(index, size + index));
+        index += size;
+    }
+    return chunked_arr;
 }

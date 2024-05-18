@@ -1,14 +1,15 @@
 "use client"
 import React, { useEffect, useState } from "react";
-import { GetAllJenis, GetAllPohonByLHC, GetLHC, GetPresignedUrl, SaveLHCPohon } from "@/api";
+import { GetAllJenis, GetAllPetak, GetAllPohonByLHC, GetAllSortimen, GetLHC, GetPresignedUrl, SaveLHCPohon } from "@/api";
 import s from "./lhc.module.sass";
-import { DraftSpreadsheetType, JenisPohonType, LHCPohonInType, LHCType, PohonInType, PohonType } from "@/types";
+import { DraftSpreadsheetType, JenisPohonType, LHCPohonInType, LHCPohonSaveDatabaseType, LHCType, PetakType, PohonInType, PohonType, SortimenType } from "@/types";
 import { LoadingModal, SpreadSheets } from "../global";
 import { SpreadsheetComponent } from "@syncfusion/ej2-react-spreadsheet";
-import { getJenisId, getKelasDiameterId, sanitizeFilename } from "@/functions";
+import { chunkArray, getJenisId, getKelasDiameterId, getPetakId, getSortimenId, getStatusPohonId, sanitizeFilename } from "@/functions";
 import { GetDraftSpreadsheets, SaveDraftSpreadsheet } from "@/api/SpreadsheetAPI";
 import { message } from "antd";
 
+const BATCH_SIZE = 2000;
 const FAKTOR_BENTUK = 0.6;
 const initialData: PohonInType = {
     id: null,
@@ -39,13 +40,15 @@ export default function LHCDetailPohon(props: {
     const [loading, setLoading] = useState(true);
     const [draftWorkbooks, setDraftWorkbooks] = useState<DraftSpreadsheetType[]>([]);
     const [listJenis, setListJenis] = useState<JenisPohonType[]>([]);
+    const [listPetak, setListPetak] = useState<PetakType[]>([]);
+    const [saveProgress, setSaveProgress] = useState<number>(0);
 
     const handleGetAllPohon = async () => {
         if (!id) return;
         setLoading(true);
         try {
             const response = await GetAllPohonByLHC(id);
-            console.log(response);
+            // console.log(response);
             if (response.length > 0) {
                 const cleanedResponse = response.map((pohon: PohonType) => {
                     return {
@@ -60,11 +63,12 @@ export default function LHCDetailPohon(props: {
                         tinggi: pohon.tinggi,
                         volume: pohon.volume,
                         sortimen: pohon.sortimen.nama,
-                        kelas_diameter: pohon.kelas_diameter ? `'${pohon.kelas_diameter.nama}` : "",
+                        kelas_diameter: pohon.kelas_diameter ? `${pohon.kelas_diameter.nama}` : "",
                         koordinat_x: pohon.koordinat_x || null,
                         koordinat_y: pohon.koordinat_y || null,
-                        status_pohon: pohon.status_pohon || null,
+                        status_pohon: pohon.status_pohon?.nama || null,
                         barcode: pohon.barcode || null,
+
                     }
                 });
                 setListPohon(cleanedResponse);
@@ -87,8 +91,16 @@ export default function LHCDetailPohon(props: {
 
     const handleGetAllJenis = async () => {
         const response = await GetAllJenis();
-        console.log('response all jenis', response)
+        // console.log('response all jenis', response)
         setListJenis(response);
+    }
+
+
+
+    const handleGetAllPetak = async () => {
+        const response = await GetAllPetak(lhc?.tahun.tahun);
+        // console.log('response all petak', response)
+        setListPetak(response);
     }
 
     const handleGetDraftWorkbooks = async () => {
@@ -98,12 +110,12 @@ export default function LHCDetailPohon(props: {
         setDraftWorkbooks(response);
     }
 
-    console.log('draftWorkbooks', draftWorkbooks)
 
     useEffect(() => {
         handleGetLHC();
         handleGetAllPohon();
         handleGetAllJenis();
+        handleGetAllPetak();
     }, []);
 
     useEffect(() => {
@@ -162,6 +174,10 @@ export default function LHCDetailPohon(props: {
         }
     ]
 
+    const defaultFormats = [
+        { format: "@", range: "A:A" }
+    ]
+
     const isValidBarcodeOrNone = (barcode: string) => {
         if (!barcode) return null;
         if (barcode.trim().length === 27) {
@@ -172,57 +188,79 @@ export default function LHCDetailPohon(props: {
     }
 
 
-    const handleSaveToDatabase = async (data: any) => {
-        // clean up sebelum dikirim ke database
-        setLoading(true);
-        try {
-            console.log('data to clean', data)
 
-            const cleanedData: LHCPohonInType = data[0].rows.map((row: any) => {
-                // Buat objek baru tanpa properti id jika id kosong atau null
-                const cleanedRow: LHCPohonInType = {
-                    ...row,
+    const handleSaveToDatabase = async (data: { data: { rows: any[] }[] }) => {
+        setLoading(true);
+        console.log('data to clean', data);
+
+        try {
+            const cleanedData: LHCPohonSaveDatabaseType[] = data.data[0].rows.map((row: any) => {
+                if (!row.jenis || !row.petak) {
+                    message.error('Jenis dan Petak tidak boleh kosong');
+                    throw new Error('Jenis dan Petak tidak boleh kosong');
+                }
+                const cleanedRow: LHCPohonSaveDatabaseType = {
+                    nomor: parseInt(row.nomor),
                     volume: parseFloat(row.volume),
                     diameter: parseInt(row.diameter),
                     tinggi: parseInt(row.tinggi),
                     barcode: isValidBarcodeOrNone(row.barcode),
                     koordinat_x: row.koordinat_x ? parseFloat(row.koordinat_x) : null,
                     koordinat_y: row.koordinat_y ? parseFloat(row.koordinat_y) : null,
-                    kelas_diameter: row.kelas_diameter.replace("'", ""),
+                    kelas_diameter_id: getKelasDiameterId(row.diameter),
+                    jenis_id: getJenisId(row.jenis, listJenis),
+                    petak_id: getPetakId(row.petak, listPetak),
+                    sortimen_id: getSortimenId(row.diameter),
+                    status_pohon_id: getStatusPohonId(row.diameter, row.jenis, listJenis),
+                    jalur: row.jalur,
+                    arah_jalur: row.arah_jalur,
+                    panjang_jalur: row.panjang_jalur,
                 };
 
-                // Hanya tambahkan properti id jika tidak kosong atau null
-                if (row.id) {
-                    console.log('row.id ada', row.id)
+
+                try {
                     cleanedRow.id = row.id;
-                } else {
-                    delete cleanedRow.id;
+                    if (cleanedRow.id === "") {
+                        delete cleanedRow.id;
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
                 }
+
 
                 return cleanedRow;
-            });
+            }).filter(row => row !== null); // Filter out invalid entries
 
-            // mengirim data ke server 
-            try {
-                const response = await SaveLHCPohon(id, cleanedData)
-                console.log('response', response)
-                if (response.success) {
-                    message.success('Data berhasil disimpan')
-                    handleGetAllPohon();
-                } else {
-                    message.error(response.detail)
+            const chunks = chunkArray(cleanedData, BATCH_SIZE);
+            const totalChunks = chunks.length;
+            let x = 0;
+            for (const chunk of chunks) {
+                // mendapatkan persentase dari chunk yang sudah diproses
+                x++; // Naikkan index karena chunk ini sedang diproses
+                const percentage = Math.round((x / totalChunks) * 100);
+                setSaveProgress(percentage);
+                try {
+                    console.log('chunk to save di database', chunk)
+                    const response = await SaveLHCPohon(id, chunk);
+                    console.log('response', response);
+                    // if (response.success) {
+                    //     message.success('Batch data berhasil disimpan');
+                    // } else {
+                    //     message.error('Gagal menyimpan batch data: ' + response.detail);
+                    // }
+                } catch (error: any) {
+                    console.log('Error saving batch', error);
+                    message.error('Error saat menyimpan data: ' + error.message);
                 }
-
-            } catch (error) {
-                console.log('error', error)
             }
-        } catch (error) {
-
-            console.log('error', error)
-            message.error((error as any).toString())
+            handleGetAllPohon();
+        } catch (error: any) {
+            console.log('error', error);
+            message.error('Kesalahan saat membersihkan data: ' + error.toString());
         }
         setLoading(false);
-    }
+    };
+
 
     const handleSaveAsDraft = async (data: any, draft?: DraftSpreadsheetType | null, isNewVersion: boolean = false) => {
         if (!lhc) return;
@@ -285,15 +323,16 @@ export default function LHCDetailPohon(props: {
 
     return (
         <div className={s.lhc_pohons}>
-            <LoadingModal open={loading} />
+            <LoadingModal open={loading} progress={saveProgress} />
             <SpreadSheets
                 defaultFormulas={defaultFormulas}
                 data={listPohon}
                 className={s.spreadsheet_container}
-                onCellChanges={onCellChanges}
+                // onCellChanges={onCellChanges}
                 onSaveAsJson={handleSaveToDatabase}
                 onSaveAsDraft={handleSaveAsDraft}
                 drafts={draftWorkbooks}
+                defaultFormats={defaultFormats}
             />
         </div>
     );

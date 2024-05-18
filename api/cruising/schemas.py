@@ -43,6 +43,8 @@ class LHCSchema(PydanticModel):
     tahun: TahunKegiatanSchema
     tanggal: date
     obyek: int
+    total_pohon: Optional[int] = None
+    total_volume: Optional[float] = None
 
     class Config:
         from_attributes = True
@@ -151,18 +153,19 @@ class PohonSchema(PydanticModel):
 
 class PohonInSchema(BaseModel):
     id: Optional[UUID] = None
+    jenis_id: int
+    petak_id: str
+    tinggi: float
+    sortimen_id: int
+    status_pohon_id: Optional[int] = None
+
     nomor: int
-    petak: str
     jalur: Optional[str] = None
     arah_jalur: Optional[str] = None
     panjang_jalur: Optional[int] = None
-    jenis: str
-    tinggi: float
     diameter: float
     volume: float
-    kelas_diameter: Optional[str] = None
-    sortimen: str
-    status_pohon: Optional[str] = None
+    kelas_diameter_id: Optional[int] = None
     koordinat_x: Optional[Union[float, str]] = None
     koordinat_y: Optional[Union[float, str]] = None
     barcode: Optional[str] = None

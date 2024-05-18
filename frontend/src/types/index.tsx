@@ -144,7 +144,11 @@ export interface PohonType {
         id: number;
         nama: string;
     } | null;
-    status_pohon: string | null;
+    status_pohon: {
+        id: number;
+        nama: string;
+    } | null;
+
     barcode: string | null;
 }
 export interface PohonInType {
@@ -198,6 +202,11 @@ export interface PetakType {
     nama: string;
     blok: BlokType;
     luas?: number | null;
+}
+
+export interface SortimenType {
+    id: number;
+    nama: string;
 }
 
 export interface PetakInType {
@@ -326,6 +335,28 @@ export interface LHCPohonInType {
     sortimen: number;
     koordinat_x: number;
     koordinat_y: number;
+    kelas_diameter: string;
+    status_pohon: string | null;
+}
+
+export interface LHCPohonSaveDatabaseType {
+    id?: string | null;
+    nomor: number;
+    barcode: string | null;
+    jalur: string;
+    arah_jalur: string;
+    panjang_jalur: number;
+    tinggi: number;
+    diameter: number;
+    volume: number;
+    koordinat_x: number | null;
+    koordinat_y: number | null;
+
+    petak_id: string;
+    jenis_id: number;
+    sortimen_id: number;
+    kelas_diameter_id: number;
+    status_pohon_id: number | null;
 }
 
 

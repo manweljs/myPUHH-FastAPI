@@ -69,3 +69,10 @@ export const GetAllJenis = async () => {
 
     return await sendRequest(endpoint, method)
 }
+
+export const GetAllSortimen = async () => {
+    const endpoint = `${API_URL}/api/Umum/Sortimen`
+    const method = "GET"
+
+    return await sendRequest(endpoint, method)
+}

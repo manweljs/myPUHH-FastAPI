@@ -41,7 +41,7 @@ export function LHCDetailBarcodes(props: { id: string }) {
     const handleSaveAsJson = async (data: any) => {
         const finalData = {
             lhc_id: id,
-            barcodes: data[0].rows.map((item: { barcode: string, id: string }) => {
+            barcodes: data.data[0].rows.map((item: { barcode: string, id: string }) => {
                 return {
                     id: item.id || null,
                     barcode: item.barcode
@@ -49,10 +49,10 @@ export function LHCDetailBarcodes(props: { id: string }) {
             })
         }
 
-        console.log('final data untuk database --->', finalData)
+        // console.log('final data untuk database --->', finalData)
         setLoading(true)
         const response = await SaveLHCBarcode(id, finalData)
-        console.log('response', response)
+        // console.log('response', response)
         if (response.success) {
             message.success('Data berhasil disimpan')
             handleGetBarcodes()

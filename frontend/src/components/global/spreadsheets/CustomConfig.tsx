@@ -53,6 +53,14 @@ export const setDefaultFormulas = (spreadsheet: SpreadsheetComponent, defaultFor
     });
 }
 
+export const setDefaultFormats = (spreadsheet: SpreadsheetComponent, defaultFormats: { range: string, format: any }[]) => {
+    if (!spreadsheet) return;
+
+    defaultFormats.forEach(({ format, range }) => {
+        console.log('format range', format, range)
+        spreadsheet.numberFormat(format, range)
+    });
+}
 
 
 
