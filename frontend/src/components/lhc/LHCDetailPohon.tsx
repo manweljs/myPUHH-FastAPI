@@ -124,6 +124,8 @@ export default function LHCDetailPohon(props: {
         }
     }, [lhc]);
 
+    console.log('lhc', lhc)
+
     const onCellChanges = async (ref: SpreadsheetComponent | null, args: any) => {
         if (!ref || !args) return;
         // console.log('args --> ', args);
@@ -201,7 +203,7 @@ export default function LHCDetailPohon(props: {
                 }
                 const cleanedRow: LHCPohonSaveDatabaseType = {
                     nomor: parseInt(row.nomor),
-                    volume: parseFloat(row.volume),
+                    volume: calcVolumeLHC(row.diameter, row.tinggi),
                     diameter: parseInt(row.diameter),
                     tinggi: parseInt(row.tinggi),
                     barcode: isValidBarcodeOrNone(row.barcode),
@@ -211,8 +213,8 @@ export default function LHCDetailPohon(props: {
                     jenis_id: getJenisId(row.jenis, listJenis),
                     petak_id: getPetakId(row.petak, listPetak),
                     sortimen_id: getSortimenId(row.diameter),
-                    status_pohon_id: getStatusPohonId(row.diameter, row.jenis, listJenis),
-                    jalur: row.jalur,
+                    status_pohon_id: getStatusPohonId(row.diameter, row.jenis, listJenis, lhc?.obyek),
+                    jalur: row.jalur.toString(),
                     arah_jalur: row.arah_jalur,
                     panjang_jalur: row.panjang_jalur,
                 };
@@ -261,7 +263,7 @@ export default function LHCDetailPohon(props: {
             handleGetAllPohon();
         } catch (error: any) {
             console.log('error', error);
-            message.error('Kesalahan saat membersihkan data: ' + error.toString());
+            // message.error('Kesalahan saat membersihkan data: ' + error.toString());
         }
         setLoading(false);
     };
@@ -336,10 +338,17 @@ export default function LHCDetailPohon(props: {
                 // onCellChanges={onCellChanges}
                 onSaveAsJson={handleSaveToDatabase}
                 defaultFormats={defaultFormats}
+                columns={initialData as any}
             />
         </div>
     );
 }
 
 
+const calcVolumeLHC = (diameter: number, tinggi: number) => {
+    // Menghitung bagian dari formula: 0.7854 * faktorBentuk * diameter^2 * tinggi
+    const volume = 0.7854 * FAKTOR_BENTUK * Math.pow(diameter, 2) * tinggi / 10000;
 
+    // Pembulatan ke dua desimal
+    return Math.round(volume * 100) / 100;
+}

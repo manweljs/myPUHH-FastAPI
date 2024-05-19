@@ -6,7 +6,7 @@ import { FormUploadCSV } from '@/components/forms/FormUploadCSV'
 import { DeletePetak, GetAllPetak } from '@/api'
 import { FormPetak } from '@/components/forms/FormPetak'
 
-const page = "Petak"
+const page = "Petak / Trayek"
 
 export function ParameterPetak() {
 

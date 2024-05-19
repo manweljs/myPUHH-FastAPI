@@ -15,11 +15,16 @@ const initialData: object = {
 
 export function LHCDetailBarcodes(props: { id: string }) {
     const { id } = props
-    const [data, setData] = useState<object[]>([initialData])
+    const [data, setData] = useState<object[]>([])
     const [loading, setLoading] = useState(false)
+
     const handleGetBarcodes = async () => {
         const response = await GetBarcodesByLHC(id)
         console.log(response)
+        if (response.length === 0) {
+            setData([initialData])
+            return
+        }
         const data = response.map((item: LHCBarcodeType, index: number) => {
             return {
                 id: item.id,
@@ -67,7 +72,6 @@ export function LHCDetailBarcodes(props: { id: string }) {
         <div className={s.lhc_barcodes}>
             <LoadingModal open={loading} />
             <SpreadSheets
-
                 data={data}
                 colCount={3}
                 columns={columns}

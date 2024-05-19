@@ -11,7 +11,7 @@ import { OpenExcelFile, SaveAsExcel, SaveAsJson } from './CustomFunctions';
 interface Props {
     data?: object[]
     colCount?: number
-    columns?: ColumnModel[]
+    columns?: ColumnModel
     onSaveAsJson?: (data: any) => void
     className?: string
     onCellChanges?: (ref: SpreadsheetComponent | null, args: any) => void
@@ -20,12 +20,6 @@ interface Props {
     defaultFormulas?: any[]
     defaultFormats?: any[]
 }
-
-const defaultData: object[] = [
-    { OrderID: 10248, CustomerID: 'VINET', EmployeeID: 5, ShipCity: 'Reims' },
-    { OrderID: 10249, CustomerID: 'TOMSP', EmployeeID: 6, ShipCity: 'Münster' },
-    { OrderID: 10250, CustomerID: 'HANAR', EmployeeID: 4, ShipCity: 'Lyon' }
-];
 
 export function SpreadSheets(props: Props) {
     const {
@@ -48,7 +42,7 @@ export function SpreadSheets(props: Props) {
         if (spreadsheetRef.current) {
             setSpreadsheet(spreadsheetRef.current);
         }
-        if (data) {
+        if (spreadsheetRef.current && data) {
             setSheetData(data)
         }
     }, [spreadsheetRef.current, data]);
@@ -60,11 +54,12 @@ export function SpreadSheets(props: Props) {
         // Batalkan operasi pembukaan default
         args.cancel = true;
 
-        // Proses file yang dipilih
+
         if (args.file) {
-            return OpenExcelFile(setSheetData, args.file as File);
+            return OpenExcelFile(setSheetData, args.file as File, columns);
         }
     };
+
 
 
 
@@ -185,13 +180,10 @@ export function SpreadSheets(props: Props) {
 
 
     const handleCellChanges = (args: any) => {
-        // console.log('args', args)
-
         onCellChanges && onCellChanges(spreadsheet, args);
-
     }
 
-
+    // console.log('sheetData', sheetData)
 
     return (
         <div className={className}>
@@ -259,9 +251,9 @@ export function SpreadSheets(props: Props) {
             >
 
                 <SheetsDirective  >
-                    <SheetDirective frozenRows={1} colCount={colCount} columns={columns}  >
+                    <SheetDirective frozenRows={1} colCount={colCount}  >
                         <RangesDirective >
-                            <RangeDirective dataSource={sheetData || defaultData} ></RangeDirective>
+                            <RangeDirective dataSource={sheetData} ></RangeDirective>
                         </RangesDirective>
 
                     </SheetDirective>

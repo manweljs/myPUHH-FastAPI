@@ -40,7 +40,7 @@ export function Parameter() {
         },
         {
             key: "Petak",
-            label: "Petak",
+            label: "Petak / Trayek",
             children: <ParameterPetak />
         },
         {

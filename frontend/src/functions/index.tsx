@@ -70,7 +70,10 @@ export function getSortimenId(diameter: number) {
     }
 }
 
-export function getStatusPohonId(diameter: number, jenis: string, listJenis: JenisPohonType[]) {
+export function getStatusPohonId(diameter: number, jenis: string, listJenis: JenisPohonType[], obyek?: number) {
+    if (obyek === 1) {
+        return 2
+    }
     const kelompok_jenis = listJenis.find(j => j.nama === jenis)!.kelompok_jenis.id as number;
     if (kelompok_jenis === 4) {
         return 3

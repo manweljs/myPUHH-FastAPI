@@ -110,7 +110,8 @@ const extractExcelData = (spreadsheet: SpreadsheetComponent) => {
 }
 
 // TODO: Implement open excel manually 
-export const OpenExcelFile = (setData: (data: any) => void, file: File) => {
+export const OpenExcelFile = (setData: (data: any) => void, file: File, columns?: any) => {
+    console.log('columns', columns)
     if (!file) return;
     console.log('masuk sini', file)
     const reader = new FileReader();
@@ -118,11 +119,28 @@ export const OpenExcelFile = (setData: (data: any) => void, file: File) => {
         const buffer = event.target?.result as ArrayBuffer;
         const workbook = XLSX.read(buffer, { type: 'buffer' });
         const worksheetName = workbook.SheetNames[0];
+
         const worksheet = workbook.Sheets[worksheetName];
-        const parsedData = XLSX.utils.sheet_to_json(worksheet);
+        let parsedData = XLSX.utils.sheet_to_json(worksheet);
+
+        if (columns) {
+            console.log('parse sesuai columns')
+            parsedData = normalizeData(parsedData, columns);
+        }
+        console.log('parsedData', parsedData)
         setData(parsedData); // Update state with the parsed data
     };
     reader.readAsArrayBuffer(file);
+};
+
+const normalizeData = (data: any[], columns: any) => {
+    return data.map(item => {
+        const normalizedItem: any = {}; // Add index signature to allow indexing with a string
+        for (const key in columns) {
+            normalizedItem[key] = item[key] ?? columns[key];
+        }
+        return normalizedItem;
+    });
 };
 
 const defaultData: object[] = [
