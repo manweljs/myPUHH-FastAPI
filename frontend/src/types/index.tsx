@@ -149,7 +149,9 @@ export interface PohonType {
         nama: string;
     } | null;
 
-    barcode: string | null;
+    barcode: {
+        barcode: string;
+    } | null;
 }
 export interface PohonInType {
     id?: string | null;

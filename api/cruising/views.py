@@ -355,7 +355,10 @@ async def save_lhc_barcode(
 async def get_all_pohon(lhc_id: UUID, perusahaan: Perusahaan = Depends(get_perusahaan)):
     pohon = (
         await Pohon.filter(Q(lhc=lhc_id) & Q(perusahaan=perusahaan))
-        .order_by("nomor")
+        .order_by(
+            "petak__nama",
+            "nomor",
+        )
         .prefetch_related(
             "jenis",
             "kelas_diameter",

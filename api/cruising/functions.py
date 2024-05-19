@@ -1,5 +1,7 @@
+from curses.ascii import HT
 from typing import List
 from uuid import UUID
+from fastapi import HTTPException
 import pandas as pd
 from botocore.exceptions import NoCredentialsError
 from cruising.models import Barcode, Pohon
@@ -143,6 +145,8 @@ async def save_lhc_pohon_to_db(data: List[PohonInSchema], lhc_id, perusahaan):
         all_barcodes = {item.barcode for item in data if item.barcode}
         all_ids = {item.id for item in data if item.id}
 
+        # print("all barcodes :", all_barcodes)
+
         # Gunakan asyncio.gather untuk menjalankan query secara paralel
         existing_barcodes, existing_pohons = await asyncio.gather(
             Barcode.filter(barcode__in=all_barcodes, perusahaan_id=perusahaan)
@@ -153,9 +157,14 @@ async def save_lhc_pohon_to_db(data: List[PohonInSchema], lhc_id, perusahaan):
             .all(),
         )
 
+        # print("existing barcodes :", existing_barcodes)
+
         existing_barcodes_dict = {
             barcode.barcode: barcode for barcode in existing_barcodes
         }
+
+        # print("existing barcodes dict :", existing_barcodes_dict)
+
         existing_pohons_dict = {pohon.id: pohon for pohon in existing_pohons}
 
         to_create, to_update = [], []
@@ -165,25 +174,42 @@ async def save_lhc_pohon_to_db(data: List[PohonInSchema], lhc_id, perusahaan):
             barcode_instance = (
                 existing_barcodes_dict.get(item.barcode) if item.barcode else None
             )
+
+            # print("barcode instance : ", barcode_instance)
+
             existing_pohon = existing_pohons_dict.get(item.id)
 
-            if existing_pohon:
-                # Update existing Pohon
-                existing_pohon.update_from_dict(item.model_dump())
-                existing_pohon.barcode_id = (
-                    barcode_instance.id if barcode_instance else None
-                )
-                to_update.append(existing_pohon)
+            # Menyiapkan data model untuk update
+            model_dump = item.model_dump(exclude_none=True, exclude_unset=True)
+
+            # Mengganti 'barcode' dengan 'barcode_id' yang valid jika ada barcode_instance
+            if barcode_instance:
+                model_dump["barcode_id"] = barcode_instance.id
+                model_dump.pop("barcode", None)
             else:
-                # Create new Pohon if not found
-                model_dump = item.model_dump(exclude_none=True, exclude_unset=True)
-                new_pohon = Pohon(
-                    **model_dump,
-                    lhc_id=lhc_id,
-                    perusahaan_id=perusahaan,
-                    barcode_id=barcode_instance.id if barcode_instance else None,
+                # Menghapus key 'barcode' jika tidak ada barcode valid
+                model_dump.pop("barcode", None)
+
+            # print("model dump : ", model_dump)
+
+            try:
+                if existing_pohon:
+                    # print("Updating existing pohon")
+
+                    # Update pohon dengan model dump yang sudah dimodifikasi
+                    existing_pohon.update_from_dict(model_dump)
+                    to_update.append(existing_pohon)
+                else:
+                    # print("Creating new pohon")
+
+                    new_pohon = Pohon(
+                        **model_dump, lhc_id=lhc_id, perusahaan_id=perusahaan
+                    )
+                    to_create.append(new_pohon)
+            except Exception as e:
+                raise HTTPException(
+                    status_code=400, detail=f"Error: {str(e)} on {item}"
                 )
-                to_create.append(new_pohon)
 
         # Fungsi untuk melakukan batch processing
         async def process_batches(batch: List, operation_type: str):

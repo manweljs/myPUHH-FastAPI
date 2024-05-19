@@ -8,6 +8,7 @@ import {
     Popconfirm,
     Space,
     Table,
+    TableProps,
 } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
 import dayjs from "dayjs";
@@ -45,7 +46,7 @@ export default function LHC() {
     }, [setPage]);
 
 
-    const columns = [
+    const columns: TableProps["columns"] = [
         {
             key: "nomor",
             title: "nomor",
@@ -61,7 +62,7 @@ export default function LHC() {
         {
             key: "tahun",
             title: "Tahun Kegiatan",
-            render: (record: LHCType) => record.tahun?.tahun,
+            dataIndex: "tahun",
         },
         {
             key: "obyek",
@@ -74,12 +75,18 @@ export default function LHC() {
         {
             key: "pohon",
             title: "Total Pohon",
-            dataIndex: "pohon",
+            dataIndex: "total_pohon",
+            render: (total_pohon: any) => (
+                <span>{total_pohon.toLocaleString()}</span>
+            ),
         },
         {
             key: "volume",
             title: "Volume (m3)",
-            dataIndex: "volume",
+            dataIndex: "total_volume",
+            render: (total_volume: any) => (
+                <span>{total_volume ? total_volume.toLocaleString() : 0}</span>
+            ),
         },
         {
             key: "action",

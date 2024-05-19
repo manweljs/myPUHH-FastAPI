@@ -48,7 +48,7 @@ export default function LHCDetailPohon(props: {
         setLoading(true);
         try {
             const response = await GetAllPohonByLHC(id);
-            // console.log(response);
+            console.log(response);
             if (response.length > 0) {
                 const cleanedResponse = response.map((pohon: PohonType) => {
                     return {
@@ -67,7 +67,7 @@ export default function LHCDetailPohon(props: {
                         koordinat_x: pohon.koordinat_x || null,
                         koordinat_y: pohon.koordinat_y || null,
                         status_pohon: pohon.status_pohon?.nama || null,
-                        barcode: pohon.barcode || null,
+                        barcode: pohon.barcode?.barcode || null,
 
                     }
                 });
@@ -243,6 +243,11 @@ export default function LHCDetailPohon(props: {
                     console.log('chunk to save di database', chunk)
                     const response = await SaveLHCPohon(id, chunk);
                     console.log('response', response);
+                    if (!response.success) {
+                        message.error('Gagal menyimpan data, ' + response.detail);
+                        setLoading(false);
+                        return
+                    }
                     // if (response.success) {
                     //     message.success('Batch data berhasil disimpan');
                     // } else {
@@ -330,8 +335,6 @@ export default function LHCDetailPohon(props: {
                 className={s.spreadsheet_container}
                 // onCellChanges={onCellChanges}
                 onSaveAsJson={handleSaveToDatabase}
-                onSaveAsDraft={handleSaveAsDraft}
-                drafts={draftWorkbooks}
                 defaultFormats={defaultFormats}
             />
         </div>

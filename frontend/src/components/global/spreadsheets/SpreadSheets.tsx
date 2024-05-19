@@ -1,12 +1,12 @@
 "use client";
 import React, { useEffect, useRef, useState } from 'react'
-import { SheetsDirective, SheetDirective, RangesDirective, RangeDirective, SpreadsheetComponent, BeforeSaveEventArgs, ColumnDirective, Inject, Filter, ColumnModel } from '@syncfusion/ej2-react-spreadsheet';
+import { SheetsDirective, SheetDirective, RangesDirective, RangeDirective, SpreadsheetComponent, BeforeSaveEventArgs, ColumnDirective, Inject, Filter, ColumnModel, BeforeOpenEventArgs } from '@syncfusion/ej2-react-spreadsheet';
 import s from "../global.module.sass"
 import { Button, Select, Space } from 'antd';
 import FIcon from '../FIcon';
 import { DraftSpreadsheetType } from '@/types';
 import { customizeRibbon, setDefaultFormats, setDefaultFormulas } from './CustomConfig';
-import { SaveAsExcel, SaveAsJson } from './CustomFunctions';
+import { OpenExcelFile, SaveAsExcel, SaveAsJson } from './CustomFunctions';
 
 interface Props {
     data?: object[]
@@ -28,16 +28,6 @@ const defaultData: object[] = [
 ];
 
 export function SpreadSheets(props: Props) {
-
-    const [spreadsheet, setSpreadsheet] = useState<SpreadsheetComponent | null>(null);
-    const spreadsheetRef = useRef<SpreadsheetComponent | null>(null);
-
-    useEffect(() => {
-        if (spreadsheetRef.current) {
-            setSpreadsheet(spreadsheetRef.current);
-        }
-    }, [spreadsheetRef.current]);
-
     const {
         data,
         colCount,
@@ -48,9 +38,35 @@ export function SpreadSheets(props: Props) {
         onSaveAsDraft,
         drafts,
         defaultFormulas,
-        defaultFormats
+        defaultFormats,
     } = props
-    const beforeOpen = (): void => { };
+    const [spreadsheet, setSpreadsheet] = useState<SpreadsheetComponent | null>(null);
+    const spreadsheetRef = useRef<SpreadsheetComponent | null>(null);
+    const [sheetData, setSheetData] = useState<object[]>([]);
+
+    useEffect(() => {
+        if (spreadsheetRef.current) {
+            setSpreadsheet(spreadsheetRef.current);
+        }
+        if (data) {
+            setSheetData(data)
+        }
+    }, [spreadsheetRef.current, data]);
+
+
+    const beforeOpen = (args: BeforeOpenEventArgs) => {
+        console.log('args', args);
+
+        // Batalkan operasi pembukaan default
+        args.cancel = true;
+
+        // Proses file yang dipilih
+        if (args.file) {
+            return OpenExcelFile(setSheetData, args.file as File);
+        }
+    };
+
+
 
     const [isInitialized, setIsInitialized] = useState(false);
     const [draftWorkbooks, setDraftWorkbooks] = useState<DraftSpreadsheetType[]>([]);
@@ -94,6 +110,7 @@ export function SpreadSheets(props: Props) {
             return SaveAsExcel(spreadsheet, args);
         }
     };
+
 
 
     useEffect(() => {
@@ -238,12 +255,13 @@ export function SpreadSheets(props: Props) {
                 beforeSave={beforeSave}
                 scrollSettings={scrollSettings}
                 cellSave={handleCellChanges}
+
             >
 
                 <SheetsDirective  >
                     <SheetDirective frozenRows={1} colCount={colCount} columns={columns}  >
                         <RangesDirective >
-                            <RangeDirective dataSource={data || defaultData} ></RangeDirective>
+                            <RangeDirective dataSource={sheetData || defaultData} ></RangeDirective>
                         </RangesDirective>
 
                     </SheetDirective>

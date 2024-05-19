@@ -15,10 +15,10 @@ export function LoadingModal(props: { open: boolean, title?: string, progress?: 
                         progress ?
                             <Progress strokeLinecap="butt" percent={progress} />
                             :
-                            <>
+                            <Space>
                                 <Spin />
                                 <div>{title}</div>
-                            </>
+                            </Space>
                     }
                 </Modal>
             }

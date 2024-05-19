@@ -109,3 +109,24 @@ const extractExcelData = (spreadsheet: SpreadsheetComponent) => {
     return allSheetsData;
 }
 
+// TODO: Implement open excel manually 
+export const OpenExcelFile = (setData: (data: any) => void, file: File) => {
+    if (!file) return;
+    console.log('masuk sini', file)
+    const reader = new FileReader();
+    reader.onload = (event: ProgressEvent<FileReader>) => {
+        const buffer = event.target?.result as ArrayBuffer;
+        const workbook = XLSX.read(buffer, { type: 'buffer' });
+        const worksheetName = workbook.SheetNames[0];
+        const worksheet = workbook.Sheets[worksheetName];
+        const parsedData = XLSX.utils.sheet_to_json(worksheet);
+        setData(parsedData); // Update state with the parsed data
+    };
+    reader.readAsArrayBuffer(file);
+};
+
+const defaultData: object[] = [
+    { OrderID: 10248, CustomerID: 'VINET', EmployeeID: 5, ShipCity: 'Reims' },
+    { OrderID: 10249, CustomerID: 'TOMSP', EmployeeID: 6, ShipCity: 'Münster' },
+    { OrderID: 10250, CustomerID: 'HANAR', EmployeeID: 4, ShipCity: 'Lyon' }
+];
