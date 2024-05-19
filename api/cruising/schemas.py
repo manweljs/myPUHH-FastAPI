@@ -43,8 +43,21 @@ class LHCSchema(PydanticModel):
     tahun: TahunKegiatanSchema
     tanggal: date
     obyek: int
-    total_pohon: Optional[int] = None
-    total_volume: Optional[float] = None
+    total_pohon: Optional[int] = 0
+    total_volume: Optional[float] = 0
+
+    class Config:
+        from_attributes = True
+
+
+class LHCBaseSchema(PydanticModel):
+    id: UUID
+    nomor: str
+    tahun: int
+    tanggal: date
+    obyek: int
+    total_pohon: Optional[int] = 0
+    total_volume: Optional[float] = 0
 
     class Config:
         from_attributes = True

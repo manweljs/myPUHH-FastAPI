@@ -22,6 +22,8 @@ from fastapi_pagination.ext.tortoise import paginate
 import asyncio
 from utils.pagination import CustomPage
 from tortoise.expressions import Q
+from tortoise.functions import Sum, Count
+
 
 BATCH_SIZE = 1000
 
@@ -42,20 +44,31 @@ async def create_lhc(
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
 
 
-@router.get("/LHC/GetAll", response_model=List[schemas.LHCSchema])
+@router.get("/LHC/GetAll", response_model=List[schemas.LHCBaseSchema])
 @timing_decorator
 async def get_all_lhc(perusahaan: Perusahaan = Depends(get_perusahaan)):
-    lhc_query = LHC.filter(perusahaan=perusahaan)
-    print(type(lhc_query))
+    lhc_query = (
+        await LHC.filter(perusahaan=perusahaan)
+        .prefetch_related("tahun")
+        .annotate(total_pohon=Count("pohons", 0), total_volume=Sum("pohons__volume", 0))
+        .order_by("id")
+        .all()
+    )
 
     serializer = LHCSerializer(lhc_query, many=True)
     return await serializer.serialize()
 
 
-@router.get("/LHC/{id}", response_model=schemas.LHCSchema)
+@router.get("/LHC/{id}", response_model=schemas.LHCBaseSchema)
+@timing_decorator
 async def get_lhc(id: UUID, perusahaan: Perusahaan = Depends(get_perusahaan)):
-    lhc_query = LHC.filter(id=id, perusahaan=perusahaan)
-    print(type(lhc_query))
+    lhc_query = (
+        await LHC.filter(id=id, perusahaan=perusahaan)
+        .prefetch_related("tahun")
+        .annotate(total_pohon=Count("pohons", 0), total_volume=Sum("pohons__volume", 0))
+        .order_by("id")
+        .first()
+    )
 
     serializer = LHCSerializer(lhc_query)
     return await serializer.serialize()
