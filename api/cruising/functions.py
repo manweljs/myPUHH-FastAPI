@@ -1,4 +1,3 @@
-from curses.ascii import HT
 from typing import List
 from uuid import UUID
 from fastapi import HTTPException
