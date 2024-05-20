@@ -1,3 +1,4 @@
+from collections import defaultdict
 from curses.ascii import HT
 from typing import List
 from uuid import UUID
@@ -11,6 +12,8 @@ from utils.storage import get_s3_client
 import io, asyncio
 from tortoise.transactions import in_transaction
 import time
+from tortoise.functions import Sum, Count
+
 
 BATCH_SIZE = 1000
 
@@ -236,3 +239,35 @@ async def save_lhc_pohon_to_db(data: List[PohonInSchema], lhc_id, perusahaan):
             return False  # Return False to indicate success with no errors
         else:
             return errors  # Return list of errors if any
+
+
+async def get_rekapitulasi_lhc(lhc_id: UUID, perusahaan: UUID):
+    rekap_data = (
+        await Pohon.filter(lhc=lhc_id, perusahaan=perusahaan)
+        .prefetch_related("jenis", "status_pohon", "kelas_diameter")
+        .annotate(jumlah_pohon=Count("id"), total_volume=Sum("volume"))
+        .group_by("jenis__nama", "status_pohon__nama", "kelas_diameter__nama")
+        .values(
+            "jenis__nama",
+            "status_pohon__nama",
+            "kelas_diameter__nama",
+            "jumlah_pohon",
+            "total_volume",
+        )
+    )
+
+    if rekap_data:
+        # Mengorganisir data berdasarkan status pohon dan kelas diameter
+        organized_data = defaultdict(lambda: defaultdict(list))
+        for item in rekap_data:
+            status_key = item["status_pohon__nama"].replace(" ", "_").upper()
+            diameter_key = item["kelas_diameter__nama"].replace(" - ", "_")
+            organized_data[status_key][diameter_key].append(
+                {
+                    "jenis__nama": item["jenis__nama"],
+                    "jumlah_pohon": item["jumlah_pohon"],
+                    "total_volume": item["total_volume"],
+                }
+            )
+
+        return {"data": rekap_data, "organized_data": organized_data}

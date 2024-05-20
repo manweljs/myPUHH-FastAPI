@@ -89,3 +89,9 @@ export const SaveLHCPohon = async (lhc_id: string, data: LHCPohonSaveDatabaseTyp
     const method = "PUT"
     return await sendRequest(endpoint, method, data)
 }
+
+export const GetRekapitulasiLHC = async (lhc_id: string) => {
+    const endpoint = `${API_URL}/api/Cruising/LHC/${lhc_id}/Rekapitulasi`
+    const method = "GET"
+    return await sendRequest(endpoint, method)
+}

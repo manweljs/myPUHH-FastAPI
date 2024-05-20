@@ -10,6 +10,9 @@
   },
   "dependencies": {
     "@flaticon/flaticon-uicons": "^3.2.1",
+    "@syncfusion/ej2-base": "^25.2.3",
+    "@syncfusion/ej2-popups": "^25.2.4",
+    "@syncfusion/ej2-react-pivotview": "^25.2.4",
     "@syncfusion/ej2-react-spreadsheet": "^25.2.3",
     "antd": "^5.17.0",
     "framer-motion": "^11.1.9",

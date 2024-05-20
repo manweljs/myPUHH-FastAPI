@@ -8,6 +8,7 @@ from umum.schemas import ErrorResponse, ResponseSchema as Response
 from account.schemas import PerusahaanSchema as Perusahaan
 from uuid import UUID
 from .functions import (
+    get_rekapitulasi_lhc,
     get_upload_barcodes_from_file,
     get_upload_pohon_from_file,
     save_lhc_barcode_to_db,
@@ -23,6 +24,7 @@ import asyncio
 from utils.pagination import CustomPage
 from tortoise.expressions import Q
 from tortoise.functions import Sum, Count
+from collections import defaultdict
 
 
 BATCH_SIZE = 1000
@@ -398,3 +400,22 @@ async def save_pohon(
         raise e
     except Exception as e:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
+
+
+@router.get(
+    "/LHC/{lhc_id}/Rekapitulasi",
+    description="Get LHC rekapitulasi by LHC ID",
+)
+@timing_decorator
+async def get_rekap_lhc(
+    lhc_id: UUID,
+    perusahaan: Perusahaan = Depends(get_perusahaan),
+):
+    try:
+        data = await get_rekapitulasi_lhc(lhc_id, perusahaan)
+        if data:
+            return data
+        else:
+            raise HTTPException(status_code=404, detail="Data not found")
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
