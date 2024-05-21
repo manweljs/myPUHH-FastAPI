@@ -94,7 +94,9 @@ export default function RencanaTebang() {
             render: (record: RencanaTebangType) => {
                 if (record.total_pohon) {
                     return (
-                        <span>{record.total_pohon}</span>
+                        <div style={{ textAlign: 'right' }}>
+                            {record.total_pohon}
+                        </div>
                     )
                 }
                 return (
@@ -110,7 +112,21 @@ export default function RencanaTebang() {
         {
             key: 'volume',
             title: 'total volume (m3)',
-            dataIndex: 'volume',
+            render: (record: RencanaTebangType) => (
+                <div style={{ textAlign: 'right' }} >
+                    {record.total_volume?.toFixed(2)}
+                </div>
+            )
+        },
+        {
+            key: 'netto',
+            title: '* FE (m3)',
+            render: (record: RencanaTebangType) => (
+                <div style={{ textAlign: 'right' }}>
+                    {record.total_volume && (record.total_volume * record.faktor).toFixed(2)}
+                </div>
+            )
+
         },
         {
             key: 'Target',

@@ -161,6 +161,7 @@ body.min #root .navbar .menu {
 .ant-btn {
   display: flex;
   align-items: center;
+  justify-content: center;
 }
 
 .e-custom-button button span {

@@ -47,21 +47,29 @@ export function SpreadSheets(props: Props) {
         }
     }, [spreadsheetRef.current, data]);
 
+    useEffect(() => {
+        if (spreadsheet && sheetData) {
+            spreadsheet.refresh()
+        }
+    }, [sheetData, spreadsheet]);
 
-    const beforeOpen = (args: BeforeOpenEventArgs) => {
+
+    const beforeOpen = async (args: BeforeOpenEventArgs) => {
+        if (!spreadsheet) return;
         console.log('args', args);
 
         // Batalkan operasi pembukaan default
-        args.cancel = true;
+        // args.cancel = true;
 
 
-        if (args.file) {
-            return OpenExcelFile(setSheetData, args.file as File, columns);
-        }
+        // if (args.file) {
+        //     OpenExcelFile(spreadsheet, setSheetData, args.file as File, columns);
+
+        // }
     };
 
 
-
+    console.log('sheetData', sheetData)
 
     const [isInitialized, setIsInitialized] = useState(false);
     const [draftWorkbooks, setDraftWorkbooks] = useState<DraftSpreadsheetType[]>([]);
@@ -234,6 +242,8 @@ export function SpreadSheets(props: Props) {
                         icon={<FIcon name='fi-rr-database' size={14} />}
                     >Save</Button>
                 }
+
+                <Button onClick={() => { spreadsheet?.refresh() }}>Refresh</Button>
             </div>
 
             <SpreadsheetComponent
@@ -249,6 +259,7 @@ export function SpreadSheets(props: Props) {
                 cellSave={handleCellChanges}
 
             >
+
 
                 <SheetsDirective  >
                     <SheetDirective frozenRows={1} colCount={colCount}  >

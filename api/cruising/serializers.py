@@ -9,7 +9,7 @@ from utils.serializers import BaseSerializer
 from .schemas import LHCBaseSchema, LHCSchema, RencanaTebangSchema
 from tortoise.models import Model
 from tortoise.queryset import QuerySet
-from .models import LHC, RencanaTebang
+from .models import LHC, Barcode, Pohon, RencanaTebang
 
 
 class LHCSerializer(BaseSerializer):
@@ -63,3 +63,20 @@ class RencanaTebangSerializer(BaseSerializer):
     async def get_blok_ids(self, instance: RencanaTebang) -> List[UUID]:
         blok_ids = await instance.blok.all().values_list("id", flat=True)
         return blok_ids
+
+    async def get_total_pohon(self, instance: RencanaTebang) -> int:
+        total_pohon = await instance.barcodes.all().count()
+        return total_pohon
+
+    async def get_total_volume(self, instance: RencanaTebang) -> float:
+        # Menggunakan database aggregate function untuk menghitung total volume
+        result = (
+            await Pohon.filter(
+                barcode__rencana_tebang_id=instance.id  # Pastikan bahwa barcode terkait dengan rencana tebang
+            )
+            .annotate(total_volume=Sum("volume"))  # Agregasi volume
+            .group_by("barcode__rencana_tebang_id")  # Grup berdasarkan rencana tebang
+            .values("total_volume")
+        )
+
+        return result[0]["total_volume"] if result else 0

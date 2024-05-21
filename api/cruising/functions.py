@@ -5,7 +5,7 @@ from fastapi import HTTPException
 import pandas as pd
 from botocore.exceptions import NoCredentialsError
 from parameter.models import TahunKegiatan
-from cruising.models import Barcode, Pohon, RencanaTebang
+from cruising.models import LHC, Barcode, Pohon, RencanaTebang
 from cruising.schemas import PohonInSchema, SaveLHCBarcodeItemSchema
 from utils.decorators import timing_decorator
 from utils.storage import get_s3_client
@@ -287,18 +287,79 @@ async def save_barcode_rencana_tebang_to_db(
         return False
 
 
+# ---------------------------------------------------------------------------------------------
+# otomatisasi mengambil target rencana tebang
+# ---------------------------------------------------------------------------------------------
+
+
 async def set_target_pohon_rencana_tebang(rencana_tebang: RencanaTebang, perusahaan):
-    print(rencana_tebang.tahun_id)
+    obyek = rencana_tebang.obyek
     bloks = await rencana_tebang.blok.all()
-    # periksa blok dan tahun kegiatan
+
+    print(rencana_tebang.tahun_id)
+    print(obyek)
+
     if not bloks:
         raise ResponseError(status_code=400, detail="Blok belum ditentukan")
 
-    try:
-        tahun_kegiatan = await TahunKegiatan.get_or_none(
-            id=rencana_tebang.tahun_id, perusahaan_id=perusahaan
-        )
-    except Exception as e:
-        raise HTTPException(status_code=400, detail=f"Error: {str(e)}")
-    print("tahun kegiatan : ", tahun_kegiatan)
+    blok_ids = [blok.id for blok in bloks]
+    print("blok ids : ", blok_ids)
+
+    all_lhc = await LHC.filter(
+        obyek=obyek, perusahaan=perusahaan, blok_id__in=blok_ids
+    ).all()
+    print("all lhc : ", all_lhc)
+
+    all_pohon = await Pohon.filter(
+        lhc_id__in=[lhc.id for lhc in all_lhc], barcode_id__isnull=False
+    ).all()
+    print("all pohon : ", len(all_pohon))
+
+    # Reset semua barcode yang terkait dengan pohon yang diambil
+    barcode_ids_to_reset = [pohon.barcode_id for pohon in all_pohon if pohon.barcode_id]
+    if barcode_ids_to_reset:
+        await Barcode.filter(id__in=barcode_ids_to_reset).update(rencana_tebang_id=None)
+        print(f"Reset {len(barcode_ids_to_reset)} barcodes.")
+
+    if obyek == 1:
+        # Mendapatkan semua ID barcode yang valid
+        barcode_ids = [pohon.barcode_id for pohon in all_pohon if pohon.barcode_id]
+        # Update batch untuk semua barcode yang terkait
+        if barcode_ids:
+            await Barcode.filter(id__in=barcode_ids).update(
+                rencana_tebang_id=rencana_tebang.id
+            )
+            print(f"Updated {len(barcode_ids)} barcodes.")
+
+    elif obyek == 0:
+
+        # filter pohon yang yg sesuai dengan jenis target rencana tebang
+        all_jenis = await rencana_tebang.jenis.all()
+        if not all_jenis:
+            raise ResponseError(status_code=400, detail="Jenis target belum ditentukan")
+        print("jenis ids : ", all_jenis)
+
+        # filter pohon yang sesuai dengan jenis target rencana tebang dan status pohon adalah 2 ( pohon tebang )
+        jenis_ids = [jenis.id for jenis in all_jenis]
+        all_pohon_target = [
+            pohon
+            for pohon in all_pohon
+            if pohon.jenis_id in jenis_ids and pohon.status_pohon_id == 2
+        ]
+        print("all pohon target : ", len(all_pohon_target))
+
+        barcode_ids = [
+            pohon.barcode_id for pohon in all_pohon_target if pohon.barcode_id
+        ]
+        # Update batch untuk semua barcode yang terkait
+        if barcode_ids:
+            print(f"Total barcode IDs to update: {len(barcode_ids)}")
+            unique_barcode_ids = set(barcode_ids)
+            print(f"Unique barcode IDs to update: {len(unique_barcode_ids)}")
+
+            await Barcode.filter(id__in=barcode_ids).update(
+                rencana_tebang_id=rencana_tebang.id
+            )
+            print(f"Updated {len(barcode_ids)} barcodes.")
+
     return False

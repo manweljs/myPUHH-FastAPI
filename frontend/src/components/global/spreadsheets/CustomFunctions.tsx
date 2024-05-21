@@ -110,7 +110,7 @@ const extractExcelData = (spreadsheet: SpreadsheetComponent) => {
 }
 
 // TODO: Implement open excel manually 
-export const OpenExcelFile = (setData: (data: any) => void, file: File, columns?: any) => {
+export const OpenExcelFile = (spreadsheet: SpreadsheetComponent, setData: (args: any) => void, file: File, columns?: any) => {
     console.log('columns', columns)
     if (!file) return;
     console.log('masuk sini', file)
@@ -128,7 +128,8 @@ export const OpenExcelFile = (setData: (data: any) => void, file: File, columns?
             parsedData = normalizeData(parsedData, columns);
         }
         console.log('parsedData', parsedData)
-        setData(parsedData); // Update state with the parsed data
+        setData(parsedData);// Update state with the parsed data
+        spreadsheet?.refresh()
     };
     reader.readAsArrayBuffer(file);
 };

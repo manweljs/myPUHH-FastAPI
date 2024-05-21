@@ -130,6 +130,8 @@ class RencanaTebangSchema(PydanticModel):
     jenis: Optional[List[str]] = None
     bloks: Optional[List[str]] = None
     blok_ids: Optional[List[UUID]] = None
+    total_pohon: Optional[int] = 0
+    total_volume: Optional[float] = 0
 
     class Config:
         from_attributes = True

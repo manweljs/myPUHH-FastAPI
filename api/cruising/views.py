@@ -222,7 +222,7 @@ async def create_rencana_tebang(
 @timing_decorator
 async def get_all_rencana_tebang(perusahaan: Perusahaan = Depends(get_perusahaan)):
     rencana_tebang = await RencanaTebang.filter(perusahaan=perusahaan).prefetch_related(
-        "tahun", "jenis", "blok"
+        "tahun", "jenis", "blok", "barcodes", "barcodes__pohon"
     )
     serializer = RencanaTebangSerializer(rencana_tebang, many=True)
     return await serializer.serialize()

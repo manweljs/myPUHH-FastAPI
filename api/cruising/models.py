@@ -93,7 +93,7 @@ class Pohon(CustomModel):
     koordinat_x = fields.FloatField(null=True)
     koordinat_y = fields.FloatField(null=True)
     barcode = fields.ForeignKeyField(
-        "models.Barcode", on_delete=fields.SET_NULL, null=True
+        "models.Barcode", on_delete=fields.SET_NULL, null=True, related_name="pohon"
     )
 
     class Meta:
