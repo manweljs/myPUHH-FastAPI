@@ -95,3 +95,22 @@ export const GetRekapitulasiLHC = async (lhc_id: string) => {
     const method = "GET"
     return await sendRequest(endpoint, method)
 }
+
+
+export const SaveBarcodeRencanaTebang = async (rencana_tebang_id: string, data: any) => {
+    const endpoint = `${API_URL}/api/Cruising/RencanaTebang/${rencana_tebang_id}/Barcode/Save`
+    const method = "PUT"
+    return await sendRequest(endpoint, method, data)
+}
+
+export const GetBarcodeRencanaTebang = async (rencana_tebang_id: string) => {
+    const endpoint = `${API_URL}/api/Cruising/RencanaTebang/${rencana_tebang_id}/Barcode/GetAll`
+    const method = "GET"
+    return await sendRequest(endpoint, method)
+}
+
+export const SetRencanaTebangTarget = async (rencana_tebang_id: string) => {
+    const endpoint = `${API_URL}/api/Cruising/RencanaTebang/${rencana_tebang_id}/SetTarget`
+    const method = "PUT"
+    return await sendRequest(endpoint, method)
+}

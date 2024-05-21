@@ -1,7 +1,6 @@
 import sys
 import asyncio
 import subprocess
-from utils.functions import init_app
 
 
 async def makemigrations():
@@ -12,6 +11,10 @@ async def migrate():
     subprocess.run(["aerich", "upgrade"], check=True)
 
 
+async def init():
+    subprocess.run(["aerich", "init", "-t", "config.db.tortoise_config"], check=True)
+
+
 if __name__ == "__main__":
     if len(sys.argv) > 1:
         command = sys.argv[1].lower()
@@ -19,8 +22,10 @@ if __name__ == "__main__":
             asyncio.run(makemigrations())
         elif command == "migrate":
             asyncio.run(migrate())
-        elif command == "initapp":
-            asyncio.run(init_app())
+        elif command == "init":
+            asyncio.run(init())
+        elif command == "runserver":
+            subprocess.run(["python", "main.py"])
         else:
             print("Unknown command")
     else:

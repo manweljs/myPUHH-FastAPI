@@ -30,7 +30,7 @@ const defaultState: UserContextType = {
     navigate: () => { },
     page: PAGE.HOME.TITLE,
     setPage: () => { },
-    minimizeSidebar: false,
+    minimizeSidebar: true,
     setMinimizeSidebar: () => { },
     theme: "light",
     setTheme: () => { }
@@ -43,7 +43,7 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     const [user, setUser] = useState<UserType | null>(null);
     const [perusahaan, setPerusahaan] = useState<PerusahaanType | null>(null)
     const [page, setPage] = useState<string>(PAGE.DASHBOARD.TITLE)
-    const [minimizeSidebar, setMinimizeSidebar] = useState<boolean>(false)
+    const [minimizeSidebar, setMinimizeSidebar] = useState<boolean>(true)
     const [theme, setTheme] = useState<string>("light")
     const [api, contextHolder] = notification.useNotification()
 

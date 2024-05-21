@@ -62,10 +62,16 @@ export interface LHPInType {
 export interface RencanaTebangType {
     id: string;
     nomor: string;
-    tahun: TahunKegiatanType;
+    tahun: number;
     obyek: number;
     tanggal: string;
     faktor: number;
+    jenis: string[];
+    jenis_ids: number[];
+    total_pohon: number | null;
+    total_volume: number | null;
+    blok_ids: string | null;
+    bloks: string[];
 }
 
 export interface RencanaTebangInType {
@@ -75,6 +81,9 @@ export interface RencanaTebangInType {
     obyek: number;
     tanggal: string;
     faktor: number;
+    jenis?: string[] | null;
+    jenis_ids?: number[] | null;
+    blok_ids?: string[] | null;
 }
 
 export interface UploadBarcodeType {
@@ -96,6 +105,7 @@ export interface LHCInType {
     tahun_id: string | null;
     tanggal: string;
     obyek: number;
+    blok_id?: string | null;
 }
 
 export interface BukuUkurType {

@@ -9,7 +9,8 @@ import { LHCDetailBarcodes } from "./LHCDetailBarcodes";
 import LHCDetailPohon from "./LHCDetailPohon";
 import LHCDetailSummary from "./LHCDetailSummary";
 import { getEnumLabel } from "@/functions";
-import { OBYEK } from "@/consts";
+import { OBYEK, PAGE } from "@/consts";
+import { useUserContext } from "@/hooks/UserContext";
 
 export default function LHCDetail(props: {
     id: string
@@ -17,6 +18,8 @@ export default function LHCDetail(props: {
     const { id } = props;
     const [lhc, setLHC] = useState<LHCType | null>(null);
     const [pageTitle, setPageTitle] = useState("LHC/");
+    const { setPage } = useUserContext();
+
 
 
     const handleGetLHC = async () => {
@@ -28,6 +31,7 @@ export default function LHCDetail(props: {
 
     useEffect(() => {
         handleGetLHC();
+        setPage(PAGE.LHC.TITLE);
     }, []);
 
     useEffect(() => {

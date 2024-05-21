@@ -1,4 +1,6 @@
-from .serializers import LHCSerializer
+from parameter.models import Blok
+from umum.models import Jenis
+from .serializers import LHCSerializer, RencanaTebangSerializer
 from .models import LHC, Barcode, RencanaTebang, Pohon
 from fastapi import APIRouter, status, Depends, HTTPException
 from typing import List, Union
@@ -11,8 +13,10 @@ from .functions import (
     get_rekapitulasi_lhc,
     get_upload_barcodes_from_file,
     get_upload_pohon_from_file,
+    save_barcode_rencana_tebang_to_db,
     save_lhc_barcode_to_db,
     save_lhc_pohon_to_db,
+    set_target_pohon_rencana_tebang,
 )
 import time
 from tortoise.transactions import in_transaction
@@ -36,12 +40,13 @@ router = APIRouter(tags=["Cruising"], prefix="/api/Cruising")
 async def create_lhc(
     lhc: schemas.LHCInSchema, perusahaan: Perusahaan = Depends(get_perusahaan)
 ):
-    data = lhc.model_dump()
+    data = lhc.model_dump(exclude_unset=True, exclude_none=True)
     data["perusahaan_id"] = perusahaan
     try:
         lhc_created = await LHC.create(**data)
         await lhc_created.fetch_related("tahun")
-        return lhc_created
+        serializer = LHCSerializer(lhc_created)
+        return await serializer.serialize()
     except Exception as e:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
 
@@ -51,7 +56,7 @@ async def create_lhc(
 async def get_all_lhc(perusahaan: Perusahaan = Depends(get_perusahaan)):
     lhc_query = (
         await LHC.filter(perusahaan=perusahaan)
-        .prefetch_related("tahun")
+        .prefetch_related("tahun", "blok")
         .annotate(total_pohon=Count("pohons", 0), total_volume=Sum("pohons__volume", 0))
         .order_by("id")
         .all()
@@ -66,7 +71,7 @@ async def get_all_lhc(perusahaan: Perusahaan = Depends(get_perusahaan)):
 async def get_lhc(id: UUID, perusahaan: Perusahaan = Depends(get_perusahaan)):
     lhc_query = (
         await LHC.filter(id=id, perusahaan=perusahaan)
-        .prefetch_related("tahun")
+        .prefetch_related("tahun", "blok")
         .annotate(total_pohon=Count("pohons", 0), total_volume=Sum("pohons__volume", 0))
         .order_by("id")
         .first()
@@ -83,7 +88,9 @@ async def update_lhc(
     perusahaan: Perusahaan = Depends(get_perusahaan),
 ):
     try:
-        await LHC(**data.model_dump()).validate_unique(id)
+        await LHC(
+            **data.model_dump(exclude_none=True, exclude_unset=True)
+        ).validate_unique(id)
 
         updated_count = await LHC.filter(id=id, perusahaan=perusahaan).update(
             **data.model_dump(exclude_unset=True)
@@ -205,32 +212,38 @@ async def create_rencana_tebang(
     try:
         rencana_tebang_created = await RencanaTebang.create(**data)
         await rencana_tebang_created.fetch_related("tahun")
-        return rencana_tebang_created
+        serializer = RencanaTebangSerializer(rencana_tebang_created)
+        return await serializer.serialize()
     except Exception as e:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
 
 
 @router.get("/RencanaTebang/GetAll", response_model=List[schemas.RencanaTebangSchema])
+@timing_decorator
 async def get_all_rencana_tebang(perusahaan: Perusahaan = Depends(get_perusahaan)):
     rencana_tebang = await RencanaTebang.filter(perusahaan=perusahaan).prefetch_related(
-        "tahun"
+        "tahun", "jenis", "blok"
     )
-    return rencana_tebang
+    serializer = RencanaTebangSerializer(rencana_tebang, many=True)
+    return await serializer.serialize()
 
 
 @router.get("/RencanaTebang/{id}", response_model=schemas.RencanaTebangSchema)
+@timing_decorator
 async def get_rencana_tebang(
     id: UUID, perusahaan: Perusahaan = Depends(get_perusahaan)
 ):
     rencana_tebang = await RencanaTebang.get_or_none(
         id=id, perusahaan=perusahaan
-    ).prefetch_related("tahun")
+    ).prefetch_related("tahun", "jenis", "blok")
 
     if not rencana_tebang:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="Rencana Tebang not found"
         )
-    return rencana_tebang
+
+    serializer = RencanaTebangSerializer(rencana_tebang)
+    return await serializer.serialize()
 
 
 @router.put("/RencanaTebang/{id}", response_model=Response)
@@ -239,11 +252,45 @@ async def update_rencana_tebang(
     data: schemas.RencanaTebangInSchema,
     perusahaan: Perusahaan = Depends(get_perusahaan),
 ):
-    updated_count = await RencanaTebang.filter(id=id, perusahaan=perusahaan).update(
-        **data.model_dump(exclude_unset=True)
-    )
-    if updated_count == 0:
-        raise HTTPException(status_code=404, detail="Rencana Tebang not found")
+    # log data
+    print(data)
+    blok_ids = data.blok_ids  # Ini bisa None atau list kosong
+
+    jenis_ids = data.jenis_ids  # Ini bisa None atau list kosong
+    rencana_tebang = await RencanaTebang.get_or_none(id=id, perusahaan=perusahaan)
+    if not rencana_tebang:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="Rencana Tebang not found"
+        )
+
+    # Update atribut lainnya
+    await rencana_tebang.update_from_dict(data.model_dump(exclude={"jenis"}))
+    await rencana_tebang.save()
+
+    # Cek apakah blok_ids ada dan tidak kosong
+    if blok_ids:
+        blok_instances = await Blok.filter(id__in=blok_ids).all()
+        if not blok_instances:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND, detail="Blok not found"
+            )
+        # Clear dan add relasi ManyToMany
+        await rencana_tebang.blok.clear()
+        await rencana_tebang.blok.add(*blok_instances)
+
+    # Cek apakah jenis_ids ada dan tidak kosong
+    if jenis_ids:
+        jenis_instances = await Jenis.filter(id__in=jenis_ids).all()
+        if not jenis_instances:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND, detail="Jenis not found"
+            )
+        # Clear dan add relasi ManyToMany
+        await rencana_tebang.jenis.clear()
+        await rencana_tebang.jenis.add(*jenis_instances)
+    else:
+        # Jika list kosong atau None, hanya clear relasi yang ada
+        await rencana_tebang.jenis.clear()
     return Response(message="Data berhasil diupdate")
 
 
@@ -419,3 +466,97 @@ async def get_rekap_lhc(
             raise HTTPException(status_code=404, detail="Data not found")
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.put(
+    "/RencanaTebang/{rencana_tebang_id}/Barcode/Save",
+    response_model=Response,
+    description="""## Save barcode rencana tebang\n pada setiap request, semua barcode yg terdaftar untuk rencana tebang akan dihapus dan digantikan data baru yang masuk""",
+)
+@timing_decorator
+async def save_rencana_tebang_barcode(
+    rencana_tebang_id: UUID,
+    data: schemas.SaveBarcodeRencanaTebangSchema,
+    perusahaan: Perusahaan = Depends(get_perusahaan),
+):
+    try:
+        # check if rencana tebang exists
+        rencana_tebang = await RencanaTebang.get_or_none(
+            id=rencana_tebang_id, perusahaan=perusahaan
+        )
+        if not rencana_tebang:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND, detail="Rencana Tebang not found"
+            )
+
+        errors = await save_barcode_rencana_tebang_to_db(
+            rencana_tebang_id, data.barcodes
+        )
+        if errors:
+            return ErrorResponse(errors=errors)
+        return Response(message="Barcode berhasil disimpan")
+    except Exception as e:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
+
+
+# get barcode by rencana tebang id
+@router.get(
+    "/RencanaTebang/{rencana_tebang_id}/Barcode/GetAll",
+    response_model=List[schemas.BarcodeSchema],
+    description="## Get all barcode by rencana tebang ID",
+)
+@timing_decorator
+async def get_all_barcode_by_rencana_tebang_id(
+    rencana_tebang_id: UUID, perusahaan: Perusahaan = Depends(get_perusahaan)
+):
+    barcode = await Barcode.filter(
+        Q(rencana_tebang=rencana_tebang_id) & Q(perusahaan=perusahaan)
+    ).order_by("barcode")
+    return barcode
+
+
+description = """
+ChimichangApp API helps you do awesome stuff. 🚀
+
+## Items
+
+You can **read items**.
+
+## Users
+
+You will be able to:
+
+* **Create users** (_not implemented_).
+* **Read users** (_not implemented_).
+"""
+
+
+@router.put(
+    "/RencanaTebang/{rencana_tebang_id}/SetTarget",
+    response_model=Response,
+    description="""
+## Set target pohon pada rencana tebang\n
+Rencana tebang harus sudah memiliki data jenis target jika obyeknya adalah **Blok/Petak**.\n
+Jika obyeknya **Jalan**, maka semua pohon di LHC jalan pada tahun kegiatan yg sama
+dengan Rencana Tebang akan dijadikan target pohon.
+""",
+)
+@timing_decorator
+async def set_target_pohon(
+    rencana_tebang_id: UUID,
+    perusahaan: Perusahaan = Depends(get_perusahaan),
+):
+    try:
+        rencana_tebang = await RencanaTebang.get_or_none(
+            id=rencana_tebang_id, perusahaan=perusahaan
+        ).prefetch_related("blok")
+        if not rencana_tebang:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND, detail="Rencana Tebang not found"
+            )
+
+        errors = await set_target_pohon_rencana_tebang(rencana_tebang, perusahaan)
+        print(errors)
+        return Response(message="Target pohon berhasil diupdate")
+    except Exception as e:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))

@@ -33,8 +33,8 @@ role = ROLE.ADMIN.value
 
 
 file_path = "utils/files"
-full_path = os.path.abspath(os.path.join(file_path, "propinsi.xlsx"))
-print("Full path:", full_path)
+# full_path = os.path.abspath(os.path.join(file_path, "propinsi.xlsx"))
+# print("Full path:", full_path)
 
 
 nama_perusahaan = "PT. Mardhika Insan Mulia"

@@ -7,6 +7,7 @@ from consts import OBYEK, SORTIMEN
 class LHC(CustomModel):
     perusahaan = fields.ForeignKeyField("models.Perusahaan", on_delete=fields.CASCADE)
     nomor = fields.CharField(255)
+    blok = fields.ForeignKeyField("models.Blok", on_delete=fields.SET_NULL, null=True)
     tahun = fields.ForeignKeyField("models.TahunKegiatan", on_delete=fields.CASCADE)
     tanggal = fields.DateField()
     obyek = fields.IntField(default=OBYEK.BLOK_PETAK.value)
@@ -106,6 +107,8 @@ class RencanaTebang(CustomModel):
     obyek = fields.IntField(default=OBYEK.BLOK_PETAK.value)
     tanggal = fields.DateField()
     faktor = fields.FloatField(default=0.7)
+    jenis = fields.ManyToManyField("models.Jenis", related_name="jenis", null=True)
+    blok = fields.ManyToManyField("models.Blok", related_name="blok", null=True)
 
     class Meta:
         table = "rencana_tebang"

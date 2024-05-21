@@ -1,12 +1,12 @@
 "use client";
 import React, { useEffect, useState } from 'react';
 import { PageHeader } from '../global/PageHeader';
-import { message, Button, Popconfirm, Table } from 'antd';
+import { message, Button, Popconfirm, Table, TableProps } from 'antd';
 import dayjs from 'dayjs';
 import { EditOutlined, DeleteOutlined, SearchOutlined } from "@ant-design/icons";
 import styles from "./rencana-tebang.module.sass"
 import { useUserContext } from '@/hooks/UserContext';
-import { DeleteRencanaTebang, GetAllRencanaTebang, } from '@/api';
+import { DeleteRencanaTebang, GetAllRencanaTebang, SetRencanaTebangTarget, } from '@/api';
 import { RencanaTebangType } from '@/types';
 import Link from 'next/link';
 import { OBYEK, PAGE } from '@/consts';
@@ -37,8 +37,25 @@ export default function RencanaTebang() {
         handleGetAll()
     }, []);
 
+    const handleAutoSetTarget = async (id: string) => {
+        console.log('auto set target')
+        try {
 
-    const columns = [
+            const response = await SetRencanaTebangTarget(id)
+            console.log('response', response)
+            if (!response.success) {
+                message.error(response.details)
+                return
+            } else {
+                handleGetAll()
+                message.success(response.message)
+            }
+        } catch (error) {
+            console.log('error', error)
+        }
+    }
+
+    const columns: TableProps['columns'] = [
         {
             key: 'nomor',
             title: 'nomor',
@@ -58,27 +75,55 @@ export default function RencanaTebang() {
             render: (tanggal: string) => (
                 tanggal &&
                 <span>{dayjs(tanggal).format("DD MMM YYYY")}</span>
-            )
+            ),
         },
         {
             key: 'tahun',
             title: 'Tahun Kegiatan',
-            render: (record: RencanaTebangType) => <span>{record.tahun.tahun}</span>
+            render: (record: RencanaTebangType) => <span>{record.tahun}</span>,
         },
         {
             key: 'fe',
-            title: 'Faktor Exploitasi',
+            title: 'FE',
             dataIndex: 'faktor',
+            width: 60
         },
         {
             key: 'pohon',
             title: 'total pohon',
-            dataIndex: 'pohon',
+            render: (record: RencanaTebangType) => {
+                if (record.total_pohon) {
+                    return (
+                        <span>{record.total_pohon}</span>
+                    )
+                }
+                return (
+                    <Button
+                        onClick={() => handleAutoSetTarget(record.id)}
+                        size='small'
+                    >
+                        Auto Set Target
+                    </Button>
+                )
+            }
         },
         {
             key: 'volume',
             title: 'total volume (m3)',
             dataIndex: 'volume',
+        },
+        {
+            key: 'Target',
+            title: 'Target',
+            render: (record: RencanaTebangType) => {
+                if (record.jenis.length > 0) {
+                    return (
+                        <span>{record.jenis.length} Jenis</span>
+                    )
+                }
+
+            }
+
         },
         {
             key: 'action',

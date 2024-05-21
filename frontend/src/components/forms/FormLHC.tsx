@@ -6,6 +6,7 @@ import { Field } from './Field';
 import dayjs from 'dayjs'
 import { OBYEK } from '@/consts';
 import { FieldTahunKegiatan } from './fields/FieldTahunKegiatan';
+import { FieldBlok } from './fields/FieldBlok';
 
 const defaultDate = dayjs().format("YYYY-MM-DD")
 
@@ -40,7 +41,6 @@ export const FormLHC = (props: Props) => {
 
             setLHC({
                 ...response,
-                tahun_id: response.tahun.id
             })
 
         }
@@ -110,6 +110,7 @@ export const FormLHC = (props: Props) => {
                         required
                     />
 
+                    <FieldBlok value={lhc.blok_id} required />
 
                     <Field
                         type='date'
@@ -128,6 +129,7 @@ export const FormLHC = (props: Props) => {
                             { label: 'Jalan', value: OBYEK.TRASE_JALAN }
                         ]}
                     />
+
 
 
                     <Space className='mt-4' >

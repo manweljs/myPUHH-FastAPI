@@ -1,25 +1,26 @@
 import React, { useEffect } from 'react'
 import { useState } from 'react';
-import { GetAllBlok } from '@/api';
+import { GetAllBlok, GetAllJenis } from '@/api';
 import { BlokType } from '@/types';
 import { Field } from '../Field';
 
 interface Props {
-    value?: string | null | string[] | undefined,
+    value?: string | null | string[] | undefined | number[] | number,
     handleUpdate?: (arg: any) => void
     required?: boolean
     name?: string
     multiple?: boolean
+    label?: string
 }
 
-export const FieldBlok = (props: Props) => {
-    const { value, handleUpdate, required, name = "blok_id", multiple = false } = props;
+export const FieldJenis = (props: Props) => {
+    const { value, required, name = "jenis_id", multiple, label = "Jenis" } = props;
     const [objects, setObjects] = useState<BlokType[]>([])
     const [loading, setLoading] = useState(true)
 
     const handleGetAll = async () => {
         setLoading(true)
-        const response = await GetAllBlok()
+        const response = await GetAllJenis()
         setObjects(response)
         setLoading(false)
     }
@@ -32,7 +33,7 @@ export const FieldBlok = (props: Props) => {
         <Field
             type="select"
             name={name}
-            label='Blok'
+            label={label}
             value={value}
             options={objects.map((item: BlokType) => ({ value: item.id, label: item.nama }))}
             loading={loading}

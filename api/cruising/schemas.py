@@ -45,6 +45,8 @@ class LHCSchema(PydanticModel):
     obyek: int
     total_pohon: Optional[int] = 0
     total_volume: Optional[float] = 0
+    blok: Optional[str] = None
+    blok_id: Optional[UUID] = None
 
     class Config:
         from_attributes = True
@@ -54,10 +56,13 @@ class LHCBaseSchema(PydanticModel):
     id: UUID
     nomor: str
     tahun: int
+    tahun_id: UUID
     tanggal: date
     obyek: int
     total_pohon: Optional[int] = 0
     total_volume: Optional[float] = 0
+    blok: Optional[str] = None
+    blok_id: Optional[UUID] = None
 
     class Config:
         from_attributes = True
@@ -83,6 +88,7 @@ class LHCInSchema(PydanticModel):
     tahun_id: UUID
     tanggal: date
     obyek: int
+    blok_id: Optional[UUID] = None
 
     class Config:
         from_attributes = True
@@ -115,10 +121,15 @@ class UploadBarcodeInSchema(PydanticModel):
 class RencanaTebangSchema(PydanticModel):
     id: UUID
     nomor: str
-    tahun: TahunKegiatanSchema
+    tahun: int
+    tahun_id: UUID
     obyek: int
     tanggal: date
     faktor: float
+    jenis_ids: Optional[List[int]] = None
+    jenis: Optional[List[str]] = None
+    bloks: Optional[List[str]] = None
+    blok_ids: Optional[List[UUID]] = None
 
     class Config:
         from_attributes = True
@@ -130,6 +141,8 @@ class RencanaTebangInSchema(PydanticModel):
     obyek: int
     tanggal: date
     faktor: float
+    jenis_ids: Optional[List[int]] = None
+    blok_ids: Optional[List[UUID]] = None
 
     class Config:
         from_attributes = True
@@ -195,6 +208,13 @@ class SaveLHCBarcodeItemSchema(PydanticModel):
 class SaveLHCBarcodeSchema(PydanticModel):
     lhc_id: UUID
     barcodes: List[SaveLHCBarcodeItemSchema]
+
+    class Config:
+        from_attributes = True
+
+
+class SaveBarcodeRencanaTebangSchema(PydanticModel):
+    barcodes: List[str]
 
     class Config:
         from_attributes = True

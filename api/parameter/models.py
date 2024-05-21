@@ -13,7 +13,7 @@ class TahunKegiatan(CustomModel):
         table = "tahun_kegiatan"
 
     def __str__(self):
-        return self.tahun
+        return str(self.tahun)
 
 
 class TPK(CustomModel):

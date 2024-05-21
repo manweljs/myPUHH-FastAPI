@@ -11,7 +11,7 @@ import { OpenExcelFile, SaveAsExcel, SaveAsJson } from './CustomFunctions';
 interface Props {
     data?: object[]
     colCount?: number
-    columns?: ColumnModel
+    columns?: object
     onSaveAsJson?: (data: any) => void
     className?: string
     onCellChanges?: (ref: SpreadsheetComponent | null, args: any) => void

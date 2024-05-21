@@ -1,7 +1,9 @@
+import RencanaTebangDetail from '@/components/rencana-tebang/RencanaTebangDetail'
 import React from 'react'
 
-export default function page() {
+export default function page(props: { params: { id: string } }) {
+    const id = props.params.id
     return (
-        <div>TODO : Detail Rencana Tebang</div>
+        <RencanaTebangDetail id={id} />
     )
 }

@@ -20,6 +20,7 @@ export interface FieldsProps {
     message?: string
     options?: any
     className?: string
+    multiple?: boolean
 }
 export function Field(props: FieldsProps) {
     const {
@@ -34,7 +35,8 @@ export function Field(props: FieldsProps) {
         message,
         options,
         loading,
-        className
+        className,
+        multiple
     } = props
 
 
@@ -101,6 +103,7 @@ export function Field(props: FieldsProps) {
                         onChange={onChange}
                         loading={loading}
                         className={className || "w-100"}
+                        mode={multiple ? "multiple" : undefined}
                         showSearch
                         filterOption={(inputValue, option: any) =>
                             option.children.toLowerCase().indexOf(inputValue.toLowerCase()) >= 0

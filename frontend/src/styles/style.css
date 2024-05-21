@@ -143,6 +143,10 @@ body.min #root .navbar .menu {
   padding: 0 !important;
 }
 
+.ant-popconfirm .ant-popconfirm-buttons {
+  display: flex;
+}
+
 .e-spreadsheet .e-ribbon {
   border: none !important;
 }

@@ -1,1 +1,1 @@
-{"version":3,"sources":["rencana-tebang.module.sass","rencana-tebang.module.css"],"names":[],"mappings":"AACA;EACI,+BAAA;ACAJ;;ADEA;EACI,oBAAA;ACCJ;;ADCA;EACI,aAAA;EACA,8BAAA;EACA,mBAAA;ACEJ","file":"rencana-tebang.module.css"}
+{"version":3,"sources":["rencana-tebang.module.sass","rencana-tebang.module.css"],"names":[],"mappings":"AACA;EACI,+BAAA;ACAJ;ADEI;EACI,iBAAA;ACAR;;ADGI;EACI,UAAA;ACAR;ADEI;EACI,gDAAA;ACAR;;ADEA;EACI,aAAA;EACA,8BAAA;EACA,mBAAA;ACCJ;;ADCA;EACI,gDAAA;ACEJ","file":"rencana-tebang.module.css"}

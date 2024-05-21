@@ -6,6 +6,8 @@ import { Field } from './Field';
 import dayjs from 'dayjs'
 import { OBYEK } from '@/consts';
 import { FieldTahunKegiatan } from './fields/FieldTahunKegiatan';
+import { FieldJenis } from './fields/FieldJenis';
+import { FieldBlok } from './fields/FieldBlok';
 
 const defaultDate = dayjs().format("YYYY-MM-DD")
 
@@ -40,7 +42,6 @@ export const FormRencanaTebang = (props: Props) => {
         if (response.id || response.success) {
             setRencanaTebang({
                 ...response,
-                tahun_id: response.tahun.id
             })
 
         }
@@ -61,6 +62,7 @@ export const FormRencanaTebang = (props: Props) => {
         const data = {
             ...rencanaTebang,
             tanggal: tanggal ? dayjs(tanggal).format("YYYY-MM-DD") : defaultDate,
+            jenis_ids: rencanaTebang.obyek === OBYEK.BLOK_PETAK ? rencanaTebang.jenis_ids : null
         }
 
         const response = id ? await UpdateRencanaTebang(data, id) : await CreateRencanaTebang(data)
@@ -98,6 +100,13 @@ export const FormRencanaTebang = (props: Props) => {
                     layout='vertical'
                 >
                     <Field
+                        type='date'
+                        name='tanggal'
+                        label='Tanggal'
+                        value={rencanaTebang.tanggal}
+                    />
+
+                    <Field
                         type='char'
                         name='nomor'
                         label='Nomor'
@@ -111,11 +120,10 @@ export const FormRencanaTebang = (props: Props) => {
                     />
 
 
-                    <Field
-                        type='date'
-                        name='tanggal'
-                        label='Tanggal'
-                        value={rencanaTebang.tanggal}
+                    <FieldBlok
+                        value={rencanaTebang.blok_ids}
+                        multiple
+                        name='blok_ids'
                     />
 
                     <Field
@@ -136,6 +144,15 @@ export const FormRencanaTebang = (props: Props) => {
                         value={rencanaTebang.faktor}
                         required
                     />
+
+                    {rencanaTebang.obyek === OBYEK.BLOK_PETAK &&
+                        <FieldJenis
+                            value={rencanaTebang.jenis_ids}
+                            multiple
+                            name='jenis_ids'
+                            label='Target Jenis'
+                        />
+                    }
 
 
                     <div className="group mt-5">

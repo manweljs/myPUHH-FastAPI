@@ -1,11 +1,11 @@
 "use client";
 import React, { useEffect, useState } from 'react'
 import { SpreadSheets } from '@/components/global'
-import { GetBarcodesByLHC, SaveLHCBarcode } from '@/api';
-import { LHCBarcodeType } from '@/types';
+import { GetBarcodeRencanaTebang, SaveBarcodeRencanaTebang } from '@/api';
+import { LHCBarcodeType, RencanaTebangType } from '@/types';
 import { message, Modal, Space, Spin } from 'antd';
 import { ColumnModel } from '@syncfusion/ej2-react-spreadsheet';
-import s from "./lhc.module.sass"
+import s from "./rencana-tebang.module.sass"
 import { LoadingModal } from '../global';
 
 const initialData: object = {
@@ -13,13 +13,16 @@ const initialData: object = {
     barcode: ""
 }
 
-export function LHCDetailBarcodes(props: { id: string }) {
-    const { id } = props
+export function RencanaTebangBarcodes(props: {
+    rencanaTebang?: RencanaTebangType
+}) {
+    const { rencanaTebang } = props
     const [data, setData] = useState<object[]>([])
     const [loading, setLoading] = useState(false)
 
     const handleGetBarcodes = async () => {
-        const response = await GetBarcodesByLHC(id)
+        if (!rencanaTebang) return
+        const response = await GetBarcodeRencanaTebang(rencanaTebang.id)
         console.log(response)
         if (response.length === 0) {
             setData([initialData])
@@ -38,14 +41,14 @@ export function LHCDetailBarcodes(props: { id: string }) {
         handleGetBarcodes()
     }, []);
 
-    const columns = {
-        id: "@",
-        barcode: "@",
-    }
+    const columns: ColumnModel[] = [
+        { width: 60, index: 0, isLocked: true, },
+        { width: 220, index: 1, },
+    ];
 
     const handleSaveAsJson = async (data: any) => {
+        if (!rencanaTebang) return
         const finalData = {
-            lhc_id: id,
             barcodes: data.data[0].rows.map((item: { barcode: string, id: string }) => {
                 return {
                     id: item.id || null,
@@ -56,7 +59,7 @@ export function LHCDetailBarcodes(props: { id: string }) {
 
         // console.log('final data untuk database --->', finalData)
         setLoading(true)
-        const response = await SaveLHCBarcode(id, finalData)
+        const response = await SaveBarcodeRencanaTebang(rencanaTebang.id, finalData)
         // console.log('response', response)
         if (response.success) {
             message.success('Data berhasil disimpan')
@@ -74,7 +77,7 @@ export function LHCDetailBarcodes(props: { id: string }) {
             <SpreadSheets
                 data={data}
                 colCount={3}
-                columns={initialData}
+                columns={columns}
                 onSaveAsJson={handleSaveAsJson}
                 className={s.spreadsheet_container}
             />

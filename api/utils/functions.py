@@ -51,3 +51,11 @@ def encode_url(url):
 
 def decode_url(url):
     return unquote(url)
+
+
+def clean_error_message(message: str) -> str:
+    if isinstance(message, str):
+        parts = message.split(": ")
+        if len(parts) > 2:
+            return ": ".join(parts[2:])
+    return message

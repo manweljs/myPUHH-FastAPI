@@ -1,11 +1,11 @@
 from collections import defaultdict
-from curses.ascii import HT
 from typing import List
 from uuid import UUID
 from fastapi import HTTPException
 import pandas as pd
 from botocore.exceptions import NoCredentialsError
-from cruising.models import Barcode, Pohon
+from parameter.models import TahunKegiatan
+from cruising.models import Barcode, Pohon, RencanaTebang
 from cruising.schemas import PohonInSchema, SaveLHCBarcodeItemSchema
 from utils.decorators import timing_decorator
 from utils.storage import get_s3_client
@@ -13,6 +13,7 @@ import io, asyncio
 from tortoise.transactions import in_transaction
 import time
 from tortoise.functions import Sum, Count
+from utils.exceptions import ResponseError
 
 
 BATCH_SIZE = 1000
@@ -271,3 +272,33 @@ async def get_rekapitulasi_lhc(lhc_id: UUID, perusahaan: UUID):
             )
 
         return {"data": rekap_data, "organized_data": organized_data}
+
+
+async def save_barcode_rencana_tebang_to_db(
+    rencana_tebang_id: UUID, barcodes: List[str]
+):
+    async with in_transaction() as connection:
+        errors = []
+        to_create = []
+
+        print("Start saving barcode rencana tebang to database")
+        print("barcodes : ", barcodes)
+
+        return False
+
+
+async def set_target_pohon_rencana_tebang(rencana_tebang: RencanaTebang, perusahaan):
+    print(rencana_tebang.tahun_id)
+    bloks = await rencana_tebang.blok.all()
+    # periksa blok dan tahun kegiatan
+    if not bloks:
+        raise ResponseError(status_code=400, detail="Blok belum ditentukan")
+
+    try:
+        tahun_kegiatan = await TahunKegiatan.get_or_none(
+            id=rencana_tebang.tahun_id, perusahaan_id=perusahaan
+        )
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=f"Error: {str(e)}")
+    print("tahun kegiatan : ", tahun_kegiatan)
+    return False

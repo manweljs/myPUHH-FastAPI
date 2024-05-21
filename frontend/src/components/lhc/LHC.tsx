@@ -65,6 +65,11 @@ export default function LHC() {
             dataIndex: "tahun",
         },
         {
+            key: "blok",
+            title: "Blok Kerja",
+            dataIndex: "blok",
+        },
+        {
             key: "obyek",
             title: "obyek",
             dataIndex: "obyek",

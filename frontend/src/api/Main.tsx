@@ -15,6 +15,7 @@ export const sendRequest = async (url: string, method: string, data?: any) => {
     }
 
     const response = await fetch(url, options);
+    console.log('response', response)
     const result = await response.json();
     return result;
 
