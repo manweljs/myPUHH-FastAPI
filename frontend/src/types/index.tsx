@@ -94,9 +94,15 @@ export interface UploadBarcodeType {
 export interface LHCType {
     id: string;
     nomor: string;
-    tahun: TahunKegiatanType;
+    tahun: number;
+    tahun_id: string;
     tanggal: string;
     obyek: number;
+    total_pohon: number;
+    total_volume: number | null;
+    blok: string;
+    blok_id: string;
+
 }
 
 export interface LHCInType {
@@ -210,15 +216,12 @@ export interface BlokInType {
 }
 
 export interface PetakType {
-    id?: string;
+    id: string;
     nama: string;
-    blok: BlokType;
+    blok: string;
+    blok_id: string;
+    tahun: number;
     luas?: number | null;
-}
-
-export interface SortimenType {
-    id: number;
-    nama: string;
 }
 
 export interface PetakInType {
@@ -227,6 +230,12 @@ export interface PetakInType {
     blok_id?: string | null;
     luas?: number | null;
 }
+
+export interface SortimenType {
+    id: number;
+    nama: string;
+}
+
 
 
 export interface TPKType {

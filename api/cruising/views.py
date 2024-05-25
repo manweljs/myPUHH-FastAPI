@@ -36,7 +36,7 @@ BATCH_SIZE = 1000
 router = APIRouter(tags=["Cruising"], prefix="/api/Cruising")
 
 
-@router.post("/LHC", response_model=schemas.LHCSchema)
+@router.post("/LHC", response_model=schemas.LHCBaseSchema)
 async def create_lhc(
     lhc: schemas.LHCInSchema, perusahaan: Perusahaan = Depends(get_perusahaan)
 ):
@@ -58,7 +58,7 @@ async def get_all_lhc(perusahaan: Perusahaan = Depends(get_perusahaan)):
         await LHC.filter(perusahaan=perusahaan)
         .prefetch_related("tahun", "blok")
         .annotate(total_pohon=Count("pohons", 0), total_volume=Sum("pohons__volume", 0))
-        .order_by("id")
+        .order_by("tanggal")
         .all()
     )
 
@@ -73,7 +73,6 @@ async def get_lhc(id: UUID, perusahaan: Perusahaan = Depends(get_perusahaan)):
         await LHC.filter(id=id, perusahaan=perusahaan)
         .prefetch_related("tahun", "blok")
         .annotate(total_pohon=Count("pohons", 0), total_volume=Sum("pohons__volume", 0))
-        .order_by("id")
         .first()
     )
 
@@ -222,7 +221,9 @@ async def create_rencana_tebang(
 @timing_decorator
 async def get_all_rencana_tebang(perusahaan: Perusahaan = Depends(get_perusahaan)):
     rencana_tebang = await RencanaTebang.filter(perusahaan=perusahaan).prefetch_related(
-        "tahun", "jenis", "blok", "barcodes", "barcodes__pohon"
+        "tahun",
+        "jenis",
+        "blok",
     )
     serializer = RencanaTebangSerializer(rencana_tebang, many=True)
     return await serializer.serialize()

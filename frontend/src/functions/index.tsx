@@ -1,5 +1,6 @@
 import { ACCESS_TOKEN_KEY } from "@/consts";
-import { JenisPohonType, PetakType, SortimenType } from "@/types";
+import { JenisPohonType, LHCType, PetakType, SortimenType } from "@/types";
+import { message } from "antd";
 import cookie from "react-cookies"
 
 export const getToken = (token_key = ACCESS_TOKEN_KEY) => {
@@ -52,12 +53,25 @@ export function getKelasDiameterId(val: number): number {
 
 
 export function getJenisId(jenis: string, listJenis: JenisPohonType[]): number {
-    return listJenis.find(j => j.nama === jenis)!.id;
+    console.log('jenis', jenis);
+    const foundJenis = listJenis.find(j => j.nama === jenis);
+
+    if (!foundJenis) {
+        throw new Error(`Jenis  ${jenis} tidak ditemukan.`);
+    }
+
+    return foundJenis.id;
 }
 
 
-export function getPetakId(petak: string, listPetak: PetakType[]): string {
-    return listPetak.find(p => p.nama === petak)!.id!;
+export function getPetakId(petak: string, listPetak: PetakType[], tahun: number): string {
+    const foundPetak = listPetak.find(p => p.nama === petak && p.tahun === tahun);
+
+    if (!foundPetak) {
+        throw new Error(`Petak dengan nama ${petak} untuk tahun ${tahun} tidak ditemukan.`);
+    }
+
+    return foundPetak.id;
 }
 
 export function getSortimenId(diameter: number) {

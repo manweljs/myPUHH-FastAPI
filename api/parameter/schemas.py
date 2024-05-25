@@ -1,3 +1,4 @@
+import string
 from tortoise.contrib.pydantic.base import PydanticModel
 from typing import Optional
 from uuid import UUID, uuid4
@@ -75,8 +76,10 @@ class BlokInSchema(PydanticModel):
 class PetakSchema(PydanticModel):
     id: UUID
     nama: str
-    blok: BlokBaseSchema
+    blok: str
+    blok_id: UUID
     luas: float
+    tahun: int
 
     class Config:
         from_attributes = True

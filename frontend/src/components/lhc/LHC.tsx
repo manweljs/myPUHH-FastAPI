@@ -134,7 +134,7 @@ export default function LHC() {
     const handleDelete = async (id: string) => {
         const response = await DeleteLHC(id);
         console.log(response);
-        response.status && handleGetAll();
+        response.success && handleGetAll();
     };
 
     return (

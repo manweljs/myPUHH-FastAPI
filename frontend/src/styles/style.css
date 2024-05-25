@@ -157,6 +157,9 @@ body.min #root .navbar .menu {
   border-left: none !important;
   border-right: none !important;
 }
+.e-spreadsheet .e-sheet-panel {
+  height: 100%;
+}
 
 .ant-btn {
   display: flex;

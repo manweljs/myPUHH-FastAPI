@@ -9,6 +9,8 @@ import { customizeRibbon, setDefaultFormats, setDefaultFormulas } from './Custom
 import { OpenExcelFile, SaveAsExcel, SaveAsJson } from './CustomFunctions';
 
 interface Props {
+    close?: () => void
+    setRef?: (ref: SpreadsheetComponent) => void
     data?: object[]
     colCount?: number
     columns?: object
@@ -19,6 +21,7 @@ interface Props {
     drafts?: DraftSpreadsheetType[]
     defaultFormulas?: any[]
     defaultFormats?: any[]
+    height?: string | number
 }
 
 export function SpreadSheets(props: Props) {
@@ -33,6 +36,8 @@ export function SpreadSheets(props: Props) {
         drafts,
         defaultFormulas,
         defaultFormats,
+        height = '100%',
+        close
     } = props
     const [spreadsheet, setSpreadsheet] = useState<SpreadsheetComponent | null>(null);
     const spreadsheetRef = useRef<SpreadsheetComponent | null>(null);
@@ -41,10 +46,12 @@ export function SpreadSheets(props: Props) {
     useEffect(() => {
         if (spreadsheetRef.current) {
             setSpreadsheet(spreadsheetRef.current);
+            props.setRef && props.setRef(spreadsheetRef.current)
         }
         if (spreadsheetRef.current && data) {
             setSheetData(data)
         }
+
     }, [spreadsheetRef.current, data]);
 
     useEffect(() => {
@@ -193,6 +200,7 @@ export function SpreadSheets(props: Props) {
 
     // console.log('sheetData', sheetData)
 
+    console.log('height', height)
     return (
         <div className={className}>
 
@@ -243,7 +251,15 @@ export function SpreadSheets(props: Props) {
                     >Save</Button>
                 }
 
-                <Button onClick={() => { spreadsheet?.refresh() }}>Refresh</Button>
+                {
+                    close &&
+                    <Button
+                        onClick={close}
+                    >
+                        Close
+                    </Button>
+                }
+
             </div>
 
             <SpreadsheetComponent
@@ -257,7 +273,7 @@ export function SpreadSheets(props: Props) {
                 beforeSave={beforeSave}
                 scrollSettings={scrollSettings}
                 cellSave={handleCellChanges}
-
+                height={height}
             >
 
 

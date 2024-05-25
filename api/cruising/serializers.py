@@ -3,6 +3,7 @@ from uuid import UUID
 from fastapi import HTTPException
 from pydantic import TypeAdapter
 from tortoise.functions import Sum, Count
+from tortoise.expressions import F
 
 from parameter.models import TahunKegiatan
 from utils.serializers import BaseSerializer
@@ -38,6 +39,20 @@ class RencanaTebangSerializer(BaseSerializer):
         model = RencanaTebang
         schema = RencanaTebangSchema
 
+    async def get_jenis(self, instance: RencanaTebang) -> List[int]:
+        jenis_nama = []
+        if instance.obyek == 1:
+            jenis_nama_set = set()
+            barcodes = await instance.barcodes.all().prefetch_related("pohon__jenis")
+            for barcode in barcodes:
+                pohon = await barcode.pohon[0]
+                if pohon and pohon.jenis:
+                    jenis_nama_set.add(pohon.jenis.nama)
+            jenis_nama = list(jenis_nama_set)
+        else:
+            jenis_nama = await instance.jenis.all().values_list("nama", flat=True)
+        return jenis_nama
+
     async def get_tahun(self, instance: RencanaTebang) -> int:
         tahun = instance.tahun.tahun
         return tahun
@@ -45,11 +60,6 @@ class RencanaTebangSerializer(BaseSerializer):
     async def get_tahun_id(self, instance: RencanaTebang) -> UUID:
         tahun_id = instance.tahun_id
         return tahun_id
-
-    async def get_jenis(self, instance: RencanaTebang) -> List[int]:
-        # Membuat query untuk mengambil entri yang terkait dan memetakan ke ID mereka
-        jenis_ids = await instance.jenis.all().values_list("nama", flat=True)
-        return jenis_ids
 
     async def get_jenis_ids(self, instance: RencanaTebang) -> List[int]:
         # Membuat query untuk mengambil entri yang terkait dan memetakan ke ID mereka

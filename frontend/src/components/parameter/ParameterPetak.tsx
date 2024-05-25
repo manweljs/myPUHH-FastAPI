@@ -5,6 +5,9 @@ import { BlokType, PetakType } from '@/types'
 import { FormUploadCSV } from '@/components/forms/FormUploadCSV'
 import { DeletePetak, GetAllPetak } from '@/api'
 import { FormPetak } from '@/components/forms/FormPetak'
+import FormPetakSpreadsheet from './FormBulkAddPetak'
+import ParameterPetakSpreadsheet from './FormBulkAddPetak'
+import FormBulkAddPetak from './FormBulkAddPetak'
 
 const page = "Petak / Trayek"
 
@@ -14,6 +17,7 @@ export function ParameterPetak() {
     const [objects, setObjects] = useState<PetakType[]>([])
     const [displayForm, setDisplayForm] = useState(false)
     const [displayFormUpload, setDisplayFormUpload] = useState(false)
+    const [displaySpreadsheet, setDisplaySpreadsheet] = useState(false)
 
     const [loading, setLoading] = useState(true)
 
@@ -26,7 +30,7 @@ export function ParameterPetak() {
         {
             key: 'blok',
             title: 'Blok',
-            render: (record: PetakType) => (record.blok.nama)
+            render: (record: PetakType) => (record.blok)
         },
         {
             key: 'luas',
@@ -71,10 +75,12 @@ export function ParameterPetak() {
     }
 
     const handleDelete = async (id: string) => {
-        const response = await DeletePetak(id)
-        console.log(response)
-        response.status && handleGetAll()
-    }
+        const response = await DeletePetak(id);
+        console.log(response);
+        if (response.success) {
+            setObjects((prev) => prev.filter((item) => item.id !== id));
+        }
+    };
 
     const handleGetAll = async () => {
         setLoading(false)
@@ -97,7 +103,7 @@ export function ParameterPetak() {
 
 
     return (
-        <div className={`setting-${page}`}>
+        <div className={`setting-petak`}>
             <FormUploadCSV
                 url='api/conf/UploadPetak'
                 open={displayFormUpload}
@@ -107,22 +113,42 @@ export function ParameterPetak() {
             />
             <div className="header mb-3">
                 <h3>{page}</h3>
-                <div className="group">
-                    <Button
-                        type='primary'
-                        onClick={handleAdd}
-                    >+ Add</Button>
-                </div>
+                {
+                    !displaySpreadsheet &&
+                    <div className="group">
+                        <Button
+                            type='primary'
+                            onClick={handleAdd}
+                        >
+                            + Add
+                        </Button>
+                        <Button
+                            type='primary'
+                            onClick={() => setDisplaySpreadsheet(true)}
+                        >
+                            + Bulk Add
+                        </Button>
+                    </div>
+                }
             </div>
 
 
-            <Table
-                className={`table-${page}`}
-                columns={columns}
-                dataSource={objects}
-                loading={loading}
-                rowKey={"id"}
-            />
+
+
+            {displaySpreadsheet ?
+                <FormBulkAddPetak
+                    data={objects}
+                    close={() => setDisplaySpreadsheet(false)}
+                    reload={handleGetAll}
+                /> :
+                <Table
+                    className={`table-${page}`}
+                    columns={columns}
+                    dataSource={objects}
+                    loading={loading}
+                    rowKey={"id"}
+                />
+            }
 
             {displayForm &&
                 <FormPetak

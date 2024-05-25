@@ -69,6 +69,9 @@ export const FormLHC = (props: Props) => {
             message.success(`LHC Disimpan!`)
             reload()
             close()
+        } else {
+            message.error(response.details || `Gagal menyimpan LHC!`)
+
         }
 
         setLoading(false)

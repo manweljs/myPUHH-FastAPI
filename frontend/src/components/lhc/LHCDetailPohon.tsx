@@ -7,7 +7,7 @@ import { LoadingModal, SpreadSheets } from "../global";
 import { SpreadsheetComponent } from "@syncfusion/ej2-react-spreadsheet";
 import { chunkArray, getJenisId, getKelasDiameterId, getPetakId, getSortimenId, getStatusPohonId, sanitizeFilename } from "@/functions";
 import { GetDraftSpreadsheets, SaveDraftSpreadsheet } from "@/api/SpreadsheetAPI";
-import { message } from "antd";
+import { message, notification } from "antd";
 
 const BATCH_SIZE = 2000;
 const FAKTOR_BENTUK = 0.6;
@@ -42,6 +42,7 @@ export default function LHCDetailPohon(props: {
     const [listJenis, setListJenis] = useState<JenisPohonType[]>([]);
     const [listPetak, setListPetak] = useState<PetakType[]>([]);
     const [saveProgress, setSaveProgress] = useState<number>(0);
+    const [api, contextHolder] = notification.useNotification();
 
     const handleGetAllPohon = async () => {
         if (!id) return;
@@ -82,6 +83,8 @@ export default function LHCDetailPohon(props: {
         setLoading(false);
     };
 
+    console.log('lhc -->', lhc)
+
     const handleGetLHC = async () => {
         if (!id) return;
         const response = await GetLHC(id);
@@ -98,7 +101,7 @@ export default function LHCDetailPohon(props: {
 
 
     const handleGetAllPetak = async () => {
-        const response = await GetAllPetak(lhc?.tahun.tahun);
+        const response = await GetAllPetak(lhc?.tahun);
         // console.log('response all petak', response)
         setListPetak(response);
     }
@@ -190,8 +193,8 @@ export default function LHCDetailPohon(props: {
     }
 
 
-
     const handleSaveToDatabase = async (data: { data: { rows: any[] }[] }) => {
+        if (!lhc) return;
         setLoading(true);
         console.log('data to clean', data);
 
@@ -211,7 +214,7 @@ export default function LHCDetailPohon(props: {
                     koordinat_y: row.koordinat_y ? parseFloat(row.koordinat_y) : null,
                     kelas_diameter_id: getKelasDiameterId(row.diameter),
                     jenis_id: getJenisId(row.jenis, listJenis),
-                    petak_id: getPetakId(row.petak, listPetak),
+                    petak_id: getPetakId(row.petak, listPetak, lhc.tahun),
                     sortimen_id: getSortimenId(row.diameter),
                     status_pohon_id: getStatusPohonId(row.diameter, row.jenis, listJenis, lhc?.obyek),
                     jalur: row.jalur.toString(),
@@ -221,9 +224,11 @@ export default function LHCDetailPohon(props: {
 
 
                 try {
-                    cleanedRow.id = row.id;
-                    if (cleanedRow.id === "") {
-                        delete cleanedRow.id;
+                    cleanedRow.id = row.id || null;
+                    if (row.id) {
+                        if (cleanedRow.id === "") {
+                            delete cleanedRow.id;
+                        }
                     }
                 } catch (error) {
                     console.error('Error:', error);
@@ -262,8 +267,10 @@ export default function LHCDetailPohon(props: {
             }
             handleGetAllPohon();
         } catch (error: any) {
+            api.error({
+                message: error.toString()
+            });
             console.log('error', error);
-            // message.error('Kesalahan saat membersihkan data: ' + error.toString());
         }
         setLoading(false);
     };
@@ -330,6 +337,7 @@ export default function LHCDetailPohon(props: {
 
     return (
         <div className={s.lhc_pohons}>
+            {contextHolder}
             <LoadingModal open={loading} progress={saveProgress} />
             <SpreadSheets
                 defaultFormulas={defaultFormulas}

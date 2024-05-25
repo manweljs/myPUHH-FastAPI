@@ -25,7 +25,7 @@
 }
 
 .extra_button_spreadsheet {
-  position: fixed;
+  position: absolute;
   z-index: 2;
   top: 0.5rem;
   right: 1.5rem;

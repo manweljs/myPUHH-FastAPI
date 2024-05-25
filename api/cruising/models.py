@@ -1,3 +1,4 @@
+from typing import List
 from tortoise import fields
 from tortoise.exceptions import IntegrityError
 from umum.models import CustomModel
@@ -15,6 +16,7 @@ class LHC(CustomModel):
 
     class Meta:
         table = "lhc"
+        ordering = ["tanggal"]
 
     class PydanticMeta:
         exclude = ("perusahaan", "tahun")
@@ -112,6 +114,18 @@ class RencanaTebang(CustomModel):
 
     class Meta:
         table = "rencana_tebang"
+
+    async def get_jenis(self) -> List[str]:
+        if self.obyek == 1:
+            barcodes = await self.barcodes.all().prefetch_related("pohon__jenis")
+            jenis_nama = [
+                barcode.pohon.jenis.nama
+                for barcode in barcodes
+                if barcode.pohon and barcode.pohon.jenis
+            ]
+        else:
+            jenis_nama = await self.jenis.all().values_list("nama", flat=True)
+        return jenis_nama
 
 
 # data = {

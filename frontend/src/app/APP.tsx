@@ -5,6 +5,7 @@ import { ConfigProvider, theme } from 'antd';
 import React, { useEffect } from 'react'
 import { registerLicense } from '@syncfusion/ej2-base';
 import { PRIMARY_COLOR } from '@/consts';
+import AntdStyleRegistry from '@/hooks/AntdStyleRegistry';
 
 interface Props {
     children: React.ReactNode;
@@ -16,13 +17,13 @@ interface Props {
 
 
 export function APP({ children, accessToken, syncfusionKey }: Props) {
-
-
     return (
         <UserProvider>
-            <Wrapper accessToken={accessToken} syncfusionKey={syncfusionKey}>
-                {children}
-            </Wrapper>
+            <AntdStyleRegistry>
+                <Wrapper accessToken={accessToken} syncfusionKey={syncfusionKey}>
+                    {children}
+                </Wrapper>
+            </AntdStyleRegistry>
         </UserProvider>
     )
 }

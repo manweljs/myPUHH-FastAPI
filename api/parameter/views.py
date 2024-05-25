@@ -1,3 +1,6 @@
+from yaml import serialize
+from utils.decorators import timing_decorator
+from parameter.serializers import PetakSerializer
 from .models import TPn, TahunKegiatan, TPK, Blok, Petak, Ganis
 from fastapi import APIRouter, status, Depends, HTTPException
 from typing import List, Optional
@@ -325,8 +328,9 @@ async def create_petak(
     data["perusahaan_id"] = perusahaan
     try:
         created_petak = await Petak.create(**data)
-        await created_petak.fetch_related("blok")
-        return created_petak
+        await created_petak.fetch_related("blok", "blok__tahun")
+        serializer = PetakSerializer(created_petak)
+        return await serializer.serialize()
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
@@ -336,6 +340,7 @@ async def create_petak(
     response_model=List[schemas.PetakSchema],
     status_code=status.HTTP_200_OK,
 )
+@timing_decorator
 async def get_all_petak(
     tahun_kegiatan: Optional[int] = None,
     perusahaan: Perusahaan = Depends(get_perusahaan),
@@ -344,8 +349,9 @@ async def get_all_petak(
     if tahun_kegiatan:
         filter_kwargs["blok__tahun__tahun"] = tahun_kegiatan
 
-    data = await Petak.filter(**filter_kwargs).prefetch_related("blok")
-    return data
+    data = await Petak.filter(**filter_kwargs).prefetch_related("blok", "blok__tahun")
+    serializer = PetakSerializer(data, many=True)
+    return await serializer.serialize()
 
 
 @router.get(
@@ -353,6 +359,7 @@ async def get_all_petak(
     response_model=schemas.PetakSchema,
     status_code=status.HTTP_200_OK,
 )
+@timing_decorator
 async def get_petak(id: str, perusahaan: Perusahaan = Depends(get_perusahaan)):
     data = await Petak.filter(id=id, perusahaan=perusahaan).first()
     if not data:
